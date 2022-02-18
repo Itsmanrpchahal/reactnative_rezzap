@@ -17,5 +17,9 @@ export default {
   ADD_NEW_CATEGORY:'Add Category',
   FAQ:'Frequently Asked Question',
   PRIVACY_POLICY:'Privacy Policy',
-  ABOUT:'About'
+  ABOUT:'About',
+  HELP:'Help',
+  NOTIFICATIONS:'Notifications',
+  ADD_RESUME:'My Resumes',
+  ADD_ACTIVITY:'Activity'
 };

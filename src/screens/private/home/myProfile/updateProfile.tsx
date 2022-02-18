@@ -22,26 +22,25 @@ import NavigationStrings from "@root/navigation/navigationStrings";
 
 const UpdateProfile = (props: any) => {
 
-
   const [imagePath, setImagePath] = useState<any>(null);
   const [showalert, setShowAlert] = useState(false);
+  const [cancelable, setCancelable] = useState(true)
   const [cancel, setCancel] = useState("Cancel");
-  const { uploadProfilePicture ,updateMyProfile} = useActions();
+  const { uploadProfilePicture, updateMyProfile } = useActions();
   const [isFocus, setIsFocus] = useState(false);
   const [visibleTimer, setVisibleTimer] = useState<boolean>(false);
   const { myProfileData, loading } = useTypedSelector(
     (state) => state.myProfile,
   );
   const [value, setValue] = useState(1);
-  const [stime, setSTime] = useState<any>(myProfileData? myProfileData.data.dob:'');
-  const [profiledesgination,setProfileDesgination] = useState( myProfileData  ? myProfileData.data.designation.toString():'')
-  const [text,setText] = useState('Update Profile')
+  const [stime, setSTime] = useState<any>(myProfileData ? myProfileData.data.dob : '');
+  const [profiledesgination, setProfileDesgination] = useState(myProfileData ? myProfileData.data.designation.toString() : '')
+  const [text, setText] = useState('Update Profile')
 
   const saveImage = async (values: any) => {
-    console.log('values   ====>   ',JSON.stringify(values))
     if (values === null) {
       console.log("Image path error");
-      setShowAlert(false)
+      
     } else {
       const formData = new FormData();
 
@@ -50,22 +49,22 @@ const UpdateProfile = (props: any) => {
           ? values.path
           : values.path.replace("file://", "");
 
-      console.log("OS PATH  ",osPath);
+      console.log("OS PATH  ", osPath);
 
 
       formData.append("file", {
         // @ts-ignore
-        
+
         uri: osPath,
         type: values.mime,
         size: values.size,
         name: values.filename,
-        },'profile_pic');
+      }, 'profile_pic');
 
-      setCancel("Uploading");
-      console.log('formData ====>   ',formData)
+      // setCancel("Uploading");
+      // console.log('formData ====>   ', formData)
       // await uploadProfilePicture(formData);
-      setShowAlert(false);
+     
     }
   };
 
@@ -73,20 +72,20 @@ const UpdateProfile = (props: any) => {
 
     setText('Updating')
     await updateMyProfile({
-      'first_name' :values.first_name,
-      'last_name' :values.last_name,
-      'mobile' :values.mobile,
-      'address' :values.address,
-      'street' : values.street,
-      'state' : values.state,
-      'gender' : values.gender,
-      'visibility' : values.visibility,
-      'highschool' :values.highschool,
-      'college' :values.college,
-      'degree':values.degree,
-      'designation':values.designation,
-      'account_type':values.account_type,
-      'dob':values.dob,
+      'first_name': values.first_name,
+      'last_name': values.last_name,
+      'mobile': values.mobile,
+      'address': values.address,
+      'street': values.street,
+      'state': values.state,
+      'gender': values.gender,
+      'visibility': values.visibility,
+      'highschool': values.highschool,
+      'college': values.college,
+      'degree': values.degree,
+      'designation': values.designation,
+      'account_type': values.account_type,
+      'dob': values.dob,
     })
 
     props.navigation.navigate(NavigationStrings.TAB_BAR_HOME)
@@ -94,10 +93,19 @@ const UpdateProfile = (props: any) => {
 
   // @ts-ignore
   return (
-    <ParentWrapper>
-      <ScrollView nestedScrollEnabled={false} showsVerticalScrollIndicator={false}>
+
+    <ScrollView >
+      <ParentWrapper>
         <TouchableOpacity onPress={() => {
-           setShowAlert(true);
+         ImagePicker.openPicker({
+          cropping: true,
+          compressImageQuality: 1,
+
+        }).then(async (image) => {
+          setImagePath(image);
+          await saveImage(image);
+
+        });
         }}>
           <ImageWrapper>
             <ImageView source={imageLayout} />
@@ -111,80 +119,66 @@ const UpdateProfile = (props: any) => {
             <ImageCamera source={camera} />
           </ImageWrapper>
         </TouchableOpacity>
+       
 
-{
-  showalert && <AwesomeAlert
-  show={showalert}
-  showProgress={false}
-  title="Select Photo"
-  closeOnTouchOutside={false}
-  closeOnHardwareBackPress={false}
-  showCancelButton={true}
-  cancelText={cancel}
-  customView={
-    <TabHorizontal>
-      <HorizotalCol>
-        <TouchableOpacity
-          onPress={() => {
-            ImagePicker.openCamera({
+        {/* customView={
+              <TabHorizontal>
+                <HorizotalCol>
+                  <TouchableOpacity
+                    onPress={() => {
+                      ImagePicker.openCamera({
 
-              cropping: true,
-              compressImageQuality: 1,
-            }).then((image) => {
-              setImagePath(image);
-            });
-          }}>
-          <Tabs>
-            <ImageBT>
-              <AddImage
-                source={camera} />
+                        cropping: true,
+                        compressImageQuality: 1,
+                      }).then((image) => {
+                        setImagePath(image);
+                      });
+                    }}>
+                    <Tabs>
+                      <ImageBT>
+                        <AddImage
+                          source={camera} />
 
 
-              <TabsText>Camera</TabsText>
-            </ImageBT>
-          </Tabs>
-        </TouchableOpacity>
-      </HorizotalCol>
+                        <TabsText>Camera</TabsText>
+                      </ImageBT>
+                    </Tabs>
+                  </TouchableOpacity>
+                </HorizotalCol>
 
-      <HorizotalCol>
-        <TouchableOpacity
-          onPress={() => {
-            ImagePicker.openPicker({
-              cropping: true,
-              compressImageQuality: 1,
+                <HorizotalCol>
+                  <TouchableOpacity
+                    onPress={() => {
+                      ImagePicker.openPicker({
+                        cropping: true,
+                        compressImageQuality: 1,
 
-            }).then(async (image) => {
-               setImagePath(image);
-              await saveImage(image);
-              
-            });
-          }}>
-          <Tabs
-          >
-            <ImageBT>
-              <AddImage
-                source={camera} />
+                      }).then(async (image) => {
+                        setImagePath(image);
+                        await saveImage(image);
+
+                      });
+                    }}>
+                    <Tabs
+                    >
+                      <ImageBT>
+                        <AddImage
+                          source={camera} />
 
 
-              <TabsText>Gallery</TabsText>
-            </ImageBT>
-          </Tabs>
-        </TouchableOpacity>
-      </HorizotalCol>
-    </TabHorizontal>
-  }
-  cancelButtonColor={"#DD6B55"}
-  onCancelPressed={() => {
-    setShowAlert(false);
-  }}
-/>
-}
-        
+                        <TabsText>Gallery</TabsText>
+                      </ImageBT>
+                    </Tabs>
+                  </TouchableOpacity>
+                </HorizotalCol>
+              </TabHorizontal>
+            } */}
+
 
         <Formik
           validationSchema={UPDATEPROFILE_SCHEMA}
           initialValues={{
-            first_name: myProfileData  ? myProfileData.data.first_name : "",
+            first_name: myProfileData ? myProfileData.data.first_name : "",
             last_name: myProfileData ? myProfileData.data.last_name : "",
             mobile: myProfileData ? myProfileData.data.mobile : "",
             address: myProfileData ? myProfileData.data.address : "",
@@ -194,10 +188,10 @@ const UpdateProfile = (props: any) => {
             visibility: myProfileData ? myProfileData.data.visibility : "",
             college: myProfileData ? myProfileData.data.college : "",
             degree: myProfileData ? myProfileData.data.degree : "",
-            designation:myProfileData ?  myProfileData.data.account_type :'' ,
+            designation: myProfileData ? myProfileData.data.account_type : '',
             account_type: myProfileData ? myProfileData.data.account_type : '',
             dob: myProfileData ? myProfileData.data.dob : "",
-            gender: myProfileData ?  myProfileData.data.gender  : ''  ,
+            gender: myProfileData ? myProfileData.data.gender : '',
           }}
           onSubmit={(values) => {
             handleUpdate(values);
@@ -235,7 +229,7 @@ const UpdateProfile = (props: any) => {
                   setFieldValue("mobile", value);
                 }}
                 placeholder="Mobile"
-                keyboardType={"default"}
+                keyboardType={"numeric"}
                 value={values.mobile}
                 autoCapitalize={"none"}
                 error={errors ? errors.mobile : null}
@@ -299,8 +293,8 @@ const UpdateProfile = (props: any) => {
                   maxHeight={100}
                   labelField="label"
                   valueField="value"
-                  placeholder={myProfileData ?  myProfileData.data.visibility === "0" ? "Public" : "Private" :'' }
-                  value={myProfileData?  myProfileData.data.visibility:''}
+                  placeholder={myProfileData ? myProfileData.data.visibility === "0" ? "Public" : "Private" : ''}
+                  value={myProfileData ? myProfileData.data.visibility : ''}
                   onFocus={() => setIsFocus(true)}
                   onBlur={() => setIsFocus(false)}
                   onChange={item => {
@@ -381,12 +375,12 @@ const UpdateProfile = (props: any) => {
                   maxHeight={100}
                   labelField="label"
                   valueField="value"
-                  placeholder={ myProfileData ?  myProfileData.data.account_type === "1" ? "Individual" : 'My Spin':''}
-                  value={myProfileData?  myProfileData.data.account_type :''}
+                  placeholder={myProfileData ? myProfileData.data.account_type === "1" ? "Individual" : 'My Spin' : ''}
+                  value={myProfileData ? myProfileData.data.account_type : ''}
                   onFocus={() => setIsFocus(true)}
                   onBlur={() => setIsFocus(false)}
                   onChange={item => {
-                    setFieldValue('account_type',item.value)
+                    setFieldValue('account_type', item.value)
                     setValue(item.value);
                     setIsFocus(false);
                   }}
@@ -428,7 +422,7 @@ const UpdateProfile = (props: any) => {
               <RadioWrapper>
                 <RadioForm
                   radio_props={radio_props}
-                  initial={myProfileData ? parseInt(myProfileData.data.gender) -1 : ''}
+                  initial={myProfileData ? parseInt(myProfileData.data.gender) - 1 : ''}
                   formHorizontal={true}
                   buttonColor={"#000000"}
                   animation={true}
@@ -448,10 +442,27 @@ const UpdateProfile = (props: any) => {
           )}
         </Formik>
 
-      </ScrollView>
-    </ParentWrapper>
+       
+      </ParentWrapper>
 
+      <AwesomeAlert
+          show={showalert}
+          showProgress={false}
+          title="Alert"
+          message="Are you sure to delete this?"
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          showCancelButton={cancelable}
 
+          cancelText="Cancel"
+
+          confirmButtonColor="#DD6B55"
+          onCancelPressed={() => {
+            setShowAlert(false)
+          }}
+
+        />
+    </ScrollView>
   );
 };
 
@@ -571,10 +582,17 @@ const ImageWrapper = styled.View`
   height: 188px;
   margin-top: 15px;
 `;
+const ChildWrapper = styled.View`
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px 0 10px;
+`;
 
 
 const ParentWrapper = styled.View`
-  width: auto;
+  width: 100%;
   padding: 16px 16px;
-  background-color: ${({ theme }: any) => theme.colors.white};`
-;
+  background-color: ${({ theme }: any) => theme.colors.white};
+  justify-content: center;
+  align-items:center`
+  ;

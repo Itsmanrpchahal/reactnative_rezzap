@@ -7,8 +7,11 @@ import { FlatList, Text, TouchableOpacity } from "react-native";
 import {  dp } from "@root/utils/assets";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import { imageUrl } from "@root/utils/constants";
+import navigationStrings from "@root/navigation/navigationStrings";
+import { navigationRef } from "@root/navigation/RootNavigation";
+import NavigationStrings from "@root/navigation/navigationStrings";
 
-const Supportors = () => {
+const Supportors = (props:any) => {
 
   const {mySupporterData,supporterLoading} = useTypedSelector((state) => state.mySupporters);
 
@@ -27,7 +30,12 @@ const Supportors = () => {
             renderItem={({ item }) => {
               return (
                 <DrawerThreeSection>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => { 
+                   
+                     navigationRef.current.navigate(NavigationStrings.SUPPORTER_PROFILE,{item: item,type:'all'})
+                    
+                  }
+                    }>
                     <HeaderWrapper>
                       <ImageWrapper>
                         <ImageContent source={{uri: item != null ?  imageUrl+item.profile_photo : dp}} />

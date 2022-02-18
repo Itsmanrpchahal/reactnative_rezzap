@@ -36,7 +36,7 @@ function CustomDrawer(props: any) {
           <MainWrapper>
             <ItemWrapper>
               <NavigationItem
-                onPress={() => {}}
+                onPress={() => {props.navigation.navigate(navigationStrings.NOTIFICATIONS)}}
                 backgroundColor={colors.secondary}
                 text={'NOTIFICATIONS'}
                 icon={require('../assets/nofication/notification.png')}
@@ -44,7 +44,7 @@ function CustomDrawer(props: any) {
               <Divider backgroundColor={colors.divider} />
 
               <NavigationItem
-                onPress={() => {}}
+                onPress={() => {props.navigation.navigate(navigationStrings.HELP)}}
                 backgroundColor={colors.secondary}
                 text={'HELP'}
                 icon={require('../assets/info/information.png')}
@@ -52,7 +52,7 @@ function CustomDrawer(props: any) {
               <Divider backgroundColor={colors.divider} />
 
               <NavigationItem
-                onPress={() => {}}
+                onPress={() => {props.navigation.navigate(navigationStrings.ABOUT)}}
                 backgroundColor={colors.secondary}
                 text={'ABOUT'}
                 icon={require('../assets/about/about.png')}

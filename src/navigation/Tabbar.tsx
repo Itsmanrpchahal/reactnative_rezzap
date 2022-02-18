@@ -8,8 +8,11 @@ import styled from 'styled-components/native';
 
 import {Home, Spin, Messages, Resume} from './index';
 import navigationStrings from './navigationStrings';
+import NavigationStrings from "./navigationStrings";
 import {TabBarIcon} from './TabbarIcon';
-import {navigaionIcon} from '../utils/assets';
+import {navigaionIcon,add} from '../utils/assets';
+import { addresume } from "../utils/assets";
+import { navigationRef } from './RootNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +40,20 @@ function DashboardTabs(props: any) {
           </TouchableOpacity>
         ),
       })}>
-      <Tab.Screen name={navigationStrings.TAB_BAR_HOME} component={Home} />
+      <Tab.Screen name={navigationStrings.TAB_BAR_HOME} component={Home} options={{ headerRight: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate(NavigationStrings.ADD_ACTIVITY)
+                  
+                }}>
+               <AddBtn
+                  style={{marginRight: 15}}
+                  source={add}
+                />
+              </TouchableOpacity>
+            );
+          },}} />
 
       <Tab.Screen name={navigationStrings.TAB_BAR_SPIN} component={Spin} />
 
@@ -45,12 +61,29 @@ function DashboardTabs(props: any) {
         name={navigationStrings.TAB_BAR_MESSAGES}
         component={Messages}
       />
-      <Tab.Screen name={navigationStrings.TAB_BAR_RESUME} component={Resume} />
+      <Tab.Screen name={navigationStrings.TAB_BAR_RESUME} component={Resume} options={{ headerRight: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate(NavigationStrings.ADD_RESUME)
+                  
+                }}>
+               <AddBtn
+                  style={{marginRight: 15}}
+                  source={addresume}
+                />
+              </TouchableOpacity>
+            );
+          },}} />
     </Tab.Navigator>
   );
 }
 
 export default DashboardTabs;
+
+const AddBtn = styled.Image`
+  margin-left: 16px;
+`;
 
 const NavigationBurgerIcon = styled.Image`
   margin-left: 16px;

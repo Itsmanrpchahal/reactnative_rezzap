@@ -26,6 +26,9 @@ const apiUri = {
   profilePictureUpload : 'update-profile-pic',
 
   resumeList :'resume/my-resumes',
+  resume_Detail:'resume/resume-details?resume_id=',
+  resumeCategorylist:'resume/category-list',
+  delete_Resume:'resume/delete?id=',
 
   messageList : 'message/supporter-list',
   messageDetail :'message/chat-list?supporter_id=',
@@ -36,10 +39,15 @@ const apiUri = {
   deleteCategory:'category/destroy?id=',
   storeCategory:'category/store-categories?category_ids=',
   categoryUpdate:'category/update?',
+  
 
 
   supportUnsupportapi : 'activity/support-unsupport?',
-  deleteActivity : 'activity/destroy?id='
+  deleteActivity : 'activity/destroy?id=',
+
+  notifications :'notifications',
+  clearNotificatins:'notifications/clear-all',
+  followUnfollow : 'spin/follow-unfollow?'
 
 };
 

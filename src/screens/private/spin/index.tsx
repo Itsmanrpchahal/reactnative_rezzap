@@ -16,7 +16,7 @@ import AppLoader from "../../../components/Loader";
 const Spin = (props: any) => {
   const { colors }: any = useTheme();
   const [tab, setTab] = useState(1)
-  const { getSpin } = useActions();
+  const { getSpin ,setFollowUnfollow} = useActions();
   const widthAndHeight = 120
 
   const [btnColor, setBtnColor] = useState(false);
@@ -36,29 +36,31 @@ const Spin = (props: any) => {
 
   return (
     <MainWrapper>
+
+      <BtnWrapper>
+        <FilterText>Filter</FilterText>
+        <SecondaryButton
+          onPress={() => {
+            setTab(1), getSpin('all')
+          }}
+          btnText={'All Spin'}
+          backgroundColor={tab === 1 ? colors.greenColor : colors.darkGray}
+        />
+        <SecondaryButton
+          onPress={() => {
+            setTab(2), getSpin('my')
+          }}
+          btnText={'My Spin'}
+          backgroundColor={tab === 2 ? colors.greenColor : colors.darkGray}
+        />
+      </BtnWrapper>
       {
         loading ? (
-          <AppLoader/>
+          <AppLoader />
         ) :
           <MainParentWrapper>
             <ChildWrapper>
-              <BtnWrapper>
-                <FilterText>Filter</FilterText>
-                <SecondaryButton
-                  onPress={() => {
-                    setTab(1), getSpin('all')
-                  }}
-                  btnText={'All Spin'}
-                  backgroundColor={tab === 1 ? colors.greenColor : colors.darkGray}
-                />
-                <SecondaryButton
-                  onPress={() => {
-                    setTab(2), getSpin('my')
-                  }}
-                  btnText={'My Spin'}
-                  backgroundColor={tab === 2 ? colors.greenColor : colors.darkGray}
-                />
-              </BtnWrapper>
+
 
 
               {
@@ -83,9 +85,13 @@ const Spin = (props: any) => {
                           </TheSpinInfograph>
                           <TheSpinTitle numberOfLines={1}>{item.name} </TheSpinTitle>
                           <TheSpinDesc>{spinData != null ? item.visibility === '0' ? 'Student' : item.visibility === '1' ? 'Parent' : item.visibility === '2' ? 'College Counselor' : item.visibility === '3' ? 'Admissions - College' : item.visibility === '4' ? 'Recruiter' : item.visibility === '5' ? 'Company' : item.visibility === '5' ? 'Company' : '' : ''} </TheSpinDesc>
-                          <TouchableOpacity onPress={() => {
+                          <TouchableOpacity onPress={async () => {
                             // @ts-ignore
                             setBtnColor(!btnColor)
+                           await setFollowUnfollow({supporter_id:item.user_id,
+                              status_type:item.is_follow === 0 ? '1' : '0'})
+
+                              {tab === 1 ?  getSpin('all') :  getSpin('my')}
                           }}>
                             <TheSpinBtn backgroundColor={item.is_follow === 1 ? colors.greenColor : colors.divider}> {item.is_follow === 1 ? "Following" : "Follow"}</TheSpinBtn>
                           </TouchableOpacity>
@@ -161,6 +167,7 @@ const BtnWrapper = styled.View`
   flex-direction: row;
   margin-top: 10px;
   align-items: center;
+  justify-content:center;
 `;
 
 const ChildWrapper = styled.View`

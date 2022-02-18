@@ -20,7 +20,7 @@ import AppLoader from "../../../../components/Loader";
 // @ts-ignore
 const SupporterProfile = ({ props, route }) => {
   const { colors }: any = useTheme();
-  const { getSupporterProfile, getMyGraph, getSupporterSupporterList, getSupporterTimeline } = useActions();
+  const { getSupporterProfile, getMyGraph, getSupporterSupporterList, getSupporterTimeline,setFollowUnfollow } = useActions();
   const { myProfileData, loading } = useTypedSelector(
     (state) => state.myProfile,
   );
@@ -34,10 +34,11 @@ const SupporterProfile = ({ props, route }) => {
 
   useEffect(() => {
     if (isFocused) {
-      getSupporterProfile({ 'supporter_id': route.params.item.item.id, });
-      getMyGraph({ 'supporter_id': route.params.item.item.id, })
-      getSupporterSupporterList({ 'supporter_id': route.params.item.item.id, })
-      getSupporterTimeline({ 'supporter_id': route.params.item.item.id, })
+      
+      getSupporterProfile({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, });
+      getMyGraph({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
+      getSupporterSupporterList({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
+      getSupporterTimeline({ 'supporter_id':route.params.type != '' ? route.params.item.id : route.params.item.item.id,})
     }
   }, [isFocused]);
 
@@ -59,13 +60,20 @@ const SupporterProfile = ({ props, route }) => {
                   <TextDecs>Actor</TextDecs>
 
                 </TitleVerticle>
-
+                
+                <TouchableOpacity onPress={async () => {  
+                  await setFollowUnfollow({supporter_id:myProfileData.data.id,
+                              status_type:myProfileData.data.is_follow === 0 ? '1' : '0'})
+                              getSupporterProfile({ 'supporter_id': route.params.item.item.id, });
+                              }}>
                 <FollowHorizontal>
                   <Image source={follow} />
                   <TextDecs>{myProfileData != null ? myProfileData.data.is_follow ? 'Unfollow' : 'Follow' : 'Follow'}</TextDecs>
                 </FollowHorizontal>
+                </TouchableOpacity>
+                
               </HorizontalWrapper>
-
+              
               <HorizontalWrapper>
                 <TouchableOpacity>
                   <TextDecs>Supporters</TextDecs>
@@ -175,7 +183,7 @@ const TabWrapper = styled.View`
 `;
 
 const TextDecs = styled.Text`
-  color: ${({ theme }: any) => theme.colors.darkGray};
+  color: ${({ theme }: any) => theme.colors.black};
   font-size: ${({ theme }: any) => theme.fontSize.cardDate};
   margin-left: 5px;
 `;

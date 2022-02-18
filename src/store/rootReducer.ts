@@ -10,9 +10,11 @@ import profilePicture from '@root/store/uploadPicture/reducer'
 import signUpData from '@root/store/register/reducer'
 import updatedProfileData from '@root/store/updateProfile/reducer'
 import resumeData from '@root/store/resume/reducer'
+import resumeCData from '@root/store/resumeCategory/reducer'
 import messageListData from '@root/store/message/reducer'
 import categoryData from '@root/store/categories/reducer'
 import supportUnsupportData from '@root/store/supportUnsupport/reducer'
+import notificationsData from '@root/store/notifictions/reducer'
 
 
 
@@ -31,6 +33,8 @@ const reducers = combineReducers({
   messageListData,
   categoryData,
   supportUnsupportData,
+  notificationsData,
+  resumeCData,
 });
 
 export default reducers;

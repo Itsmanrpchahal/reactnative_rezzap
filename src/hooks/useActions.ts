@@ -17,6 +17,9 @@ import { authActionCreators,
    signUp,
    updateMyProfile,
    getResume,
+   deleteResume,
+   resumeDetail,
+   resume_CategoryList,
    getMessageList,
    getMessageDetail,
    sendMessage,
@@ -27,7 +30,10 @@ import { authActionCreators,
    updateCategory,
    setsupport,
    deleteTimelineItem,
-   UpdateInterest} from "../store";
+   UpdateInterest,
+   getNotifications,
+   clear_Notificatins,
+   setFollowUnfollow} from "../store";
 
 export const useActions = () => {
   const dispatch = useDispatch();
@@ -51,6 +57,9 @@ export const useActions = () => {
       signUp,
       updateMyProfile,
       getResume,
+      deleteResume,
+      resumeDetail,
+      resume_CategoryList,
       getMessageList,
       getMessageDetail,
       sendMessage,
@@ -61,7 +70,10 @@ export const useActions = () => {
       updateCategory,
       setsupport,
       deleteTimelineItem,
-      UpdateInterest
+      UpdateInterest,
+      getNotifications,
+      clear_Notificatins,
+      setFollowUnfollow,
     ),
     dispatch,
   );

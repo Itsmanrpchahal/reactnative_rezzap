@@ -28,6 +28,10 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import FAQ from '../screens/private/home/faq';
 import About from '../screens/private/home/about';
 import PrivacyPolicy from '../screens/private/home/privacypolicy';
+import Help from '../screens/private/home/help';
+import Notifications from '../screens/private/home/notifications';
+import AddResume from '../screens/private/resume/addResume';
+import AddActivity from '../screens/private/home/addActivity';
 
 const Stack = createStackNavigator();
 
@@ -147,6 +151,36 @@ function StackNavigator(props: any) {
         }}
       />
 
+<Stack.Screen
+        name={navigationStrings.NOTIFICATIONS}
+        component={Notifications}
+        options={{
+          headerShown: true,
+          title: navigationStrings.NOTIFICATIONS,
+          headerStyle: {
+            backgroundColor: colors.white,
+          },
+          headerBackTitleStyle: {
+            color: colors.black,
+          },
+        }}
+      />
+
+<Stack.Screen
+        name={navigationStrings.HELP}
+        component={Help}
+        options={{
+          headerShown: true,
+          title: navigationStrings.HELP,
+          headerStyle: {
+            backgroundColor: colors.white,
+          },
+          headerBackTitleStyle: {
+            color: colors.black,
+          },
+        }}
+      />
+
       <Stack.Screen
         name={navigationStrings.ABOUT}
         component={About}
@@ -161,6 +195,37 @@ function StackNavigator(props: any) {
           },
         }}
       />
+
+<Stack.Screen
+        name={navigationStrings.ADD_RESUME}
+        component={AddResume}
+        options={{
+          headerShown: true,
+          title: navigationStrings.ADD_RESUME,
+          headerStyle: {
+            backgroundColor: colors.white,
+          },
+          headerBackTitleStyle: {
+            color: colors.black,
+          },
+        }}
+      />
+
+<Stack.Screen
+        name={navigationStrings.ADD_ACTIVITY}
+        component={AddActivity}
+        options={{
+          headerShown: true,
+          title: navigationStrings.ADD_ACTIVITY,
+          headerStyle: {
+            backgroundColor: colors.white,
+          },
+          headerBackTitleStyle: {
+            color: colors.black,
+          },
+        }}
+      />
+
 
 <Stack.Screen
         name={navigationStrings.PRIVACY_POLICY}

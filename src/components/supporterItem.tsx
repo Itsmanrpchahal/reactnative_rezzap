@@ -15,7 +15,9 @@ const ListCard = (item :any) => {
   return (
     <DrawerThreeSection>
       <TouchableOpacity onPress={() => { // @ts-ignore
-        navigationRef.current.navigate(NavigationStrings.SUPPORTER_PROFILE,{item: item})}}>
+        navigationRef.current.navigate(NavigationStrings.SUPPORTER_PROFILE,{item: item,type:''})
+        
+        }}>
         <HeaderWrapper>
           <ImageWrapper>
             <ImageContent source={{uri: item != null ?  imageUrl+item.item.profile_photo : dp}} />

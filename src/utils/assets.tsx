@@ -25,5 +25,7 @@ import addCategory from '../assets/addCategory/addCategory.png'
 import editBlack from '../assets/editBlack/editBlack.png'
 import deleteBlack from '../assets/deleteBlack/deleteBlack.png'
 import addWhite from '../assets/addWhite/addWhite.png';
+import close from '../assets/close/close.png';
+import addresume from '../assets/addresume/addresume.png'
 
-export {navigaionIcon, imageLayout, demoImage,dp,loc,back,follow,dummy,edit,deletei,add,dots,support,comment,share,camera,pdf,calender,pdfwhite,word,doc,search,send,addCategory,editBlack,deleteBlack,addWhite};
+export {navigaionIcon, imageLayout, demoImage,dp,loc,back,follow,dummy,edit,deletei,add,dots,support,comment,share,camera,pdf,calender,pdfwhite,word,doc,search,send,addCategory,editBlack,deleteBlack,addWhite,close,addresume};

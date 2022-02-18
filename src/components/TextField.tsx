@@ -6,7 +6,7 @@ import {withTheme} from 'styled-components';
 import styled from 'styled-components/native';
 
 type TextFieldProps = {
-  onChangeText: Function;
+  onChangeText?: Function;
   placeholder?: string;
   value?: string;
   accessibilityLabel?: string;
@@ -16,6 +16,7 @@ type TextFieldProps = {
   error?: string | null;
   multiline?: boolean;
   defaultValue? : string;
+  editable? : boolean;
   style?: any;
 };
 
@@ -24,11 +25,12 @@ const TextField: React.FC<TextFieldProps> = ({
   accessibilityLabel,
   secureTextEntry = false,
   keyboardType = 'default',
-  onChangeText,
+  onChangeText = false,
   autoCapitalize = 'sentences',
   error = null,
   multiline = false,
   defaultValue='',
+  editable=true,
   style = {},
   ...rest
 }) => {
@@ -51,6 +53,7 @@ const TextField: React.FC<TextFieldProps> = ({
           placeholder={placeholder}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
+          editable ={editable}
           underlineColorAndroid="rgba(0,0,0,0)"
           multiline={multiline}
           defaultValue = {defaultValue}

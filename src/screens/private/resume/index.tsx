@@ -7,23 +7,24 @@ import styled from "styled-components/native";
 import { withTheme } from "styled-components";
 import { useIsFocused, useTheme } from "@react-navigation/native";
 import { MainParentWrapper, MainWrapper, NotFound } from "@root/utils/globalStyle";
-import { calender, deletei, doc, edit,  pdfwhite, word } from "@root/utils/assets";
+import { calender, deletei, doc, edit, pdfwhite, word } from "@root/utils/assets";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useActions } from "@root/hooks/useActions";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import { format } from "date-fns";
 import AppLoader from "../../../components/Loader";
+import navigationStrings from "../../../navigation/navigationStrings";
 
 const Resume = (props: any) => {
   const { colors }: any = useTheme();
-  const [viewmore,setViewMore] = useState(false)
+  const [viewmore, setViewMore] = useState(false)
   const isFocused = useIsFocused();
-  const { getResume } = useActions();
+  const { getResume ,deleteResume} = useActions();
   const { resumeData, loading } = useTypedSelector((state) => state.resumeData);
 
   useEffect(() => {
     if (isFocused) {
-     getResume()
+      getResume()
     }
   }, [isFocused]);
 
@@ -31,67 +32,74 @@ const Resume = (props: any) => {
     <MainWrapper>
       {
         loading ? (
-          <AppLoader/>
-        ) : 
-        <ScrollView nestedScrollEnabled={false} style={{width:'100%'}}>
-      {loading ? (
-          <NotFound>Loading...</NotFound>
+          <AppLoader />
         ) :
-        Object.keys(resumeData).length > 0 ?
-          (resumeData.data.map((item: any) => (
-            <ParentWrapper>
-              <Divider backgroundColor={colors.greenColor} height={4} />
-              <ResumeWrapper>
-                <Titletext>
-                  {item.name}
-                </Titletext>
+          Object.keys(resumeData).length > 0 ?
+            (
+              <FlatList
+                nestedScrollEnabled={false}
+                data={resumeData.data}
+                horizontal={false}
+                renderItem={({ item ,index}) => {
+                  return (
+                    <ParentWrapper>
+                      <Divider backgroundColor={colors.greenColor} height={4} />
+                    
+                      <ResumeWrapper>
+                        <Titletext>
+                          {item.name}
+                        </Titletext>
 
-                <HorizontalWrapper>
-                  <HorizontalWrapper>
-                    <ImageWrapper source={calender} />
-                    <TimeText>{format(new Date(item.created_at), "yyyy-MM-dd")}</TimeText>
+                        <HorizontalWrapper>
+                          <HorizontalWrapper>
+                            <ImageWrapper source={calender} />
+                            <TimeText>{format(new Date(item.created_at), "yyyy-MM-dd")}</TimeText>
 
-                  </HorizontalWrapper>
+                          </HorizontalWrapper>
 
-                  <HorizontalWrapper>
-                    <ImageWrapper source={calender} />
-                    <TimeText>{format(new Date(item.updated_at), "yyyy-MM-dd")}</TimeText>
-                  </HorizontalWrapper>
-                </HorizontalWrapper>
+                          <HorizontalWrapper>
+                            <ImageWrapper source={calender} />
+                            <TimeText>{format(new Date(item.updated_at), "yyyy-MM-dd")}</TimeText>
+                          </HorizontalWrapper>
+                        </HorizontalWrapper>
 
-              </ResumeWrapper>
+                      </ResumeWrapper>
+                     
+                     
 
-              <GreenWrapper>
-                <TouchableOpacity onPress={() => {setViewMore(!viewmore)}}>
-                  {
-                    viewmore === true ? <ViewMore>
-                      <EditWrapper>
-                        <EditImages source={edit}/>
-                        <EditImages source={pdfwhite}/>
-                        <EditImages source={word}/>
-                        <EditImages source={doc}/>
-                        <EditImages source={deletei}/>
-                      </EditWrapper>
-                      <TimeTextWhite>View less</TimeTextWhite>
-                    </ViewMore> :  <TimeTextWhite>View more</TimeTextWhite>
-                  }
+                    
 
-                </TouchableOpacity>
+                      <GreenWrapper>
+                        {/* <TouchableOpacity onPress={() => { setViewMore(!viewmore) }}> */}
+                          {/* { */}
+                            {/* viewmore  ? <ViewMore> */}
+                              <EditWrapper>
+                                <TouchableOpacity onPress={() => {props.navigation.navigate(navigationStrings.ADD_RESUME,{id:item.id,type:'edit'})}}>
+                                 <EditImages source={edit} />
+                                  </TouchableOpacity>
+                               
+                                <EditImages source={pdfwhite} />
+                                <EditImages source={word} />
+                                <EditImages source={doc} />
+                                <TouchableOpacity onPress={ async ()=>{await deleteResume({id:item.id}) 
+                              getResume()}}><EditImages source={deletei} /></TouchableOpacity>
+                              </EditWrapper>
+                              <TimeTextWhite>View less</TimeTextWhite>
+                            {/* </ViewMore> : <TimeTextWhite>View more</TimeTextWhite>  } */}
 
-              </GreenWrapper>
-
-            </ParentWrapper>
+                        {/* </TouchableOpacity> */}
 
 
+                          
+                      </GreenWrapper>
 
-          ))) :
-          (<Text>No Data Found</Text>)
-        }
-
-    </ScrollView>
-}
+                    </ParentWrapper>
+                  )
+                }}
+              />) : <NotFound>No Data Found</NotFound>
+      }
     </MainWrapper>
-    
+
 
   );
 };
@@ -119,7 +127,7 @@ const EditWrapper = styled.View`
   flex-direction: row;
   width: 100%;
   justify-content: space-between`
-;
+  ;
 
 const TimeTextWhite = styled.Text`
 color: white;

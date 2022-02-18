@@ -15,7 +15,7 @@ export const updateMyProfile = (fn : any) => {
     });
 
     try {
-      const response = await service.post(apiUri.updateProfile,fn,);
+      const response = await service.put(apiUri.updateProfile,fn,);
 
       dispatch({
         type: ActionType.UPDATE_PROFILE_SUCCESS,
@@ -23,7 +23,7 @@ export const updateMyProfile = (fn : any) => {
       });
       return response;
     } catch (e: any) {
-
+        console.log('Update profile error  ',JSON.parse(e))
       dispatch({
         type: ActionType.UPDATE_PROFILE_ERROR,
         payload: 'Somethings wents wrong',

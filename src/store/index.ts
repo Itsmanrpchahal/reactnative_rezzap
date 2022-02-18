@@ -18,6 +18,9 @@ export * as getSupporterTimeline from '@root/store/timeline/action-creators';
 export * as uploadProfilePicture from '@root/store/uploadPicture/action-creators';
 export * as signUp from '@root/store/register/action-creators';
 export * as getResume from '@root/store/resume/action-creators';
+export * as deleteResume from '@root/store/resume/action-creators';
+export * as resumeDetail from '@root/store/resume/action-creators';
+export * as resume_CategoryList from '@root/store/resumeCategory/action-creators';
 export * as getMessageList from '@root/store/message/action-creators';
 export * as getMessageDetail from '@root/store/message/action-creators';
 export * as sendMessage from '@root/store/message/action-creators';
@@ -27,5 +30,8 @@ export * as addCategory from '@root/store/categories/action-creators';
 export * as updateCategory from '@root/store/categories/action-creators';
 export * as deleteCategory from '@root/store/categories/action-creators';
 export * as setsupport from '@root/store/supportUnsupport/action-creators';
+export * as getNotifications from '@root/store/notifictions/action-creators';
+export * as clear_Notificatins from '@root/store/notifictions/action-creators';
+export * as setFollowUnfollow from '@root/store/follow_unfollow/action-creators'
 export * from '@root/store/rootReducer';
 
