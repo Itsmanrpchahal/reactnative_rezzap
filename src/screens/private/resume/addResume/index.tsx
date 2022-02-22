@@ -42,7 +42,7 @@ const AddResume = ({ props, route }) => {
                             <TextField accessibilityLabel="Phone" defaultValue={resumeData.data.resume_phone} />
                             <TextField accessibilityLabel="Resume Profile" defaultValue={resumeData.data.resume_profile} />
                            
-                          
+                            
                             <Horizontal>
                             
                               <Dropdown

@@ -32,6 +32,8 @@ import Help from '../screens/private/home/help';
 import Notifications from '../screens/private/home/notifications';
 import AddResume from '../screens/private/resume/addResume';
 import AddActivity from '../screens/private/home/addActivity';
+import ResetPassword from '../screens/Public/resetPassword';
+import AddSupporter from '../screens/private/home/supporters/addSupporter';
 
 const Stack = createStackNavigator();
 
@@ -127,6 +129,21 @@ function StackNavigator(props: any) {
         options={{
           headerShown: true,
           title: navigationStrings.SIGNUP_STEP_2,
+          headerStyle: {
+            backgroundColor: colors.white,
+          },
+          headerBackTitleStyle: {
+            color: colors.black,
+          },
+        }}
+      />
+
+<Stack.Screen
+        name={navigationStrings.RESET_PASSWORD}
+        component={ResetPassword}
+        options={{
+          headerShown: true,
+          title: navigationStrings.RESET_PASSWORD,
           headerStyle: {
             backgroundColor: colors.white,
           },
@@ -242,6 +259,21 @@ function StackNavigator(props: any) {
         }}
       />
 
+<Stack.Screen
+        name={navigationStrings.ADD_SUPPORTER}
+        component={AddSupporter}
+        options={{
+          headerShown: true,
+          title: navigationStrings.ADD_SUPPORTER,
+          headerStyle: {
+            backgroundColor: colors.white,
+          },
+          headerBackTitleStyle: {
+            color: colors.black,
+          },
+        }}
+      />
+
       <Stack.Screen
         name={navigationStrings.SUPPORTERS}
         component={Supporters}
@@ -253,6 +285,19 @@ function StackNavigator(props: any) {
           },
           headerBackTitleStyle: {
             color: colors.black,
+          },
+          headerRight: (props: any) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigationRef.current.navigate(NavigationStrings.ADD_SUPPORTER)
+                }}>
+               <AddBtn
+                  style={{marginRight: 15}}
+                  source={add}
+                />
+              </TouchableOpacity>
+            );
           },
          
         }}

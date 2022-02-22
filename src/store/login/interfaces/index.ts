@@ -16,6 +16,10 @@ export interface LoginInterface {
   password: string;
 }
 
+export interface ForgotInterface {
+  email:string;
+}
+
 export  interface SignUpInterface {
   first_name :string;
   last_name :string;

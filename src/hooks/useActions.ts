@@ -33,7 +33,17 @@ import { authActionCreators,
    UpdateInterest,
    getNotifications,
    clear_Notificatins,
-   setFollowUnfollow} from "../store";
+   setFollowUnfollow,
+   addComments,
+   findSupporter,
+   addSupporter,
+   supporters_InterestList,
+   getCollegeStates,
+   getCollegeList,
+   getDreamCollegeList,
+   getAllCollege,
+   search_StateSchool,
+   send_email} from "../store";
 
 export const useActions = () => {
   const dispatch = useDispatch();
@@ -74,6 +84,16 @@ export const useActions = () => {
       getNotifications,
       clear_Notificatins,
       setFollowUnfollow,
+      addComments,
+      findSupporter,
+      addSupporter,
+      supporters_InterestList,
+      getCollegeStates,
+      getCollegeList,
+      getDreamCollegeList,
+      getAllCollege,
+      search_StateSchool,
+      send_email
     ),
     dispatch,
   );

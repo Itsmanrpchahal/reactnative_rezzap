@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { withTheme } from "styled-components";
 // @ts-ignore
 import styled from "styled-components/native";
-import { FlatList, Text, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, TextInput, TouchableOpacity } from "react-native";
 import { demoImage, dp, search, close } from "@root/utils/assets";
 import { useActions } from "@root/hooks/useActions";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
@@ -11,16 +11,13 @@ import { useIsFocused, useTheme } from "@react-navigation/native";
 import { NotFound } from "@root/utils/globalStyle";
 import NavigationStrings from "@root/navigation/navigationStrings";
 import { imageUrl } from "@root/utils/constants";
-import { format } from "date-fns";
-import { MainWrapper } from "../../../utils/globalStyle";
-import AppLoader from "../../../components/Loader";
-import { tr } from "date-fns/locale";
+import { MainWrapper } from "@root/utils/globalStyle";
+import AppLoader from "@root/components/Loader";
 
 const Messages = (props: any) => {
   const isFocused = useIsFocused();
   const { colors }: any = useTheme();
   const { getMessageList, searchSupporter } = useActions();
-  const [isSearch, setIsSearch] = useState(false);
   const [searcht, setSearch] = useState("");
   const { messageListData, loading } = useTypedSelector((state) => state.messageListData);
 
@@ -39,14 +36,12 @@ const Messages = (props: any) => {
 
         </TextInput>
         {
-
-          searcht ==='' ? <TouchableOpacity onPress={() => {
-           
-           getMessageList();
+          searcht === '' ? <TouchableOpacity onPress={() => {
+            getMessageList();
           }}>
             <ImageView source={close} />
           </TouchableOpacity> : <TouchableOpacity onPress={() => {
-          searchSupporter(searcht)
+            searchSupporter(searcht)
           }}>
             <ImageView source={search} />
           </TouchableOpacity>

@@ -14,7 +14,7 @@ function Wheel(item:any) {
   const series = [123, 321, 123, 789, 537];
   const sliceColor = ["#4F4998", "#4CAD62", "#1E6DB6", "#FB8F1D", "#FF9800"];
   return (
-    <MainWrapper>
+    <MainView>
       <ChartView>
         <PieChart
           widthAndHeight={widthAndHeight}
@@ -41,7 +41,7 @@ function Wheel(item:any) {
       </ChartView>
 
 
-    </MainWrapper>
+    </MainView>
   );
 }
 
@@ -74,3 +74,6 @@ const ChartView = styled.View`
   flex-direction: row;
  
 `;
+
+
+const MainView = styled.View``;

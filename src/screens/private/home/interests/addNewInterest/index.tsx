@@ -8,7 +8,6 @@ import { Formik } from "formik";
 import { useTheme } from "@react-navigation/native";
 import { INTEREST_SCHEMA } from "./helpers";
 import ImagePicker from "react-native-image-crop-picker";
-import { AddInterestInterface } from "@root/store/interests/interface/AddInterestInterface";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { camera, demoImage } from "@root/utils/assets";
 import Snackbar from "react-native-snackbar";

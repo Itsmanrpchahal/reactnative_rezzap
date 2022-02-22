@@ -106,5 +106,31 @@ export const UpdateInterest = (data:any) => {
 
 
 
+export const supporters_InterestList = (fn:any) => {
+  
+  return async (dispatch: Dispatch<Action | any>) => {
+    dispatch({
+      type: ActionType.MY_INTEREST,
+    });
+
+    try {
+      const response = await service.get(apiUri.supportersInterestList+fn.supporter_id);
+
+      dispatch({
+        type: ActionType.MY_INTEREST_SUCCESS,
+        payload: response.data,
+      });
+      return response;
+    } catch (e: any) {
+
+      dispatch({
+        type: ActionType.MY_INTEREST_ERROR,
+        payload: 'Somethings wents wrong',
+      });
+    }
+  };
+};
+
+
 
 

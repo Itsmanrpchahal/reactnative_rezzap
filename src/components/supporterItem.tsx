@@ -2,7 +2,7 @@
 import React from 'react';
 // @ts-ignore
 import styled from 'styled-components/native';
-import {  TouchableOpacity } from "react-native";
+import {  Text, TouchableOpacity } from "react-native";
 import { imageUrl } from "../utils/constants";
 import { dp } from "../utils/assets";
 import NavigationStrings from "@root/navigation/navigationStrings";
@@ -12,17 +12,17 @@ import { navigationRef } from "../navigation/RootNavigation";
 
 
 const ListCard = (item :any) => {
+  
   return (
     <DrawerThreeSection>
       <TouchableOpacity onPress={() => { // @ts-ignore
         navigationRef.current.navigate(NavigationStrings.SUPPORTER_PROFILE,{item: item,type:''})
-        
+         
         }}>
         <HeaderWrapper>
           <ImageWrapper>
             <ImageContent source={{uri: item != null ?  imageUrl+item.item.profile_photo : dp}} />
           </ImageWrapper>
-
         </HeaderWrapper>
       </TouchableOpacity>
     </DrawerThreeSection>

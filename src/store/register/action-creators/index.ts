@@ -25,6 +25,8 @@ export const signUp = (data: any) => {
         type: ActionType.SIGNUP_SUCCESS,
         payload: response,
       });
+
+      
       return response.data;
     } catch (e: any) {
       console.log('Register Error ===?  ',e)

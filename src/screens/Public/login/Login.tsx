@@ -1,26 +1,31 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, TouchableOpacity, View } from "react-native";
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 // @ts-ignore
 import styled from 'styled-components/native';
-import {withTheme} from 'styled-components';
+import { withTheme } from 'styled-components';
 // @ts-ignore
-import {MainParentWrapper} from '@root/utils/globalStyle';
+import { MainParentWrapper } from '@root/utils/globalStyle';
 import TextField from '@root/components/TextField';
 import PrimaryButton from '@root/components/Button';
-import {LOGIN_SCHEMA} from './helpers';
-import {useTypedSelector} from '@root/hooks/useTypedSelector';
+import { FORGOT_SCHEMA, LOGIN_SCHEMA } from './helpers';
+import { useTypedSelector } from '@root/hooks/useTypedSelector';
 import navigationStrings from '@root/navigation/navigationStrings';
 import { useActions } from "@root/hooks/useActions";
 import { useTheme } from "@react-navigation/native";
-import { LoginInterface } from "../../../store/login/interfaces";
+import { ForgotInterface, LoginInterface } from "../../../store/login/interfaces";
+import AwesomeAlert from 'react-native-awesome-alerts';
+import SecondaryButton from '@root/components/ButtonSecondary';
+import { navigationRef } from '../../../navigation/RootNavigation';
 
 const Login = (props: any) => {
-  const { login } = useActions();
-  const {colors}: any = useTheme();
-  const {loading, error, isAuthenticated} = useTypedSelector(
+  const { login,send_email } = useActions();
+  const { colors }: any = useTheme();
+  const { loading, error, isAuthenticated } = useTypedSelector(
     state => state.auth,
   );
+  const [showAlert, setShowAlert] = useState(false);
+  const [otpAlert, setOtpAlert] = useState(false)
 
   useEffect(() => {
     if (error !== null) {
@@ -38,28 +43,109 @@ const Login = (props: any) => {
   const handleLogin = (values: LoginInterface) => {
     login(values);
   };
+
+  const handleForgot = (values: ForgotInterface) => {
+    setShowAlert(false)
+    send_email({email:values.email})
+    // props.navigation.navigate(navigationStrings.RESET_PASSWORD,values)
+  }
   return (
     <ImageBackground
       resizeMode={'stretch'}
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       source={require('@root/assets/login/login.png')}>
-        <MainParentWrapper>
-          <ChildWrapperOuter>
-            <ChildWrapper>
-              <LoginText>Login</LoginText>
-              <EmailPasswordWrapper>
+      <MainParentWrapper>
+        <ChildWrapperOuter>
+          <ChildWrapper>
+            <LoginText>Login</LoginText>
+            <EmailPasswordWrapper>
+              <Formik
+                validationSchema={LOGIN_SCHEMA}
+                initialValues={{
+                  email: '',
+                  password: '',
+                }}
+                onSubmit={(values) => {
+                  handleLogin(values);
+
+                }}>
+                {({ setFieldValue, handleSubmit, errors }) => (
+                  <View>
+                    <TextField
+                      accessibilityLabel="Email"
+                      onChangeText={(value: any) => {
+                        setFieldValue('email', value);
+                      }}
+                      placeholder="email"
+                      keyboardType={'email-address'}
+                      autoCapitalize={'none'}
+                      error={errors ? errors.email : null}
+                    />
+                    <TextField
+                      accessibilityLabel="Password"
+                      onChangeText={(value: any) => {
+                        setFieldValue('password', value);
+                      }}
+                      placeholder="********"
+                      secureTextEntry={true}
+                      error={errors ? errors.password : null}
+                    />
+
+                    <ButtonWrapper>
+                      <PrimaryButton
+                        onPress={handleSubmit}
+                        backgroundColor={colors.black}
+                        btnText={'LOGIN'}
+                        loading={loading}
+                      />
+                    </ButtonWrapper>
+
+                    <SignUpView>
+
+                      <DontHaveAccountText textColor={colors.black} fontSize={16}>Don't have account?</DontHaveAccountText>
+                      <TouchableOpacity onPress={() => { props.navigation.navigate(navigationStrings.SIGNUP) }}>
+                        <DontHaveAccountText textColor={colors.greenColor} fontSize={20}> SignUp</DontHaveAccountText>
+                      </TouchableOpacity>
+                    </SignUpView>
+                  </View>
+                )}
+              </Formik>
+            </EmailPasswordWrapper>
+
+            <TouchableOpacity onPress={() => {
+              setShowAlert(true)
+
+            }}>
+              <ForgotWrapper>
+                Forgot Password?
+              </ForgotWrapper>
+
+
+            </TouchableOpacity>
+
+          </ChildWrapper>
+        </ChildWrapperOuter>
+        {
+          <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title="Forgot Password?"
+            message="Please fill out your email. A link to reset password will be sent there."
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
+            customView={
+              <AlertView>
                 <Formik
-                  validationSchema={LOGIN_SCHEMA}
+                  validationSchema={FORGOT_SCHEMA}
                   initialValues={{
                     email: '',
-                    password: '',
                   }}
                   onSubmit={(values) => {
-                    handleLogin(values);
-
+                    handleForgot(values);
                   }}>
-                  {({setFieldValue, handleSubmit, errors}) => (
+                  {({ setFieldValue, handleSubmit, errors }) => (
                     <View>
+
                       <TextField
                         accessibilityLabel="Email"
                         onChangeText={(value: any) => {
@@ -70,41 +156,44 @@ const Login = (props: any) => {
                         autoCapitalize={'none'}
                         error={errors ? errors.email : null}
                       />
-                      <TextField
-                        accessibilityLabel="Password"
-                        onChangeText={(value: any) => {
-                          setFieldValue('password', value);
-                        }}
-                        placeholder="********"
-                        secureTextEntry={true}
-                        error={errors ? errors.password : null}
-                      />
 
-                      <ButtonWrapper>
-                        <PrimaryButton
-                          onPress={handleSubmit}
-                          backgroundColor={colors.black}
-                          btnText={'LOGIN'}
-                          loading={loading}
+                      <BtnWrapper>
+
+                        <SecondaryButton
+                          onPress={() => {
+                            setShowAlert(false)
+                          }}
+                          btnText={'Cancel'}
+                          backgroundColor={colors.darkGray}
                         />
-                      </ButtonWrapper>
 
-                      <SignUpView>
+                        <SecondaryButton
+                          onPress={
+                            handleSubmit
+                          }
+                          btnText={'Confirm'}
+                          backgroundColor={colors.greenColor}
+                        />
+                      </BtnWrapper>
 
-                        <DontHaveAccountText textColor={colors.black} fontSize={16}>Don't have account?</DontHaveAccountText>
-                        <TouchableOpacity onPress={() => { props.navigation.navigate(navigationStrings.SIGNUP)}}>
-                          <DontHaveAccountText textColor={colors.greenColor} fontSize={20}> SignUp</DontHaveAccountText>
-                        </TouchableOpacity>
-                      </SignUpView>
                     </View>
+
                   )}
                 </Formik>
-              </EmailPasswordWrapper>
-            </ChildWrapper>
-          </ChildWrapperOuter>
-        </MainParentWrapper>
 
+              </AlertView>
+            }
+            showCancelButton={false}
+            showConfirmButton={false}
+            cancelText="Cancel"
+            confirmText="Confirm"
+            confirmButtonColor="#DD6B55"
 
+          />
+        }
+
+        
+      </MainParentWrapper>
     </ImageBackground>
   );
 };
@@ -118,15 +207,33 @@ type DontHaveAccountProps = {
   fontSize: string;
 };
 
+const BtnWrapper = styled.View`
+  flex-direction: row;
+  margin-top: 10px;
+  align-items: center;
+  justify-content:center;
+`;
+
+const AlertView = styled.View`
+width:100%
+margin-top:10px
+`;
+
+const ForgotWrapper = styled.Text`
+  font-size:16px;
+  text-align:center;
+  margin-top:16px;
+`;
+
 const DontHaveAccountText = styled.Text<DontHaveAccountProps>`
-  color: ${({textColor}: any) => textColor};
-  font-size: ${({fontSize}: any) => fontSize}px;
+  color: ${({ textColor }: any) => textColor};
+  font-size: ${({ fontSize }: any) => fontSize}px;
 `;
 
 const SignUpView = styled.View`
   flex-direction: row;
   justify-content: center;
-  margin-top: ${({theme}: any) => theme.spacing.horizontal}px;
+  margin-top: ${({ theme }: any) => theme.spacing.horizontal}px;
   align-items: center;
 `;
 
@@ -145,13 +252,13 @@ const ChildWrapperOuter = styled.View`
   height: 100%;
 `;
 const ChildWrapper = styled.View`
-  padding-left: ${({theme}: any) => theme.spacing.horizontal}px;
-  padding-right: ${({theme}: any) => theme.spacing.horizontal}px;
+  padding-left: ${({ theme }: any) => theme.spacing.horizontal}px;
+  padding-right: ${({ theme }: any) => theme.spacing.horizontal}px;
 `;
 
 const LoginText = styled.Text`
-  font-size: ${({theme}: any) => theme.fontSize.cardHeading}px;
-  color: ${({theme}: any) => theme.colors.text};
+  font-size: ${({ theme }: any) => theme.fontSize.cardHeading}px;
+  color: ${({ theme }: any) => theme.colors.text};
   padding-bottom: 2px;
   flex-direction: row;
   align-content: center;

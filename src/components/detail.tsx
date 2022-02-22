@@ -11,7 +11,7 @@ import styled from "styled-components/native";
 function Detail(item:any) {
   const { colors }: any = useTheme();
   return (
-    <MainWrapper>
+    <MainView>
       <ProfileItem heading={"Location :"}
                    decs={ item.item != null ? item.item.city : ''}
                    backgroundColor={colors.divider}
@@ -65,10 +65,13 @@ function Detail(item:any) {
                    decs={ item.item != null ? item.item.visibility === 0 ? 'Public' : 'Private' : ''}
                    backgroundColor={colors.divider}
                    icon={loc} />
-    </MainWrapper>
+    </MainView>
   );
 }
 
 export default withTheme(Detail);
+
+
+const MainView = styled.View``;
 
 

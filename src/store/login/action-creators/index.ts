@@ -33,6 +33,7 @@ export const login = (data: LoginInterface) => {
       dispatch(setAuthentication(true));
       return response;
     } catch (e: any) {
+      
       dispatch({
         type: ActionType.LOGIN_ERROR,
         payload: 'Invalid email/password',

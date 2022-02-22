@@ -38,7 +38,7 @@ const reducer = (
       case ActionType.MY_SUPPORTER_ERROR:
         draft.supporterLoading = false;
         draft.error = action.payload;
-        draft.mySupporterData= []
+        draft.mySupporterData= action.payload
         return draft;
       default:
         return draft;

@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { FlatList, Linking, Text, TouchableOpacity } from "react-native";
 // @ts-ignore
 import styled from "styled-components/native";
-import { comment, deleteBlack, dots, editBlack, pdf, share, support } from "../utils/assets";
+import { comment, deleteBlack, dots, add, pdf, share, support } from "../utils/assets";
 import { format } from 'date-fns';
 import { activityImages, pdfUrl } from "../utils/constants";
 import { useActions } from "@root/hooks/useActions";
 import Share from 'react-native-share'
+import TextField from "@root/components/TextField";
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import { useTypedSelector } from "@root/hooks/useTypedSelector";
+import { id } from "date-fns/locale";
 
 
 const Timeline = (item: any) => {
+  
+  const [addcomment,setAddComment] = useState('')
   const myCustomShare = async (id: any) => {
     const shareOptions = {
       message: id
@@ -23,17 +28,17 @@ const Timeline = (item: any) => {
     }
   }
   const [visible, setVisible] = useState(false);
-
   const hideMenu = () => setVisible(false);
-
   const showMenu = () => setVisible(true);
   const [showComment, setShowComent] = useState(false);
-  const { setsupport,deleteTimelineItem,getMyTimeline } = useActions();
+  const { setsupport, deleteTimelineItem, getMyTimeline ,addComments} = useActions();
+  const {addCommemtData,commentloading} = useTypedSelector((state) => state.addCommemtData);
   const [supportt, setSupport] = useState(false);
+  
 
   return (
     <ParentWarpper>
-      <HorizontalWrapper>
+        <HorizontalWrapper>
         <VerticalWrapper>
           <CapText>{item.item.category.substring(0, 1).toUpperCase()}</CapText>
           <DateText>{format(new Date(item.item.created_at), 'do')}</DateText>
@@ -73,14 +78,14 @@ const Timeline = (item: any) => {
 
               <Menu
                 visible={visible}
-                anchor={<Text style={{fontWeight:'800'}} onPress={showMenu}>. . .</Text>}
+                anchor={<Text style={{ fontWeight: '800' }} onPress={showMenu}>. . .</Text>}
                 onRequestClose={hideMenu}
               >
-                <MenuItem onPress={() => {alert(item.item.id)}}>Edit</MenuItem>
-                <MenuItem onPress={async () => {await deleteTimelineItem({id:item.item.id}) ,getMyTimeline()}}>Delete</MenuItem>
-                
+                <MenuItem onPress={() => { alert(item.item.id) }}>Edit</MenuItem>
+                <MenuItem onPress={async () => { await deleteTimelineItem({ id: item.item.id }), getMyTimeline() }}>Delete</MenuItem>
+
                 <MenuDivider />
-                
+
               </Menu>
             </TouchableOpacity>
 
@@ -113,7 +118,7 @@ const Timeline = (item: any) => {
 
               <VerticalWrapper>
                 <Dots source={support} />
-                <Text>{supportt === true ? item.item.is_support === 0 ?  'Unsupport': 'Support' : item.item.is_support === 1 ? 'Unsupport' : 'Support'}</Text>
+                <Text>{supportt === true ? item.item.is_support === 0 ? 'Unsupport' : 'Support' : item.item.is_support === 1 ? 'Unsupport' : 'Support'}</Text>
               </VerticalWrapper>
             </TouchableOpacity>
 
@@ -136,6 +141,26 @@ const Timeline = (item: any) => {
 
 
           </HorizontalWrapper>
+
+          <CommentSection>
+            <CommentField>
+              <TextField placeholder={'Comment'}  onChangeText={(value: any) => {
+                        setAddComment(value)
+                        }}>
+
+              </TextField>
+            </CommentField>
+
+            <TouchableOpacity onPress={async ()=> {
+              if (addcomment != '') {
+                 addComments({activity_id: item.item.id, comment: addcomment})
+                getMyTimeline()
+              }
+              }}>
+              <AddBtn source={add} />
+            </TouchableOpacity>
+
+          </CommentSection>
         </DataWrapper>
       </HorizontalWrapper>
 
@@ -146,7 +171,17 @@ const Timeline = (item: any) => {
 
 export default Timeline;
 
-
+const AddBtn = styled.Image`
+margin:10px;
+`;
+const CommentField = styled.View`
+width:90%;
+`;
+const CommentSection = styled.View`
+padding-left:10px;
+flex-direction:row;
+align-items:center;
+`;
 
 const Divider = styled.View`
   height: 1px;

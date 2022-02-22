@@ -33,14 +33,14 @@ export const getMyGraph = () => {
  *
  * @param data
  */
-export const getSupporterGraph = () => {
+export const getSupporterGraph = (fn:any) => {
   return async (dispatch: Dispatch<Action | any>) => {
     dispatch({
       type: ActionType.MY_GRAPH,
     });
 
     try {
-      const response = await service.get(apiUri.myGraph);
+      const response = await service.get(apiUri.supportersGraphList+fn.supporter_id);
 
       dispatch({
         type: ActionType.MY_GRAPH_SUCCESS,

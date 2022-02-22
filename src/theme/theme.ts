@@ -22,6 +22,7 @@ export const navigationTheme = {
       darkGray: '#DFE1E5',
       white: '#ffffff',
       black: '#000000',
+      
     },
     spacing: {
       horizontal: 15,

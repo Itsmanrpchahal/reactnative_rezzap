@@ -1,32 +1,33 @@
 // @ts-ignore
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useTheme} from '@react-navigation/native';
-import {TouchableOpacity} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useTheme } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native';
 // @ts-ignore
 import styled from 'styled-components/native';
 
-import {Home, Spin, Messages, Resume} from './index';
+import { Home, Spin, Messages, Resume } from './index';
 import navigationStrings from './navigationStrings';
 import NavigationStrings from "./navigationStrings";
-import {TabBarIcon} from './TabbarIcon';
-import {navigaionIcon,add} from '../utils/assets';
+import { TabBarIcon } from './TabbarIcon';
+import { navigaionIcon, add } from '../utils/assets';
 import { addresume } from "../utils/assets";
 import { navigationRef } from './RootNavigation';
+import Dash from '../screens/private/dash';
 
 const Tab = createBottomTabNavigator();
 
 function DashboardTabs(props: any) {
-  const {colors, type}: any = useTheme();
+  const { colors, type }: any = useTheme();
 
   return (
     <Tab.Navigator
       initialRouteName="Dashboard"
-      screenOptions={({route}) => ({
-        tabBarIcon: ({color}) => (
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color }) => (
           <TabBarIcon color={color} routeName={route.name} />
         ),
-        tabBarStyle: {backgroundColor: colors.white},
+        tabBarStyle: { backgroundColor: colors.white },
         tabBarActiveTintColor: colors.accentColor,
         tabBarInactiveTintColor: colors.inactive,
         headerStyle: {
@@ -40,20 +41,22 @@ function DashboardTabs(props: any) {
           </TouchableOpacity>
         ),
       })}>
-      <Tab.Screen name={navigationStrings.TAB_BAR_HOME} component={Home} options={{ headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate(NavigationStrings.ADD_ACTIVITY)
-                  
-                }}>
-               <AddBtn
-                  style={{marginRight: 15}}
-                  source={add}
-                />
-              </TouchableOpacity>
-            );
-          },}} />
+      <Tab.Screen name={navigationStrings.TAB_BAR_HOME} component={Home} options={{
+        headerRight: () => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate(NavigationStrings.ADD_ACTIVITY)
+
+              }}>
+              <AddBtn
+                style={{ marginRight: 15 }}
+                source={add}
+              />
+            </TouchableOpacity>
+          );
+        },
+      }} />
 
       <Tab.Screen name={navigationStrings.TAB_BAR_SPIN} component={Spin} />
 
@@ -61,20 +64,27 @@ function DashboardTabs(props: any) {
         name={navigationStrings.TAB_BAR_MESSAGES}
         component={Messages}
       />
-      <Tab.Screen name={navigationStrings.TAB_BAR_RESUME} component={Resume} options={{ headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate(NavigationStrings.ADD_RESUME)
-                  
-                }}>
-               <AddBtn
-                  style={{marginRight: 15}}
-                  source={addresume}
-                />
-              </TouchableOpacity>
-            );
-          },}} />
+      <Tab.Screen name={navigationStrings.TAB_BAR_RESUME} component={Resume} options={{
+        headerRight: () => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate(NavigationStrings.ADD_RESUME)
+
+              }}>
+              <AddBtn
+                style={{ marginRight: 15 }}
+                source={addresume}
+              />
+            </TouchableOpacity>
+          );
+        },
+      }} />
+
+      <Tab.Screen
+        name={navigationStrings.TAB_BAR_DASH}
+        component={Dash}
+      />
     </Tab.Navigator>
   );
 }

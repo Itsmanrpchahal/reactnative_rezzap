@@ -19,6 +19,8 @@ import { format } from "date-fns";
 import { UPDATEPROFILE_SCHEMA } from "./helpers";
 import { UpdateProfileInterface } from "@root/store/updateProfile/interfaces";
 import NavigationStrings from "@root/navigation/navigationStrings";
+import RNFetchBlob from 'rn-fetch-blob'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UpdateProfile = (props: any) => {
 
@@ -29,42 +31,45 @@ const UpdateProfile = (props: any) => {
   const { uploadProfilePicture, updateMyProfile } = useActions();
   const [isFocus, setIsFocus] = useState(false);
   const [visibleTimer, setVisibleTimer] = useState<boolean>(false);
-  const { myProfileData, loading } = useTypedSelector(
+  const [token,setToken] = useState('');
+    const { myProfileData, loading } = useTypedSelector(
     (state) => state.myProfile,
   );
   const [value, setValue] = useState(1);
   const [stime, setSTime] = useState<any>(myProfileData ? myProfileData.data.dob : '');
   const [profiledesgination, setProfileDesgination] = useState(myProfileData ? myProfileData.data.designation.toString() : '')
   const [text, setText] = useState('Update Profile')
+  AsyncStorage.getItem('TOKEN').then((asyncStorageRes) => {
+    // @ts-ignore
+    setToken(asyncStorageRes)
+  });
 
   const saveImage = async (values: any) => {
     if (values === null) {
       console.log("Image path error");
-      
+
     } else {
       const formData = new FormData();
-
+      console.log('Image' , values)
       let osPath =
-        Platform.OS === "ios"
+        Platform.OS === "android"
           ? values.path
           : values.path.replace("file://", "");
 
-      console.log("OS PATH  ", osPath);
-
-
-      formData.append("file", {
-        // @ts-ignore
-
+      let data = {
         uri: osPath,
         type: values.mime,
-        size: values.size,
         name: values.filename,
-      }, 'profile_pic');
+      }
+
+      formData.append("profile_pic", JSON.stringify(data));
+
+   
 
       // setCancel("Uploading");
       // console.log('formData ====>   ', formData)
-      // await uploadProfilePicture(formData);
-     
+      await uploadProfilePicture(formData);
+
     }
   };
 
@@ -97,15 +102,15 @@ const UpdateProfile = (props: any) => {
     <ScrollView >
       <ParentWrapper>
         <TouchableOpacity onPress={() => {
-         ImagePicker.openPicker({
-          cropping: true,
-          compressImageQuality: 1,
+          ImagePicker.openPicker({
+            cropping: true,
+            compressImageQuality: 1,
 
-        }).then(async (image) => {
-          setImagePath(image);
-          await saveImage(image);
+          }).then(async (image) => {
+            setImagePath(image);
+            await saveImage(image);
 
-        });
+          });
         }}>
           <ImageWrapper>
             <ImageView source={imageLayout} />
@@ -119,7 +124,7 @@ const UpdateProfile = (props: any) => {
             <ImageCamera source={camera} />
           </ImageWrapper>
         </TouchableOpacity>
-       
+
 
         {/* customView={
               <TabHorizontal>
@@ -442,26 +447,26 @@ const UpdateProfile = (props: any) => {
           )}
         </Formik>
 
-       
+
       </ParentWrapper>
 
       <AwesomeAlert
-          show={showalert}
-          showProgress={false}
-          title="Alert"
-          message="Are you sure to delete this?"
-          closeOnTouchOutside={false}
-          closeOnHardwareBackPress={false}
-          showCancelButton={cancelable}
+        show={showalert}
+        showProgress={false}
+        title="Alert"
+        message="Are you sure to delete this?"
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showCancelButton={cancelable}
 
-          cancelText="Cancel"
+        cancelText="Cancel"
 
-          confirmButtonColor="#DD6B55"
-          onCancelPressed={() => {
-            setShowAlert(false)
-          }}
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          setShowAlert(false)
+        }}
 
-        />
+      />
     </ScrollView>
   );
 };

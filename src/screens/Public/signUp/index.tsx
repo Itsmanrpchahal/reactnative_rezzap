@@ -33,7 +33,7 @@ const SignUp = (props: any) => {
 
   const handleSignUp = (values: SignUpStep1) => {
     {
-      props.navigation.navigate(navigationStrings.SIGNUP_STEP_2,{data:values})
+      props.navigation.navigate(navigationStrings.SIGNUP_STEP_2,{data:values,props:props})
       // @ts-ignore
 
     }

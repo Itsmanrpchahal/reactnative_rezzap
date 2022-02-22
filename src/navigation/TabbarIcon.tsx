@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Image} from 'react-native';
 // @ts-ignore
-import {homeIcon, spinIcon, messageIcon, resumeIcon} from '../assets';
+import {homeIcon, spinIcon, messageIcon, resumeIcon,dash} from '../assets';
 import navigationStrings from '../navigation/navigationStrings';
 
 const tabIcon = {
@@ -12,6 +12,7 @@ const tabIcon = {
   [navigationStrings.TAB_BAR_SPIN]: spinIcon,
   [navigationStrings.TAB_BAR_MESSAGES]: messageIcon,
   [navigationStrings.TAB_BAR_RESUME]: resumeIcon,
+  [navigationStrings.TAB_BAR_DASH]: dash,
 };
 
 type TabBarIconProps = {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, TouchableOpacity, View } from "react-native";
+import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { withTheme } from "styled-components";
 import { MainParentWrapper } from "@root/utils/globalStyle";
 // @ts-ignore
@@ -13,10 +13,10 @@ import { STATES } from "@root/utils/constants";
 import CustomTimePicker from "@root/components/TimePicker";
 import { format } from "date-fns";
 import PrimaryButton from "@root/components/Button";
-import { useTheme } from "@react-navigation/native";
+import { StackActions, useNavigation, useTheme } from "@react-navigation/native";
 import { SignUpInterface } from "@root/store/login/interfaces";
 import { useActions } from "@root/hooks/useActions";
-import { navigationRef } from "../../../navigation/RootNavigation";
+import  {navigationRef}  from "../../../navigation/RootNavigation";
 import navigationStrings from "../../../navigation/navigationStrings";
 
 var radio_props = [
@@ -25,15 +25,19 @@ var radio_props = [
   { label: "Other", value: 3 },
 ];
 // @ts-ignore
-const SignUpStep2 = ({ route }) => {
+const SignUpStep2 = ({ props,route }) => {
   const { signUp } = useActions();
   const { colors }: any = useTheme();
   const [value, setValue] = useState(1);
   const [isFocus, setIsFocus] = useState(false);
+  const [sigup,setSignUp] = useState('SignUp')
   const [visibleTimer, setVisibleTimer] = useState<boolean>(false);
   const [stime, setSTime] = useState<any>(new Date());
+  const nav  = useNavigation()
+
   const handleSignUp = async (values: SignUpInterface) => {
     {
+      setSignUp('loading...')
       await signUp({
         'first_name' :values.first_name,
         'last_name' :values.last_name,
@@ -50,8 +54,7 @@ const SignUpStep2 = ({ route }) => {
         'dob' : values.dob,
         'gender': values.gender})
 
-      navigationRef.current.navigate.replace(navigationStrings.LOGIN)
-
+         navigationRef.current.dispatch(StackActions.replace(navigationStrings.LOGIN))
     }
   };
 
@@ -64,7 +67,6 @@ const SignUpStep2 = ({ route }) => {
 
       <ScrollView>
         <MainParentWrapper>
-
           <Formik
             initialValues={{
               address: "",
@@ -201,7 +203,7 @@ const SignUpStep2 = ({ route }) => {
                   <PrimaryButton
                     onPress={handleSubmit}
                     backgroundColor={colors.black}
-                    btnText={"Sign Up"}
+                    btnText={sigup}
 
                   />
                 </ButtonWrapper>

@@ -5,6 +5,7 @@ export default {
   TAB_BAR_HOME: 'Home',
   TAB_BAR_SPIN: 'Spin',
   TAB_BAR_MESSAGES: 'Message',
+  TAB_BAR_DASH:'College List',
   TAB_BAR_RESUME: 'Resume',
   MY_WHEEL:'My Wheel',
   SUPPORTERS :'SUPPORTERS',
@@ -21,5 +22,7 @@ export default {
   HELP:'Help',
   NOTIFICATIONS:'Notifications',
   ADD_RESUME:'My Resumes',
-  ADD_ACTIVITY:'Activity'
+  ADD_ACTIVITY:'Activity',
+  RESET_PASSWORD:'Reset Password',
+  ADD_SUPPORTER:'Add Supporter',
 };

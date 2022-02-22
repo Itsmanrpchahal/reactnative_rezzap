@@ -11,6 +11,7 @@ export * as getSupporterSupporterList from '@root/store/user-supporter/action-cr
 export * as getMyInterest from '@root/store/interests/action-creators';
 export * as addNew_Interest from '@root/store/interests/action-creators';
 export * as UpdateInterest from '@root/store/interests/action-creators';
+export * as supporters_InterestList from '@root/store/interests/action-creators';
 export * as deleteMyInterest from '@root/store/interests/action-creators';
 export * as getMyTimeline from '@root/store/timeline/action-creators';
 export * as deleteTimelineItem from '@root/store/timeline/action-creators';
@@ -33,5 +34,14 @@ export * as setsupport from '@root/store/supportUnsupport/action-creators';
 export * as getNotifications from '@root/store/notifictions/action-creators';
 export * as clear_Notificatins from '@root/store/notifictions/action-creators';
 export * as setFollowUnfollow from '@root/store/follow_unfollow/action-creators'
+export * as addComments from '@root/store/addComment/action-creators'
+export * as findSupporter from '@root/store/findSupporter/action-creators'
+export * as addSupporter from '@root/store/findSupporter/action-creators'
+export * as getCollegeStates from '@root/store/college/action-creators'
+export * as getCollegeList from '@root/store/collegeList/action-creators'
+export * as getDreamCollegeList from '@root/store/dreamCollege/action-creators'
+export * as getAllCollege from '@root/store/allCollegeList/action-creators'
+export * as search_StateSchool from '@root/store/allCollegeList/action-creators'
+export * as send_email from '@root/store/sendEmail/action-creators'
 export * from '@root/store/rootReducer';
 

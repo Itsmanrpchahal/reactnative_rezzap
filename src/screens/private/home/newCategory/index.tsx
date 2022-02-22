@@ -12,6 +12,7 @@ import { useActions } from "@root/hooks/useActions";
 import { NotFound } from "@root/utils/globalStyle";
 import { CATEGORY_SCHEMA } from './helpers';
 import { Formik } from 'formik';
+import PrimaryButton from "@root/components/Button";
 import AppLoader from "../../../../components/Loader";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { addWhite } from "../../../../utils/assets";
@@ -20,10 +21,11 @@ const AddNewCategory = () => {
   const { colors }: any = useTheme();
   const isFocused = useIsFocused();
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  const [data,setData] = useState('');
-  const [itemId,setItemId] = useState('');
-  const [confirm,setConfirm] = useState('Update');
-  const { getCategories, deleteCategory,updateCategory ,addCategory} = useActions();
+  const [checkedIds, setChekedIds] = useState({})
+  const [data, setData] = useState('');
+  const [itemId, setItemId] = useState('');
+  const [confirm, setConfirm] = useState('Update');
+  const { getCategories, deleteCategory, updateCategory, addCategory } = useActions();
   const { categoryData, loading } = useTypedSelector(
     (state) => state.categoryData,
   );
@@ -36,13 +38,13 @@ const AddNewCategory = () => {
   }, [isFocused]);
 
   return (
-   
-      <MainWrapperWhite>
-        <MainView>
+
+    <MainWrapperWhite>
+      <MainView>
         {loading ? (
           <AppLoader />
         ) :
-        
+
           Object.keys(categoryData).length > 0 ?
             (<FlatList
               nestedScrollEnabled={true}
@@ -73,7 +75,7 @@ const AddNewCategory = () => {
                       {
                         item.is_custom === '1' ? <CateRight>
 
-                          <TouchableOpacity onPress={() => { setShowAlert(true) ,setData(item.title),setItemId(item.id)}}>
+                          <TouchableOpacity onPress={() => { setShowAlert(true), setData(item.title), setItemId(item.id) }}>
                             <AddBtn
                               source={editBlack}
                             />
@@ -108,22 +110,22 @@ const AddNewCategory = () => {
             showConfirmButton={true}
             customView={
               <PopUpView>
-                <TextField 
-                onChangeText={(value: any) => {
-                     setData(value)
-                }}
-                defaultValue={data}
-                placeholder="Category name"
-                secureTextEntry={false}
-               >
+                <TextField
+                  onChangeText={(value: any) => {
+                    setData(value)
+                  }}
+                  defaultValue={data}
+                  placeholder="Category name"
+                  secureTextEntry={false}
+                >
 
                 </TextField>
 
                 {data === '' ? (
-        <ErrorWrapper>
-          <ErrorWrapper__Text>Category Required</ErrorWrapper__Text>
-        </ErrorWrapper>
-      ): <Text></Text>}
+                  <ErrorWrapper>
+                    <ErrorWrapper__Text>Category Required</ErrorWrapper__Text>
+                  </ErrorWrapper>
+                ) : <Text></Text>}
 
               </PopUpView>
             }
@@ -135,9 +137,9 @@ const AddNewCategory = () => {
             }}
             onConfirmPressed={async () => {
               setConfirm('Updating...')
-                await updateCategory({id:itemId,title:data})
-                getCategories()
-                setShowAlert(false)
+              await updateCategory({ id: itemId, title: data })
+              getCategories()
+              setShowAlert(false)
             }}>
           </AwesomeAlert>
         }
@@ -149,13 +151,13 @@ const AddNewCategory = () => {
               title: '',
             }}
             onSubmit={async (values) => {
-              
-             await addCategory({title:values.title})
-             setData('')
-             getCategories()
+
+              await addCategory({ title: values.title })
+              setData('')
+              getCategories()
             }}>
             {({ setFieldValue, handleSubmit, errors }) => (
-              <View style={{ width: '95%' ,marginLeft:10,marginRight:10}}>
+              <View style={{ width: '95%', marginLeft: 10, marginRight: 10 }}>
                 <TextField
                   onChangeText={(value: any) => {
                     setFieldValue('title', value);
@@ -167,7 +169,7 @@ const AddNewCategory = () => {
 
 
                 <AddBt>
-                  <TouchableOpacity onPress={ handleSubmit }>
+                  <TouchableOpacity onPress={handleSubmit}>
                     <AddImage
                       source={addWhite}
                     />
@@ -180,10 +182,19 @@ const AddNewCategory = () => {
           </Formik>
 
         </AddWrapper>
-        </MainView>
 
-      </MainWrapperWhite>
-  
+        <ButtonWrapper>
+          <PrimaryButton
+            onPress={() => { alert(JSON.stringify(checkedIds)) }}
+            backgroundColor={colors.black}
+            btnText={"Add"}
+            loading={loading}
+          />
+        </ButtonWrapper>
+      </MainView>
+
+    </MainWrapperWhite>
+
 
 
 
@@ -191,6 +202,12 @@ const AddNewCategory = () => {
 }
 
 export default withTheme(AddNewCategory)
+
+const ButtonWrapper = styled.View`
+  margin-bottom: 20px;
+  align-items: center;
+`;
+
 
 const ErrorWrapper = styled.View`
   margin-top: 3px;
@@ -206,7 +223,7 @@ const PopUpView = styled.View`
 
 `;
 
-const AddImage= styled.Image`
+const AddImage = styled.Image`
 `;
 
 const AddBt = styled.View`

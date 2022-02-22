@@ -15,6 +15,7 @@ const apiUri = {
   supporterProfile : 'supporter/profile?supporter_id=' ,// need to send supporter_id
   supportersSupporterList :'supporter/supporter-list?supporter_id=' ,// need to send supporter_id
   supportersGraphList :'supporter/category-graph-list?supporter_id=' ,// need to send supporter_id
+  supportersInterestList : 'supporter/interests-list?supporter_id=',
 
   interests : '/interests/show',
   deleteInterest :'interests/destroy?id=',
@@ -23,12 +24,14 @@ const apiUri = {
 
   activityShow :'activity/show',
   supporterActivityShow :'supporter/activity-list?supporter_id=',
+
   profilePictureUpload : 'update-profile-pic',
 
   resumeList :'resume/my-resumes',
   resume_Detail:'resume/resume-details?resume_id=',
   resumeCategorylist:'resume/category-list',
   delete_Resume:'resume/delete?id=',
+  add_Comment : 'activity/add-comment?',
 
   messageList : 'message/supporter-list',
   messageDetail :'message/chat-list?supporter_id=',
@@ -41,13 +44,24 @@ const apiUri = {
   categoryUpdate:'category/update?',
   
 
-
   supportUnsupportapi : 'activity/support-unsupport?',
   deleteActivity : 'activity/destroy?id=',
 
   notifications :'notifications',
   clearNotificatins:'notifications/clear-all',
-  followUnfollow : 'spin/follow-unfollow?'
+  followUnfollow : 'spin/follow-unfollow?',
+
+  sendemail : 'password/reset?email=',
+  resetPassword : 'password/reset-password?',
+  find_Supporter:'supporter/find?keyword=',
+  addSupporter:'supporter/send-invite?to_user=',
+
+  collegeStateList:'college/state-list',
+  collegeList:'college/school-type-list',
+  dreamCollege:'college/dream-colleges',
+  allCollegeList:'college/list',
+  searchStateSchool :'college/search-state-school?state=',
+  searchCollegeKeyword:'college/search-college?keyword='
 
 };
 

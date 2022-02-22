@@ -16,13 +16,17 @@ import navigationStrings from "@root/navigation/navigationStrings";
 import Timeline from "@root/components/timeline";
 import { navigationRef } from "@root/navigation/RootNavigation";
 import AppLoader from "../../../../components/Loader";
+import SupportersInterests from "@root/components/interests";
 
 // @ts-ignore
 const SupporterProfile = ({ props, route }) => {
   const { colors }: any = useTheme();
-  const { getSupporterProfile, getMyGraph, getSupporterSupporterList, getSupporterTimeline,setFollowUnfollow } = useActions();
+  const { getSupporterProfile, getSupporterGraph, getSupporterSupporterList, getSupporterTimeline, setFollowUnfollow, supporters_InterestList } = useActions();
   const { myProfileData, loading } = useTypedSelector(
     (state) => state.myProfile,
+  );
+  const { myInterestData, interestLoading } = useTypedSelector(
+    (state) => state.interest,
   );
   const { mySupporterData, supporterLoading } = useTypedSelector((state) => state.mySupporters);
   const { myGraphData } = useTypedSelector((state) => state.myGraph);
@@ -34,11 +38,12 @@ const SupporterProfile = ({ props, route }) => {
 
   useEffect(() => {
     if (isFocused) {
-      
+
       getSupporterProfile({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, });
-      getMyGraph({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
+      getSupporterGraph({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
       getSupporterSupporterList({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
-      getSupporterTimeline({ 'supporter_id':route.params.type != '' ? route.params.item.id : route.params.item.item.id,})
+      getSupporterTimeline({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
+      supporters_InterestList({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
     }
   }, [isFocused]);
 
@@ -60,20 +65,22 @@ const SupporterProfile = ({ props, route }) => {
                   <TextDecs>Actor</TextDecs>
 
                 </TitleVerticle>
-                
-                <TouchableOpacity onPress={async () => {  
-                  await setFollowUnfollow({supporter_id:myProfileData.data.id,
-                              status_type:myProfileData.data.is_follow === 0 ? '1' : '0'})
-                              getSupporterProfile({ 'supporter_id': route.params.item.item.id, });
-                              }}>
-                <FollowHorizontal>
-                  <Image source={follow} />
-                  <TextDecs>{myProfileData != null ? myProfileData.data.is_follow ? 'Unfollow' : 'Follow' : 'Follow'}</TextDecs>
-                </FollowHorizontal>
+
+                <TouchableOpacity onPress={async () => {
+                  await setFollowUnfollow({
+                    supporter_id: myProfileData.data.id,
+                    status_type: myProfileData.data.is_follow === 0 ? '1' : '0'
+                  })
+                  getSupporterProfile({ 'supporter_id': route.params.item.item.id, });
+                }}>
+                  <FollowHorizontal>
+                    <Image source={follow} />
+                    <TextDecs>{myProfileData != null ? myProfileData.data.is_follow ? 'Unfollow' : 'Follow' : 'Follow'}</TextDecs>
+                  </FollowHorizontal>
                 </TouchableOpacity>
-                
+
               </HorizontalWrapper>
-              
+
               <HorizontalWrapper>
                 <TouchableOpacity>
                   <TextDecs>Supporters</TextDecs>
@@ -85,19 +92,22 @@ const SupporterProfile = ({ props, route }) => {
                 </TouchableOpacity>
               </HorizontalWrapper>
 
+
               {
                 supporterLoading ? (
                   <NotFound>Loading...</NotFound>
                 ) :
                   Object.keys(mySupporterData).length > 0 ?
-                    (<FlatList
-                      nestedScrollEnabled={false}
-                      data={mySupporterData.data}
-                      horizontal={true}
-                      renderItem={({ item }) => {
-                        return <ListCard item={item} />;
-                      }}
-                    />) :
+                    (
+                      <FlatList
+                        nestedScrollEnabled={false}
+                        data={mySupporterData.data}
+                        horizontal={true}
+                        renderItem={({ item }) => {
+                          return <ListCard item={item} />;
+                        }}
+                      />
+                    ) :
                     (<Text>No Data Found</Text>)
               }
 
@@ -131,10 +141,30 @@ const SupporterProfile = ({ props, route }) => {
 
                   <Divider backgroundColor={tab === 3 ? colors.greenColor : colors.darkGray} height={3} />
                 </Tabbutton>
+
+                <Tabbutton>
+                  <TouchableOpacity onPress={() => {
+                    setTab(4);
+                  }}>
+                    <TabText>Interests</TabText>
+                  </TouchableOpacity>
+
+                  <Divider backgroundColor={tab === 4 ? colors.greenColor : colors.darkGray} height={3} />
+                </Tabbutton>
               </TabWrapper>
 
               <BottomWrapper>
-                {tab === 1 ? <Detail item={myProfileData.data} /> : tab === 3 ? <Wheel item={myGraphData.data} /> :
+                {tab === 1 ? <Detail item={myProfileData.data} /> : tab === 3 ? <Wheel item={myGraphData.data} /> : tab === 4 ? interestLoading ? (
+                  <NotFound>Loading...</NotFound>
+                ) :
+                  Object.keys(myInterestData).length > 0 ?
+                    (
+                      myInterestData.data.map((item: any) => (
+                        <SupportersInterests item={item} />
+
+                      ))
+                    ) :
+                    (<Text>No Data Found</Text>) :
                   timelineLoading ? (
                     <NotFound>Loading...</NotFound>
                   ) :
@@ -170,7 +200,7 @@ const TabText = styled.Text`
 `;
 
 const Tabbutton = styled.View`
-  width: 33.3333%;
+  width: 25%;
 `;
 
 const TabWrapper = styled.View`

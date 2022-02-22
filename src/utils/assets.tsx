@@ -27,5 +27,10 @@ import deleteBlack from '../assets/deleteBlack/deleteBlack.png'
 import addWhite from '../assets/addWhite/addWhite.png';
 import close from '../assets/close/close.png';
 import addresume from '../assets/addresume/addresume.png'
+import slidebc from '../assets/slidebc/slidebc.png'
+import dash from '../assets/dash/dash.png'
+import searchwhite from '../assets/searchwhite/searchwhite.png'
+import closewhite from '../assets/closewhite/closewhite.png'
+import bookmark from '../assets/bookmark/bookmark.png'
 
-export {navigaionIcon, imageLayout, demoImage,dp,loc,back,follow,dummy,edit,deletei,add,dots,support,comment,share,camera,pdf,calender,pdfwhite,word,doc,search,send,addCategory,editBlack,deleteBlack,addWhite,close,addresume};
+export {navigaionIcon, imageLayout, demoImage,dp,loc,back,follow,dummy,edit,deletei,add,dots,support,comment,share,camera,pdf,calender,pdfwhite,word,doc,search,send,addCategory,editBlack,deleteBlack,addWhite,close,addresume,slidebc,dash,searchwhite,closewhite,bookmark};

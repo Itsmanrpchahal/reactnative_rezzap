@@ -6,6 +6,7 @@ export const WINDOW_DEVICE_HEIGHT = Dimensions.get('window').height;
 export const imageUrl = "https://www.rezzap.com/uploads/profile-photo/";
 export const pdfUrl = "https://www.rezzap.com/uploads/activity-pdfs/";
 export const activityImages = "https://www.rezzap.com/uploads/activity-images/";
+export const interestsImages = "https://www.rezzap.com/uploads/group-icon/";
 export const CURRENT_TIME = 'CURRENT_TIME';
 
 export const radio_props = [
