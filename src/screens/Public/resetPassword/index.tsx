@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme, withTheme } from "styled-components";
 import { MainWrapper } from "../../../utils/globalStyle";
 import { ImageBackground, ScrollView, Text, View } from 'react-native'
@@ -7,10 +7,28 @@ import { Formik } from "formik";
 import { FORGOT_SCHEMA, RESET_PASSWORD_SCHEMA } from "../login/helpers";
 import TextField from "../../../components/TextField";
 import PrimaryButton from '@root/components/Button';
+import { useActions } from "@root/hooks/useActions";
+import { navigationRef } from "../../../navigation/RootNavigation";
+import navigationStrings from "../../../navigation/navigationStrings";
+import { StackActions } from "@react-navigation/native";
+import { useTypedSelector } from '@root/hooks/useTypedSelector';
 
 
 const ResetPassword = ({ props, route }) => {
+    const [confirm, setConfirm] = useState('Reset')
     const { colors }: any = useTheme();
+    const { reset_Password } = useActions();
+    const { sendEmailloading, sendEmailerror, sendEmailData } = useTypedSelector(
+        state => state.sendEmailData,
+    );
+
+    useEffect(() => {
+
+        if (sendEmailerror !== null) {
+
+        }
+
+    }, [sendEmailerror]);
     return (
         <ImageBackground
             resizeMode={'stretch'}
@@ -19,6 +37,10 @@ const ResetPassword = ({ props, route }) => {
 
             <ScrollView>
                 <ResetView>
+
+                    <ForgotText>
+                        Please check your email. A link for reset password has been sent.
+                    </ForgotText>
                     <Formik
                         validationSchema={RESET_PASSWORD_SCHEMA}
                         initialValues={{
@@ -26,8 +48,15 @@ const ResetPassword = ({ props, route }) => {
                             otp: '',
                             password: ''
                         }}
-                        onSubmit={(values) => {
-                                alert(JSON.stringify(values))
+                        onSubmit={async (values) => {
+                            setConfirm('Loading...')
+                            await reset_Password({
+                                email: values.email,
+                                otp: values.otp,
+                                password: values.password
+                            })
+                            setConfirm('Try again')
+                            navigationRef.current.dispatch(StackActions.replace(navigationStrings.LOGIN))
                         }}>
                         {({ setFieldValue, handleSubmit, errors }) => (
                             <View>
@@ -41,7 +70,7 @@ const ResetPassword = ({ props, route }) => {
                                     placeholder="email"
                                     keyboardType={'email-address'}
                                     autoCapitalize={'none'}
-                                    error={errors ? errors.email : null}
+
                                 />
 
                                 <TextField
@@ -71,7 +100,7 @@ const ResetPassword = ({ props, route }) => {
                                     <PrimaryButton
                                         onPress={handleSubmit}
                                         backgroundColor={colors.black}
-                                        btnText={'Reset'}
+                                        btnText={confirm}
                                     />
                                 </ButtonWrapper>
 
@@ -95,6 +124,10 @@ const ButtonWrapper = styled.View`
   align-items: center;
 `;
 
+const ForgotText = styled.Text`
+    color:#000;
+    text-align:center;
+`;
 const ResetView = styled.View`
     height:90%;
     width:auto;

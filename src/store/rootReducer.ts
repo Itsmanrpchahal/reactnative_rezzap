@@ -17,10 +17,14 @@ import supportUnsupportData from '@root/store/supportUnsupport/reducer'
 import notificationsData from '@root/store/notifictions/reducer'
 import addCommemtData  from '@root/store/addComment/reducer'
 import findSupporterData from '@root/store/findSupporter/reducer'
+import addSupporterData from '@root/store/addSupporter/reducer'
+import deleteSupporterData from '@root/store/deleteSupporter/reducer'
 import collegeStateData from '@root/store/college/reducer'
 import collegeListData from '@root/store/collegeList/reducer'
 import dreamCollegeData from '@root/store/dreamCollege/reducer'
 import allcollegeData from '@root/store/allCollegeList/reducer'
+import sendEmailData from '@root/store/sendEmail/reducer'
+import resumeActivityData from '@root/store/resumeActivity/reducer'
 
 
 
@@ -46,7 +50,11 @@ const reducers = combineReducers({
   collegeStateData,
   collegeListData,
   dreamCollegeData,
-  allcollegeData
+  allcollegeData,
+  sendEmailData,
+  addSupporterData,
+  deleteSupporterData,
+  resumeActivityData
 });
 
 export default reducers;

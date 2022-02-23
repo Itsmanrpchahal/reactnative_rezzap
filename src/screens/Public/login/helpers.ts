@@ -16,9 +16,7 @@ export const FORGOT_SCHEMA = Yup.object().shape({
 
 
 export const RESET_PASSWORD_SCHEMA = Yup.object().shape({
-  email: Yup.string()
-    .email('Email entered is not valid')
-    .required('Email is required'),
+ 
     otp:Yup.string().required('OTP required'),
     password: Yup.string().required('Password is required'),
 })

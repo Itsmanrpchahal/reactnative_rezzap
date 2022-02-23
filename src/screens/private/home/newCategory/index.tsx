@@ -40,11 +40,12 @@ const AddNewCategory = () => {
   return (
 
     <MainWrapperWhite>
+      
       <MainView>
+        
         {loading ? (
           <AppLoader />
         ) :
-
           Object.keys(categoryData).length > 0 ?
             (<FlatList
               nestedScrollEnabled={true}
@@ -82,7 +83,8 @@ const AddNewCategory = () => {
                           </TouchableOpacity>
 
 
-                          <TouchableOpacity onPress={async () => { await deleteCategory({ id: item.id }), getCategories() }}>
+                          <TouchableOpacity onPress={async () => { await deleteCategory({ id: item.id }) 
+                              await getCategories() }}>
                             <AddBtn source={deleteBlack} />
                           </TouchableOpacity>
 

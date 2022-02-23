@@ -90,7 +90,7 @@ const SignUp = (props: any) => {
                       setFieldValue("email", value);
                     }}
                     placeholder="Email"
-                    keyboardType={"default"}
+                    keyboardType={"email-address"}
                     error={errors ? errors.email : null}
                   />
 
@@ -101,6 +101,7 @@ const SignUp = (props: any) => {
                     }}
                     placeholder="Password"
                     keyboardType={"default"}
+                    secureTextEntry={true}
                     error={errors ? errors.password : null}
                   />
 

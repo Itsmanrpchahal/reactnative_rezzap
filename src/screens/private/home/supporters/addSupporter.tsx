@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme, withTheme } from "styled-components";
 import styled from 'styled-components/native'
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -18,7 +18,8 @@ import NavigationStrings from "@root/navigation/navigationStrings";
 
 const AddSupporter = () => {
     const { findSupporter, addSupporter } = useActions();
-    const { findSupporterData, loading } = useTypedSelector((state) => state.findSupporterData);
+    const { findSupporterData, loading, error } = useTypedSelector((state) => state.findSupporterData);
+    const { addSupporterData, addloading } = useTypedSelector((state) => state.addSupporterData);
     const [search, setSearch] = useState('')
     const { colors }: any = useTheme()
     const [showAlert, setShowAlert] = useState(false);
@@ -26,10 +27,11 @@ const AddSupporter = () => {
     const handleSearch = (values: SearchSupporterInterface) => {
         findSupporter(values.keyword)
     };
+
     return (
         <MainView>
             {
-                loading ? <AppLoader /> : <ChildView>
+                loading || addloading ? <AppLoader /> : <ChildView>
                     <TitleText>
                         Enter supporter's name to locate user.
                     </TitleText>
@@ -64,7 +66,7 @@ const AddSupporter = () => {
                                     />
                                 </ButtonWrapper>
                                 {
-                                   Object.keys(findSupporterData).length  > 0 &&  findSupporterData.data.length > 0 ?
+                                    Object.keys(findSupporterData).length > 0 && findSupporterData.data.length > 0 ?
                                         (<FlatList
                                             nestedScrollEnabled={false}
                                             data={findSupporterData.data}
@@ -75,8 +77,7 @@ const AddSupporter = () => {
                                                 return (
                                                     <DrawerThreeSection>
                                                         <TouchableOpacity onPress={async () => {
-                                                             await addSupporter({ to_user: item.user_id })    
-                                                            setShowAlert(true)
+                                                            await addSupporter({ to_user: item.user_id })
                                                         }}>
                                                             <HeaderWrapper>
                                                                 <ImageWrapper>
@@ -90,50 +91,15 @@ const AddSupporter = () => {
                                                             </HeaderWrapper>
                                                         </TouchableOpacity>
 
-                                                        {
-                                                            <AwesomeAlert
-                                                                show={showAlert}
-                                                                showProgress={false}
-                                                                title="Suppoter Added"
-                                                                message="This User has been notified"
-                                                                closeOnTouchOutside={false}
-                                                                closeOnHardwareBackPress={false}
-                                                                customView={
-                                                                    <AlertView>
 
-
-                                                                        <HeaderWrapper>
-                                                                            <ImageWrapper>
-                                                                                <ImageContent source={item != null ? { uri: imageUrl + item.profile_photo } : dp} ></ImageContent>
-                                                                                {/* <ImageContent source={{ uri: item != null ? imageUrl + item.profile_photo : dp }} /> */}
-                                                                            </ImageWrapper>
-                                                                            <UserName numberOfLines={1}>{item.first_name + " " + item.last_name}</UserName>
-                                                                           
-                                                                           <TouchableOpacity onPress={() => {  setShowAlert(false)}}>
-                                                                           <BtnView>
-                                                                                <OkayText >{'Okay'}</OkayText>
-                                                                            </BtnView>
-                                                                           </TouchableOpacity>
-                                                                        </HeaderWrapper>
-
-                                                                    </AlertView>
-                                                                }
-                                                                showCancelButton={false}
-                                                                showConfirmButton={false}
-                                                                cancelText="Cancel"
-                                                                confirmText="Confirm"
-                                                                confirmButtonColor="#DD6B55"
-
-                                                            />
-                                                        }
                                                     </DrawerThreeSection>
 
                                                 );
                                             }}
                                         />) : (<NotFound></NotFound>)
-                                        
+
                                 }
-                                
+
                             </View>
                         )}
                     </Formik>

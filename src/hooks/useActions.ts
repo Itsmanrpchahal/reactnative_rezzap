@@ -43,7 +43,10 @@ import { authActionCreators,
    getDreamCollegeList,
    getAllCollege,
    search_StateSchool,
-   send_email} from "../store";
+   send_Email,
+   reset_Password,
+   deleteSupporter,
+   resume_ActivityList} from "../store";
 
 export const useActions = () => {
   const dispatch = useDispatch();
@@ -93,7 +96,10 @@ export const useActions = () => {
       getDreamCollegeList,
       getAllCollege,
       search_StateSchool,
-      send_email
+      send_Email,
+      reset_Password,
+      deleteSupporter,
+      resume_ActivityList
     ),
     dispatch,
   );

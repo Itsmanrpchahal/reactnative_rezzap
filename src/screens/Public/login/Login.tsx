@@ -16,23 +16,24 @@ import { useTheme } from "@react-navigation/native";
 import { ForgotInterface, LoginInterface } from "../../../store/login/interfaces";
 import AwesomeAlert from 'react-native-awesome-alerts';
 import SecondaryButton from '@root/components/ButtonSecondary';
-import { navigationRef } from '../../../navigation/RootNavigation';
 
 const Login = (props: any) => {
-  const { login,send_email } = useActions();
+  const [confirm, setConfirm] = useState('Send')
+  const [email,setEmail] = useState('')
+  const { login, send_Email } = useActions('');
   const { colors }: any = useTheme();
   const { loading, error, isAuthenticated } = useTypedSelector(
     state => state.auth,
   );
+  const { sendEmailloading, sendEmailerror, sendEmailData } = useTypedSelector(
+    state => state.sendEmailData,
+  );
   const [showAlert, setShowAlert] = useState(false);
-  const [otpAlert, setOtpAlert] = useState(false)
 
   useEffect(() => {
-    if (error !== null) {
-      // @ts-ignore
-      alert(error);
-    }
-  }, [error]);
+  
+
+  }, [error, sendEmailerror]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -44,10 +45,16 @@ const Login = (props: any) => {
     login(values);
   };
 
-  const handleForgot = (values: ForgotInterface) => {
+  const handleForgot = async (values: ForgotInterface) => {
+    setConfirm('Sending...')
+    await send_Email({ email: values.email })
+    setEmail(values.email)
+    if(sendEmailData.data.status)
+    {
+      props.navigation.navigate(navigationStrings.RESET_PASSWORD,values)
+    }
+   
     setShowAlert(false)
-    send_email({email:values.email})
-    // props.navigation.navigate(navigationStrings.RESET_PASSWORD,values)
   }
   return (
     <ImageBackground
@@ -67,7 +74,6 @@ const Login = (props: any) => {
                 }}
                 onSubmit={(values) => {
                   handleLogin(values);
-
                 }}>
                 {({ setFieldValue, handleSubmit, errors }) => (
                   <View>
@@ -75,6 +81,7 @@ const Login = (props: any) => {
                       accessibilityLabel="Email"
                       onChangeText={(value: any) => {
                         setFieldValue('email', value);
+                       
                       }}
                       placeholder="email"
                       keyboardType={'email-address'}
@@ -114,7 +121,7 @@ const Login = (props: any) => {
 
             <TouchableOpacity onPress={() => {
               setShowAlert(true)
-
+              setConfirm('Send')
             }}>
               <ForgotWrapper>
                 Forgot Password?
@@ -171,7 +178,7 @@ const Login = (props: any) => {
                           onPress={
                             handleSubmit
                           }
-                          btnText={'Confirm'}
+                          btnText={confirm}
                           backgroundColor={colors.greenColor}
                         />
                       </BtnWrapper>
@@ -192,7 +199,7 @@ const Login = (props: any) => {
           />
         }
 
-        
+
       </MainParentWrapper>
     </ImageBackground>
   );

@@ -41,25 +41,14 @@ instance.interceptors.response.use(
     return response;
   },
   error => {
-    console.log('Error ====> ',JSON.stringify(error))
-    // if (error.response.status === 401) {
-    //   persistor.purge().then(async () => {
-    //     await clearAll();
-    //     store.dispatch({
-    //       type: ActionType.SET_AUTHENTICATION,
-    //       payload: false,
-    //     });
-    //     navigationRef.current.dispatch(
-    //       CommonActions.navigate({
-    //         name: navigationStrings.LOGIN,
-    //       }),
-    //     );
-    //   });
-    //   Snackbar.show({
-    //     text: 'Token expire',
-    //     duration: Snackbar.LENGTH_SHORT,
-    //   });
-    // }
+    
+    if(!error.response.data.status)
+    {
+      Snackbar.show({
+        text: error.response.data.message,
+        duration: Snackbar.LENGTH_SHORT,
+      })
+    }
 
     return Promise.reject(error);
   },

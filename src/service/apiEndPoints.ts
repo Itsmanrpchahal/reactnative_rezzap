@@ -31,6 +31,9 @@ const apiUri = {
   resume_Detail:'resume/resume-details?resume_id=',
   resumeCategorylist:'resume/category-list',
   delete_Resume:'resume/delete?id=',
+  add_Resume:'resume/add?',
+  resume_Activity:'/activity/category-activity?category_id=',
+
   add_Comment : 'activity/add-comment?',
 
   messageList : 'message/supporter-list',
@@ -55,6 +58,7 @@ const apiUri = {
   resetPassword : 'password/reset-password?',
   find_Supporter:'supporter/find?keyword=',
   addSupporter:'supporter/send-invite?to_user=',
+  deleteSupporter:'supporter/remove?to_user=',
 
   collegeStateList:'college/state-list',
   collegeList:'college/school-type-list',
@@ -62,7 +66,6 @@ const apiUri = {
   allCollegeList:'college/list',
   searchStateSchool :'college/search-state-school?state=',
   searchCollegeKeyword:'college/search-college?keyword='
-
 };
 
 export {apiUri, baseURL};

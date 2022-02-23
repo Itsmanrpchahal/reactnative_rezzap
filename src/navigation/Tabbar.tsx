@@ -69,7 +69,7 @@ function DashboardTabs(props: any) {
           return (
             <TouchableOpacity
               onPress={() => {
-                // props.navigation.navigate(NavigationStrings.ADD_RESUME)
+                props.navigation.navigate(NavigationStrings.ADD_RESUME, { type: 'new' })
 
               }}>
               <AddBtn
