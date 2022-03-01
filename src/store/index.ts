@@ -35,6 +35,7 @@ export * as getNotifications from '@root/store/notifictions/action-creators';
 export * as clear_Notificatins from '@root/store/notifictions/action-creators';
 export * as setFollowUnfollow from '@root/store/follow_unfollow/action-creators'
 export * as addComments from '@root/store/addComment/action-creators'
+export * as deleteComments from '@root/store/addComment/action-creators'
 export * as findSupporter from '@root/store/findSupporter/action-creators'
 export * as deleteSupporter from '@root/store/deleteSupporter/action-creators'
 export * as addSupporter from '@root/store/addSupporter/action-creators'

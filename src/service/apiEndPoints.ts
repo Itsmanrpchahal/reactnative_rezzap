@@ -35,6 +35,7 @@ const apiUri = {
   resume_Activity:'/activity/category-activity?category_id=',
 
   add_Comment : 'activity/add-comment?',
+  delete_Comment:'activity/delete-comment?id=',
 
   messageList : 'message/supporter-list',
   messageDetail :'message/chat-list?supporter_id=',

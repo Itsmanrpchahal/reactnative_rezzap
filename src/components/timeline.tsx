@@ -31,7 +31,7 @@ const Timeline = (item: any) => {
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
   const [showComment, setShowComent] = useState(false);
-  const { setsupport, deleteTimelineItem, getMyTimeline ,addComments} = useActions();
+  const { setsupport, deleteTimelineItem, getMyTimeline ,addComments,deleteComments} = useActions();
   const {addCommemtData,commentloading} = useTypedSelector((state) => state.addCommemtData);
   const [supportt, setSupport] = useState(false);
   
@@ -99,7 +99,12 @@ const Timeline = (item: any) => {
 
                 <HorizontalWrapper>
                   <Text>{item.comment}</Text>
+                  <RightCommentView>
                   <Text>{item && Object.keys(item).length > 0 ? item.created_at.split(' ')[1].substring(4) : 'Eror'}</Text>
+                  
+                  <TouchableOpacity onPress={async () => {await deleteComments({id:item.id}) , getMyTimeline()}}><DeleteImage source={deleteBlack}/></TouchableOpacity>
+                  </RightCommentView>
+                  
                 </HorizontalWrapper>
               )) : <Text></Text> : <Text></Text>
           }
@@ -170,6 +175,12 @@ const Timeline = (item: any) => {
 }
 
 export default Timeline;
+
+const DeleteImage = styled.Image`
+margin-left:3px;`;
+
+const RightCommentView = styled.View`
+flex-direction:row`;
 
 const AddBtn = styled.Image`
 margin:10px;

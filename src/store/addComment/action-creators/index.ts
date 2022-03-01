@@ -27,3 +27,28 @@ export const addComments = (fn:any) => {
     }
   };
 };
+
+
+export const deleteComments = (fn:any) => {
+  return async (dispatch: Dispatch<Action | any>) => {
+    dispatch({
+      type: ActionType.ADD_COMMENT_INIT,
+    });
+
+    try {
+      const response = await service.delete(apiUri.delete_Comment+fn.id);
+
+      dispatch({
+        type: ActionType.ADD_COMMENT_SUCCESS,
+        payload: response.data,
+      });
+      return response;
+    } catch (e: any) {
+
+      dispatch({
+        type: ActionType.ADD_COMMENT_ERROR,
+        payload: 'Somethings wents wrong',
+      });
+    }
+  };
+};

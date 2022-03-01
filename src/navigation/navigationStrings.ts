@@ -25,4 +25,5 @@ export default {
   ADD_ACTIVITY:'Activity',
   RESET_PASSWORD:'Reset Password',
   ADD_SUPPORTER:'Add Supporter',
+  PAYPAL:'PayPal',
 };

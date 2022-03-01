@@ -16,6 +16,8 @@ import PrimaryButton from "@root/components/Button";
 import AppLoader from "../../../../components/Loader";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { addWhite } from "../../../../utils/assets";
+import { navigationRef } from "../../../../navigation/RootNavigation";
+import navigationStrings from "../../../../navigation/navigationStrings";
 
 const AddNewCategory = () => {
   const { colors }: any = useTheme();
@@ -187,7 +189,7 @@ const AddNewCategory = () => {
 
         <ButtonWrapper>
           <PrimaryButton
-            onPress={() => { alert(JSON.stringify(checkedIds)) }}
+            onPress={() => { navigationRef.current.navigate(navigationStrings.PAYPAL)}}
             backgroundColor={colors.black}
             btnText={"Add"}
             loading={loading}

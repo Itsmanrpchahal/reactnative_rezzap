@@ -49,7 +49,7 @@ const Login = (props: any) => {
     setConfirm('Sending...')
     await send_Email({ email: values.email })
     setEmail(values.email)
-    if(sendEmailData.data.status)
+    if(sendEmailData.data.status===true)
     {
       props.navigation.navigate(navigationStrings.RESET_PASSWORD,values)
     }

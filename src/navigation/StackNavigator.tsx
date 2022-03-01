@@ -34,6 +34,7 @@ import AddResume from '../screens/private/resume/addResume';
 import AddActivity from '../screens/private/home/addActivity';
 import ResetPassword from '../screens/Public/resetPassword';
 import AddSupporter from '../screens/private/home/supporters/addSupporter';
+import Paypal from '../components/paypal';
 
 const Stack = createStackNavigator();
 
@@ -107,6 +108,8 @@ function StackNavigator(props: any) {
         }}
       />
 
+
+
       <Stack.Screen
         name={navigationStrings.SIGNUP}
         component={SignUp}
@@ -122,6 +125,20 @@ function StackNavigator(props: any) {
         }}
       />
 
+<Stack.Screen
+        name={navigationStrings.PAYPAL}
+        component={Paypal}
+        options={{
+          headerShown: true,
+          title: navigationStrings.PAYPAL,
+          headerStyle: {
+            backgroundColor: colors.white,
+          },
+          headerBackTitleStyle: {
+            color: colors.black,
+          },
+        }}
+      />
 
       <Stack.Screen
         name={navigationStrings.SIGNUP_STEP_2}

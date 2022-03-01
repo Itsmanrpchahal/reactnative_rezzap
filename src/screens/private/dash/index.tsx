@@ -15,7 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 const Dash = () => {
     const isFocused = useIsFocused();
     const { colors }: any = useTheme();
-    const { getCollegeStates, getCollegeList, getDreamCollegeList, getAllCollege, search_StateSchool,search_CollegeKeyword } = useActions();
+    const { getCollegeStates, getCollegeList, getDreamCollegeList, getAllCollege, search_StateSchool, search_CollegeKeyword } = useActions();
     const { collegeStateData, loading } = useTypedSelector((state) => state.collegeStateData);
     const { collegeListData, collegeloading } = useTypedSelector((state) => state.collegeListData);
     const { allcollegeData, allCollegeloading } = useTypedSelector((state) => state.allcollegeData);
@@ -24,8 +24,9 @@ const Dash = () => {
     let [states, setStates] = useState([])
     let [state, setState] = useState('')
     let [school_type, setSchoolType] = useState('')
-    const [dreamValue, setDreamValue] = useState();
+    const [dreamValue, setDreamValue] = useState({});
     const [isFocus, setIsFocus] = useState(false);
+    const [showDream, setShowDream] = useState(0);
 
     useEffect(() => {
         if (isFocused) {
@@ -40,7 +41,7 @@ const Dash = () => {
         <MainWrapper>
 
             <SearchWrapper>
-                <TextInput style={{ color: '#ffffff' }} placeholder={"Search"} onChangeText={(mess) => setSearch(mess)} >
+                <TextInput style={{ color: '#000000' }} placeholder={"Search"} onChangeText={(mess) => setSearch(mess)}>
                 </TextInput>
                 {
                     searcht === '' ? <TouchableOpacity onPress={() => {
@@ -48,7 +49,7 @@ const Dash = () => {
                     }}>
                         <ImageView source={closewhite} />
                     </TouchableOpacity> : <TouchableOpacity onPress={() => {
-                            search_CollegeKeyword({keyword:searcht})
+                        search_CollegeKeyword({ keyword: searcht })
                     }}>
                         <ImageView source={searchwhite} />
                     </TouchableOpacity>
@@ -122,90 +123,94 @@ const Dash = () => {
                             onBlur={() => setIsFocus(false)}
                             onChange={item => {
                                 setIsFocus(false)
-                                
+                                setDreamValue(item)
+                                setShowDream(1)
                             }}
                         />
                     </DropView>
+
                 </ChildView>
             }
 
+
             {
-                loading || collegeloading || dreamloading || allCollegeloading ? <AppLoader /> : allcollegeData && Object.keys(allcollegeData).length > 0 ? <FlatList
-                    nestedScrollEnabled={false}
-                    data={allcollegeData.data}
-                    horizontal={false}
-                    style={{ height: '72%' }}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <CollegeItem>
-                                <CollegeView backgroundColor={colors.blue}>
-                                    <CollegeTitle color={colors.white}>
-                                        {item.college_name}
-                                    </CollegeTitle>
-                                    <ImageWrapper source={bookmark} />
+                loading || collegeloading || dreamloading || allCollegeloading ? <AppLoader /> : allcollegeData && Object.keys(allcollegeData).length > 0 ?
+                    <FlatList
+                        nestedScrollEnabled={false}
+                        data={allcollegeData.data}
+                        horizontal={false}
+                        style={{ height: '72%' }}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <CollegeItem>
+                                    <CollegeView backgroundColor={colors.blue}>
+                                        <CollegeTitle color={colors.white}>
+                                            {item.college_name}
+                                        </CollegeTitle>
+                                        <ImageWrapper source={bookmark} />
 
-                                </CollegeView>
+                                    </CollegeView>
 
-                                <CollegeView backgroundColor={colors.white}>
-                                    <CollegeTitle color={colors.black}>
-                                        Acceptance rate %
-                                    </CollegeTitle>
+                                    <CollegeView backgroundColor={colors.white}>
+                                        <CollegeTitle color={colors.black}>
+                                            Acceptance rate %
+                                        </CollegeTitle>
 
-                                    <MathView backgroundColor={colors.black}>
-                                        {item.acceptance_rate}
-                                    </MathView>
-                                </CollegeView>
-                                <Divider />
+                                        <MathView backgroundColor={colors.black}>
+                                            {item.acceptance_rate}
+                                        </MathView>
+                                    </CollegeView>
+                                    <Divider />
 
-                                <CollegeView backgroundColor={colors.white}>
-                                    <CollegeTitle color={colors.black}>
-                                        Avg GPA
-                                    </CollegeTitle>
+                                    <CollegeView backgroundColor={colors.white}>
+                                        <CollegeTitle color={colors.black}>
+                                            Avg GPA
+                                        </CollegeTitle>
 
-                                    <MathView backgroundColor={colors.black}>
-                                        {item.avg_gpa}
-                                    </MathView>
-                                </CollegeView>
-                                <Divider />
-
-
-                                <CollegeView backgroundColor={colors.white}>
-                                    <CollegeTitle color={colors.black}>
-                                        SAT Math
-                                    </CollegeTitle>
-
-                                    <MathView backgroundColor={colors.black}>
-                                        {item.sat_math}
-                                    </MathView>
-                                </CollegeView>
-                                <Divider />
-
-                                <CollegeView backgroundColor={colors.white}>
-                                    <CollegeTitle color={colors.black}>
-                                        SAT Critical
-                                    </CollegeTitle>
-
-                                    <MathView backgroundColor={colors.black}>
-                                        {item.sat_critical}
-                                    </MathView>
-                                </CollegeView>
-                                <Divider />
+                                        <MathView backgroundColor={colors.black}>
+                                            {item.avg_gpa}
+                                        </MathView>
+                                    </CollegeView>
+                                    <Divider />
 
 
-                                <CollegeView backgroundColor={colors.white}>
-                                    <CollegeTitle color={colors.black}>
-                                        AAT Composite
-                                    </CollegeTitle>
+                                    <CollegeView backgroundColor={colors.white}>
+                                        <CollegeTitle color={colors.black}>
+                                            SAT Math
+                                        </CollegeTitle>
 
-                                    <MathView backgroundColor={colors.black}>
-                                        {item.act_composite}
-                                    </MathView>
-                                </CollegeView>
-                            </CollegeItem>
-                        )
-                    }}
-                >
-                </FlatList> : <NotFound>No search record found!</NotFound>
+                                        <MathView backgroundColor={colors.black}>
+                                            {item.sat_math}
+                                        </MathView>
+                                    </CollegeView>
+                                    <Divider />
+
+                                    <CollegeView backgroundColor={colors.white}>
+                                        <CollegeTitle color={colors.black}>
+                                            SAT Critical
+                                        </CollegeTitle>
+
+                                        <MathView backgroundColor={colors.black}>
+                                            {item.sat_critical}
+                                        </MathView>
+                                    </CollegeView>
+                                    <Divider />
+
+
+                                    <CollegeView backgroundColor={colors.white}>
+                                        <CollegeTitle color={colors.black}>
+                                            AAT Composite
+                                        </CollegeTitle>
+
+                                        <MathView backgroundColor={colors.black}>
+                                            {item.act_composite}
+                                        </MathView>
+                                    </CollegeView>
+                                </CollegeItem>
+                            )
+                        }}
+                    >
+                    </FlatList> : <NotFound>No search record found!</NotFound>
             }
 
         </MainWrapper>
@@ -287,7 +292,7 @@ const SearchWrapper = styled.View`
   width: auto;
   margin: 16px;
   padding: 15px;
-  background-color: ${({ theme }: any) => theme.colors.black};
+  background-color: ${({ theme }: any) => theme.colors.darkGray};
   justify-content: space-between;
   flex-direction: row;
 `;

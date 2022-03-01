@@ -46,7 +46,8 @@ import { authActionCreators,
    send_Email,
    reset_Password,
    deleteSupporter,
-   resume_ActivityList} from "../store";
+   resume_ActivityList,
+   deleteComments} from "../store";
 
 export const useActions = () => {
   const dispatch = useDispatch();
@@ -99,7 +100,8 @@ export const useActions = () => {
       send_Email,
       reset_Password,
       deleteSupporter,
-      resume_ActivityList
+      resume_ActivityList,
+      deleteComments
     ),
     dispatch,
   );
