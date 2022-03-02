@@ -65,7 +65,8 @@ const Dash = () => {
                     <DropDownView>
                         <Horizontal>
                             <Dropdown
-                                style={{ width: "100%" }}
+                                style={{ width: "100%",backgroundColor:'#D3D3D3' ,padding : 5 }}
+                                selectedTextStyle={{color:colors.black}}
                                 data={collegeStateData && Object.keys(collegeStateData).length > 0 ? collegeStateData.data : states}
                                 search={false}
                                 maxHeight={300}
@@ -87,7 +88,8 @@ const Dash = () => {
 
                         <Horizontal>
                             <Dropdown
-                                style={{ width: "100%" }}
+                                 style={{ width: "100%",backgroundColor:'#D3D3D3' ,padding : 5 }}
+                                 selectedTextStyle={{color:colors.black}}
                                 data={collegeListData && Object.keys(collegeListData).length > 0 ? collegeListData.data : states}
                                 search={false}
                                 maxHeight={300}
@@ -111,7 +113,8 @@ const Dash = () => {
 
                     <DropView>
                         <Dropdown
-                            style={{ width: "100%" }}
+                             style={{ width: "100%",backgroundColor:'#D3D3D3',padding : 5 }}
+                             selectedTextStyle={{color:colors.black}}
                             data={dreamCollegeData && Object.keys(dreamCollegeData).length > 0 ? dreamCollegeData.data : states}
                             search={false}
                             maxHeight={300}
@@ -269,7 +272,6 @@ const ImageView = styled.Image``;
 const DropView = styled.View`
 width:100%;
 align-items: center;
-padding: 2px 20px;
 background-color: ${({ theme }: any) => theme.colors.borderGray};
 margin-top: 16px;
 `;
@@ -279,7 +281,6 @@ display: flex;
 width:48%;
 flex-direction: row;
 align-items: center;
-padding: 2px 20px;
 background-color: ${({ theme }: any) => theme.colors.borderGray};
 margin-top: 16px;
 `;
@@ -291,9 +292,12 @@ justify-content:space-between`;
 const SearchWrapper = styled.View`
   width: auto;
   margin: 16px;
-  padding: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+    height:40px;
   background-color: ${({ theme }: any) => theme.colors.darkGray};
   justify-content: space-between;
+  align-items:center;
   flex-direction: row;
 `;
 

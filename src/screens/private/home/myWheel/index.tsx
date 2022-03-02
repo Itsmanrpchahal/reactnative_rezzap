@@ -1,21 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MainParentWrapper, MainWrapper, NotFound } from "@root/utils/globalStyle";
 // @ts-ignore
 import styled from "styled-components/native";
 import { useActions } from "@root/hooks/useActions";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import { useIsFocused, useTheme } from "@react-navigation/native";
-import { FlatList, ScrollView, Text } from "react-native";
+import { FlatList, ScrollView, Text, TouchableOpacity } from "react-native";
 import { withTheme } from "styled-components";
 import PieChart from "react-native-pie-chart";
-import AppLoader from "../../../../components/Loader";
-import { MainWrapperWhite } from "../../../../utils/globalStyle";
+import AppLoader from "@root/components/Loader";
+import { MainWrapperWhite } from "@root/utils/globalStyle";
+import { filter, support } from "@root/utils/assets";
+import Timeline from "../../../../components/timeline";
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 
 
 function MyWheel(props: any) {
+  const [visible, setVisible] = useState(false);
+  const hideMenu = () => setVisible(false);
+  const showMenu = () => setVisible(true);
   const isFocused = useIsFocused();
-  const { getMyGraph } = useActions();
+  const { getMyGraph, getMyTimeline ,search_Activity} = useActions();
   const { myGraphData, loading } = useTypedSelector((state) => state.myGraph);
+  const { timelineData, timelineLoading } = useTypedSelector(
+    (state) => state.timeline,
+  );
   const series = [123]
   const sliceColor = ['#F44336']
 
@@ -26,21 +35,24 @@ function MyWheel(props: any) {
   useEffect(() => {
     if (isFocused) {
       getMyGraph();
+      getMyTimeline();
     }
   }, [isFocused]);
 
   return (
 
-    <MainWrapperWhite>
 
-      {loading ? (
-        <AppLoader/>
+    <MainWrapper>
+
+
+      {loading || timelineLoading ? (
+        <AppLoader />
       ) : <ChildWrapperOuter>
         <ChartView>
           <PieChart
             widthAndHeight={widthAndHeight}
-            series={ myGraphData && Object.keys(myGraphData).length > 0 ? myGraphData.data.map((li: any) => parseInt(li["percentage"])):series}
-            sliceColor={myGraphData && Object.keys(myGraphData).length > 0 ? myGraphData.data.map((li: any) => li["color"]):sliceColor}
+            series={myGraphData && Object.keys(myGraphData).length > 0 ? myGraphData.data.map((li: any) => parseInt(li["percentage"])) : series}
+            sliceColor={myGraphData && Object.keys(myGraphData).length > 0 ? myGraphData.data.map((li: any) => li["color"]) : sliceColor}
             doughnut={true}
             coverRadius={0.45}
             coverFill={"#FFFFFF"}
@@ -51,20 +63,56 @@ function MyWheel(props: any) {
 
         <Divider backgroundColor={colors.divider} />
 
-        <FlatList
-          data={myGraphData.data}
-          renderItem={({ item }) => {
-            return <ValueView>
-              <BoxView backgroundColor={item != null ? item.color : ""} />
-              <ValuetText> {item != null ? item.category_name : ""}</ValuetText>
-            </ValueView>;
-          }}
-        />
+
+
+        <FilterView>
+         
+          <Menu
+            visible={visible}
+            anchor={<Text style={{ fontWeight: '500' }} onPress={showMenu}>Filter by category </Text>}
+            onRequestClose={hideMenu}
+          >
+            <FlatList
+              data={myGraphData.data}
+              renderItem={({ item }) => {
+                return <MenuItem onPress={() => { 
+                 setVisible(false)
+                  search_Activity({id:item.category_id})
+                 }}>{ item != null ? item.category_name : "" }</MenuItem>
+              }}
+            />
+
+
+            <MenuDivider />
+
+          </Menu>
+        </FilterView>
+
+
+
+
+        {
+          timelineLoading ? (
+            <NotFound>Loading...</NotFound>
+          ) :
+            timelineData.data && Object.keys(timelineData.data).length > 0 ?
+              (
+                <FlatList
+                  data={timelineData.data}
+                  renderItem={({ item }) => {
+                    return <Timeline item={item} />
+                  }}
+                />
+
+              ) :
+              (<Text>No Data Found</Text>)
+        }
+
 
       </ChildWrapperOuter>}
-    </MainWrapperWhite>
 
 
+    </MainWrapper>
   );
 }
 
@@ -74,6 +122,15 @@ export default withTheme(MyWheel);
 type DrawerWrapperProps = {
   backgroundColor: string;
 };
+const ImageFilter = styled.Image`
+  
+`;
+
+const FilterView = styled.View`
+flex-direction:row;
+justify-content:flex-end;
+align-items:flex-end;
+padding:5px;`;
 
 const ValuetText = styled.Text<DrawerWrapperProps>`
   color: #000000;
@@ -110,7 +167,5 @@ const ChildWrapperOuter = styled.View`
   height:100%;
   padding-top:10px;
   margin-bottom: 20px;
-  align-content: center;
-  justify-content: center;
   background-color: white;
 `;

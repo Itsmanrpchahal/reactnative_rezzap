@@ -31,7 +31,7 @@ const Messages = (props: any) => {
     <MainWrapper>
 
       <SearchWrapper>
-        <TextInput placeholder={"Search"} onChangeText={(mess) => setSearch(mess)} >
+        <TextInput style={{color:colors.black}} placeholder={"Search"} onChangeText={(mess) => setSearch(mess)} >
 
 
         </TextInput>
@@ -79,18 +79,13 @@ const Messages = (props: any) => {
                                 <ChatText numberofLines={1}>
                                   {item.name}
                                 </ChatText>
-                                <ChatMessage color={colors.borderGray} fontWeight={100}>
-                                  {/* { item && Object.keys(item).length> 0 ? format(new Date(item.created), "HH:mm") : ''} */}
-                                  {/* {format(new Date(item.created), "HH:mm")} */}
-                                </ChatMessage>
+                                
                               </ChatTimeNameWrapper>
 
                               <ChatMessage color={colors.black} fontWeight={500}>
                                 {item.message}
                               </ChatMessage>
-                              <ChatMessage color={colors.darkGray} fontWeight={100}>
-                                {item.message}
-                              </ChatMessage>
+                             
                               {/*}*/}
                             </ChatNameView>
                           </ChatWrapper>
@@ -138,7 +133,8 @@ const ChatTimeNameWrapper = styled.View`
 const ChatText = styled.Text`
   color: black;
   font-size: ${({ theme }: any) => theme.fontSize.cardDate}px;
-  font-weight: 500;`;
+  font-weight: 500;
+  width:100%`;
 
 const ChatNameView = styled.View`
   justify-content: space-between;
@@ -165,9 +161,12 @@ const SearchWrapper = styled.View`
   margin: 16px;
   border-radius: 20px;
   border-width: 1px;
-  padding: 10px;
+  padding-left: 10px;
+  padding-right:10px;
+  height:40px;
   border-color: ${({ theme }: any) => theme.colors.borderGray};
   justify-content: space-between;
+  align-items:center;
   flex-direction: row;
 `;
 

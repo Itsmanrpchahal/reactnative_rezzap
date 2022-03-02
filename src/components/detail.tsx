@@ -21,7 +21,7 @@ function Detail(item:any) {
                    backgroundColor={colors.white}
                    icon={loc} />
       <ProfileItem heading={"Gender :"}
-                   decs={item.item != null ? item.item.gender : ''}
+                   decs={item.item != null ? item.item.gender === '1' ? 'Male' : item.item.gender === '2' ? 'Female' : 'Other' : ''}
                    backgroundColor={colors.divider}
                    icon={loc} />
       <ProfileItem heading={"Mobile :"}

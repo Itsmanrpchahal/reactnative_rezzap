@@ -40,7 +40,7 @@ const Timeline = (item: any) => {
     <ParentWarpper>
         <HorizontalWrapper>
         <VerticalWrapper>
-          <CapText>{item.item.category.substring(0, 1).toUpperCase()}</CapText>
+          <CapText>{item.item.category ? item.item.category.substring(0,1).toUpperCase() : ''}</CapText>
           <DateText>{format(new Date(item.item.created_at), 'do')}</DateText>
           <MonthWrapper>
             <MonthText>
@@ -81,7 +81,7 @@ const Timeline = (item: any) => {
                 anchor={<Text style={{ fontWeight: '800' }} onPress={showMenu}>. . .</Text>}
                 onRequestClose={hideMenu}
               >
-                <MenuItem onPress={() => { alert(item.item.id) }}>Edit</MenuItem>
+                <MenuItem onPress={() => {  }}>Edit</MenuItem>
                 <MenuItem onPress={async () => { await deleteTimelineItem({ id: item.item.id }), getMyTimeline() }}>Delete</MenuItem>
 
                 <MenuDivider />
@@ -98,9 +98,9 @@ const Timeline = (item: any) => {
               item.item.comments.map((item: any) => (
 
                 <HorizontalWrapper>
-                  <Text>{item.comment}</Text>
+                  <CommentText>{item.comment}</CommentText>
                   <RightCommentView>
-                  <Text>{item && Object.keys(item).length > 0 ? item.created_at.split(' ')[1].substring(4) : 'Eror'}</Text>
+                  <CommentText>{item && Object.keys(item).length > 0 ? item.created_at.split(' ')[1].substring(4) : 'Error'}</CommentText>
                   
                   <TouchableOpacity onPress={async () => {await deleteComments({id:item.id}) , getMyTimeline()}}><DeleteImage source={deleteBlack}/></TouchableOpacity>
                   </RightCommentView>
@@ -123,7 +123,7 @@ const Timeline = (item: any) => {
 
               <VerticalWrapper>
                 <Dots source={support} />
-                <Text>{supportt === true ? item.item.is_support === 0 ? 'Unsupport' : 'Support' : item.item.is_support === 1 ? 'Unsupport' : 'Support'}</Text>
+                <SubTitleText>{supportt === true ? item.item.is_support === 0 ? 'Unsupport' : 'Support' : item.item.is_support === 1 ? 'Unsupport' : 'Support'}</SubTitleText>
               </VerticalWrapper>
             </TouchableOpacity>
 
@@ -133,14 +133,14 @@ const Timeline = (item: any) => {
             }}>
               <VerticalWrapper>
                 <Dots source={comment} />
-                <Text>{item.item.comment_count} Comment</Text>
+                <SubTitleText>{item.item.comment_count} Comment</SubTitleText>
               </VerticalWrapper>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => { myCustomShare('activity/' + item.item.id) }}>
               <VerticalWrapper>
                 <Dots source={share} />
-                <Text>Share</Text>
+                <SubTitleText>Share</SubTitleText>
               </VerticalWrapper>
             </TouchableOpacity>
 
@@ -149,7 +149,7 @@ const Timeline = (item: any) => {
 
           <CommentSection>
             <CommentField>
-              <TextField placeholder={'Comment'}  onChangeText={(value: any) => {
+              <TextField  placeholder={'Comment'}  onChangeText={(value: any) => {
                         setAddComment(value)
                         }}>
 
@@ -176,6 +176,9 @@ const Timeline = (item: any) => {
 
 export default Timeline;
 
+const CommentText = styled.Text`
+color:#000`
+
 const DeleteImage = styled.Image`
 margin-left:3px;`;
 
@@ -187,9 +190,11 @@ margin:10px;
 `;
 const CommentField = styled.View`
 width:90%;
+paddingVertical: 0
 `;
 const CommentSection = styled.View`
 padding-left:10px;
+paddingVertical: 0
 flex-direction:row;
 align-items:center;
 `;

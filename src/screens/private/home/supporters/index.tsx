@@ -98,6 +98,10 @@ const Supportors = (props: any) => {
 // @ts-ignore
 export default withTheme(Supportors);
 
+const CommentText = styled.Text`
+color:#000`
+
+
 const EditBtn = styled.Text`
 background-color:#000;
 padding:5px;
@@ -141,7 +145,8 @@ const ImageContent = styled.Image`
 `;
 
 
-const UserName = styled.Text``;
+const UserName = styled.Text`
+color:#000;`;
 
 const DrawerThreeSection = styled.View`
   flex-direction: row;

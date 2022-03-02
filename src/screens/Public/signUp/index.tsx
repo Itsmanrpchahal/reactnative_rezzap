@@ -126,7 +126,8 @@ const SignUp = (props: any) => {
 
                   <Horizontal>
                     <Dropdown
-                      style={{ width: "100%" }}
+                       style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                       selectedTextStyle={{color:colors.black}}
                       data={data}
                       search={false}
                       maxHeight={100}
@@ -175,7 +176,6 @@ const Horizontal = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2px 20px;
   border-width: 1px;
   border-color: ${({ theme }: any) => theme.colors.borderGray};
   border-radius: 8px;

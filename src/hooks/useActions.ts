@@ -47,7 +47,8 @@ import { authActionCreators,
    reset_Password,
    deleteSupporter,
    resume_ActivityList,
-   deleteComments} from "../store";
+   deleteComments,
+   search_Activity} from "../store";
 
 export const useActions = () => {
   const dispatch = useDispatch();
@@ -101,7 +102,8 @@ export const useActions = () => {
       reset_Password,
       deleteSupporter,
       resume_ActivityList,
-      deleteComments
+      deleteComments,
+      search_Activity
     ),
     dispatch,
   );

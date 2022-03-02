@@ -168,7 +168,7 @@ const SupporterProfile = ({ props, route }) => {
                   timelineLoading ? (
                     <NotFound>Loading...</NotFound>
                   ) :
-                    Object.keys(timelineData).length > 0 ?
+                  timelineData &&  Object.keys(timelineData).length > 0 ?
                       (
                         timelineData.data.map((item: any) => (
                           <Timeline item={item} />
@@ -190,6 +190,8 @@ const SupporterProfile = ({ props, route }) => {
 
 // @ts-ignore
 export default withTheme(SupporterProfile);
+const CommentText = styled.Text`
+color:#000`
 
 const BottomWrapper = styled.View`
   height: auto;
@@ -197,6 +199,7 @@ const BottomWrapper = styled.View`
 
 const TabText = styled.Text`
   text-align: center;
+  color:#000;
 `;
 
 const Tabbutton = styled.View`

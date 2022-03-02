@@ -79,6 +79,32 @@ export const deleteTimelineItem = (fn:any) => {
   };
 };
 
+export const search_Activity = (fn:any) => {
+
+  return async (dispatch: Dispatch<Action | any>) => {
+    dispatch({
+      type: ActionType.TIMELINE_INIT,
+    });
+
+    try {
+      const response = await service.get(apiUri.searchActivity+fn.id);
+
+      dispatch({
+        type: ActionType.TIMELINE_SUCCESS,
+        payload: response.data,
+      });
+      return response;
+    } catch (e: any) {
+
+      dispatch({
+        type: ActionType.TIMELINE_ERROR,
+        payload: 'Somethings wents wrong',
+      });
+    }
+  };
+};
+
+
 
 
 

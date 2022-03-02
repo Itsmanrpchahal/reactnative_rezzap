@@ -24,6 +24,7 @@ const apiUri = {
 
   activityShow :'activity/show',
   supporterActivityShow :'supporter/activity-list?supporter_id=',
+  searchActivity:'activity/category-activity?category_id=',
 
   profilePictureUpload : 'update-profile-pic',
 

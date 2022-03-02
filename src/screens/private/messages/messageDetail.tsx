@@ -68,7 +68,7 @@ const MessageDetail = ({ props, route }) => {
       <SendMessageWrapper>
 
         <SearchWrapper>
-          <TextInput placeholder={"Type message"} onChangeText={(mess) => setMessageTV(mess)} value={message}>
+          <TextInput style={{color:colors.black}} placeholder={"Type message"} onChangeText={(mess) => setMessageTV(mess)} value={message}>
           </TextInput>
 
           <TouchableOpacity onPress={async () => {
@@ -103,9 +103,11 @@ const SearchWrapper = styled.View`
  margin: 0 16px;
   border-radius: 20px;
   border-width: 1px;
-  padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   border-color: ${({ theme }: any) => theme.colors.borderGray};
   justify-content: space-between;
+  align-items:center;
   flex-direction: row;
 `;
 

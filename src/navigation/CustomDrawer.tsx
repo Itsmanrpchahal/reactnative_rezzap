@@ -162,6 +162,6 @@ const MainWrapper = styled.View`
 
 const DrawerWrapper = styled.View<DrawerWrapperProps>`
   background-color: ${({backgroundColor}: any) => backgroundColor};
-  margin-top: 30px;
+  margin-top: 20px;
   justify-content: space-between;
 `;

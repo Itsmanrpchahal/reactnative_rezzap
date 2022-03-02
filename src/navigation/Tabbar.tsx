@@ -46,7 +46,7 @@ function DashboardTabs(props: any) {
           return (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate(NavigationStrings.ADD_ACTIVITY)
+                 props.navigation.navigate(NavigationStrings.ADD_NEW_CATEGORY)
 
               }}>
               <AddBtn

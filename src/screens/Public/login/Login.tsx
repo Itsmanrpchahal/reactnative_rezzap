@@ -230,6 +230,7 @@ const ForgotWrapper = styled.Text`
   font-size:16px;
   text-align:center;
   margin-top:16px;
+  color:#000;
 `;
 
 const DontHaveAccountText = styled.Text<DontHaveAccountProps>`

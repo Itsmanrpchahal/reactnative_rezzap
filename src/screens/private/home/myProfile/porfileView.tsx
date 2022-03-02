@@ -46,7 +46,7 @@ const ProfileView = (props: any) => {
                        backgroundColor={colors.white}
                        icon={loc} />
           <ProfileItem heading={"Gender :"}
-                       decs={myProfileData != null ? myProfileData.data.gender : ""}
+                       decs={myProfileData != null ? myProfileData.data.gender === '1' ? 'Male' : myProfileData.data.gender === '2' ? 'Female' : 'Other' : ''}
                        backgroundColor={colors.divider}
                        icon={loc} />
           <ProfileItem heading={"Mobile :"}

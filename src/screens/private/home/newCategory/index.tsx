@@ -189,7 +189,9 @@ const AddNewCategory = () => {
 
         <ButtonWrapper>
           <PrimaryButton
-            onPress={() => { navigationRef.current.navigate(navigationStrings.PAYPAL)}}
+            onPress={() => { 
+             // navigationRef.current.navigate(navigationStrings.PAYPAL)
+            }}
             backgroundColor={colors.black}
             btnText={"Add"}
             loading={loading}
@@ -257,6 +259,7 @@ const AddBtn = styled.Image`
 const TitleText = styled.Text`
 margin-left:10px;
 margin-top:6px;
+color:#000;
 `;
 
 const CateLeft = styled.View`
@@ -290,6 +293,5 @@ flex-wrap:wrap;
 flex-direction:column;
 height:100%;
 background-color:#fffff;
-
 width:100%;
 `;

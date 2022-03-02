@@ -51,6 +51,7 @@ const TextField: React.FC<TextFieldProps> = ({
           onChangeText={onChangeText}
           secureTextEntry={showSecureEntry ? false : secureTextEntry}
           placeholder={placeholder}
+          placeholderTextColor="gray"
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           editable ={editable}
@@ -85,6 +86,7 @@ const TextInputField = styled.TextInput`
   flex: 1;
   color: ${({theme}: any) => theme.colors.text};
   padding-left: 8px;
+  paddingVertical: 0
 `;
 
 const Horizontal = styled.View`

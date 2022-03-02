@@ -142,6 +142,7 @@ type DrawerWrapperProps = {
 };
 
 
+
 const TextWrapper = styled.Text`
   color: ${({ theme }: any) => theme.colors.borderGray};
   font-size: ${({ theme }: any) => theme.fontSize.cardSubTitle}px;

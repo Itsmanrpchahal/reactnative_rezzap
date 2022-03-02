@@ -79,7 +79,8 @@ function StackNavigator(props: any) {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigationRef.current.navigate(NavigationStrings.ADD_NEW_CATEGORY)
+                  
+                  navigationRef.current.navigate(NavigationStrings.ADD_ACTIVITY)
                 }}>
                <AddBtn
                   style={{marginRight: 15}}

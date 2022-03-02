@@ -82,9 +82,8 @@ const AddResume = ({ props, route }) => {
                                             Category
                                         </Title>
                                         <Horizontal>
-
                                             <Dropdown
-                                                style={{ width: "100%" }}
+                                                style={{ width: "100%" ,backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5}}
                                                 data={resumeCData && Object.keys(resumeCData).length > 0 ? resumeCData.data : series}
                                                 search={false}
                                                 maxHeight={300}
@@ -92,7 +91,7 @@ const AddResume = ({ props, route }) => {
                                                 valueField="cat_id"
                                                 searchPlaceholder={"Search"}
                                                 value={'cat_name'}
-
+                                                selectedTextStyle={{color:colors.black}}
                                                 onFocus={() => setIsFocus(true)}
                                                 onBlur={() => setIsFocus(false)}
                                                 onChange={item => {
@@ -106,7 +105,7 @@ const AddResume = ({ props, route }) => {
                                                 <ErrorWrapper__Text>{errors ? errors.category_names : null}</ErrorWrapper__Text>
                                             </ErrorWrapper>
                                         )}
-                                        <Text>Select categories in the order that should appear in the resume.</Text>
+                                        <TextTV>Select categories in the order that should appear in the resume.</TextTV>
 
                                         <Title>
                                             Activity
@@ -114,7 +113,8 @@ const AddResume = ({ props, route }) => {
 
                                         <Horizontal>
                                             <Dropdown
-                                                style={{ width: "100%" }}
+                                                style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                                                selectedTextStyle={{color:colors.black}}
                                                 data={resumeActivityData && Object.keys(resumeActivityData).length > 0 ? resumeActivityData.data : series}
                                                 search={false}
                                                 maxHeight={150}
@@ -143,7 +143,8 @@ const AddResume = ({ props, route }) => {
 
                                         <Horizontal>
                                             <Dropdown
-                                                style={{ width: "100%" }}
+                                               style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                                               selectedTextStyle={{color:colors.black}}
                                                 data={mySupporterData && Object.keys(mySupporterData).length > 0 ? mySupporterData.data : series}
                                                 search={false}
                                                 maxHeight={150}
@@ -158,7 +159,6 @@ const AddResume = ({ props, route }) => {
                                                    
                                                 }}
                                             />
-
                                         </Horizontal>
 
                                         {errors !== null && (
@@ -166,8 +166,8 @@ const AddResume = ({ props, route }) => {
                                                 <ErrorWrapper__Text>{errors ? errors.supporters_ids : null}</ErrorWrapper__Text>
                                             </ErrorWrapper>
                                         )}
-
-                                        <Text>order you select here is directly affected in resume.</Text>
+            
+                                        <TextTV>order you select here is directly affected in resume.</TextTV>
 
                                         <Title>
                                             Interests
@@ -175,7 +175,8 @@ const AddResume = ({ props, route }) => {
 
                                         <Horizontal>
                                             <Dropdown
-                                                style={{ width: "100%" }}
+                                                style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                                                selectedTextStyle={{color:colors.black}}
                                                 data={myInterestData && Object.keys(myInterestData).length > 0 ? myInterestData.data : series}
                                                 search={false}
                                                 maxHeight={150}
@@ -198,7 +199,7 @@ const AddResume = ({ props, route }) => {
                                             </ErrorWrapper>
                                         )}
 
-                                        <Text>Order you select here is directly affected in resume.</Text>
+                                        <TextTV>Order you select here is directly affected in resume.</TextTV>
 
                                         <ButtonWrapper>
                                             <PrimaryButton
@@ -227,6 +228,8 @@ const AddResume = ({ props, route }) => {
 
 export default withTheme(AddResume)
 
+const TextTV = styled.Text`
+color:#000`;
 const ErrorWrapper = styled.View`
   margin-top: 3px;
   padding-left: 2px;
@@ -252,7 +255,6 @@ padding:0 16px;
 const Horizontal = styled.View`
 display: flex;
 align-items: center;
-padding: 2px 20px;
 border-width: 1px;
 border-color: ${({ theme }: any) => theme.colors.borderGray};
 border-radius: 8px;

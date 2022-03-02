@@ -44,12 +44,12 @@ export default class Paypal extends Component {
             }
         }
 
-        axios.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+        axios.post('https://api-m.sandbox.paypal.com/v1/oauth2/token',
             {
                 grant_type: 'client_credentials',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + btoa('AWAN63DSjhqT_63eHgI1PQFAzrI9aSEEJdfkwELN_srCztQMClPHkOuo4zS-syY6Kvs5tr16hdJRQQ5w:EAg9LrY13esczACH7V_WlzCPoib2zRuAEbRx6PWHe9k0FWf59TVaz7br6tqIlJWZrBFQYH0buXYcMlRe')
+                    'Authorization': 'Bearer A21AAItFu3xussDHhEdtx4VDTj91Xfw9g_CBXnrxnUVG29SKbtr3W-qE2DAzWHz8rllC4iK18R1Jbjx575_4XAIADUBjGXR9A'
                 }
             }
         )
@@ -62,7 +62,8 @@ export default class Paypal extends Component {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer A21AAIVkRxipNG9yl7ghldeow7SZjPfN3Mhf6X4F1ywRME1VPLVPSnRheAmSWwgDLcmrWifpw0VchbAY9kZc-siXpKiGA9gng`
+                            'Accept-Language': 'en_US',
+                            'Authorization': `Basic A21AAIVkRxipNG9yl7ghldeow7SZjPfN3Mhf6X4F1ywRME1VPLVPSnRheAmSWwgDLcmrWifpw0VchbAY9kZc-siXpKiGA9gng`
                         }
                     }
                 )

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withTheme } from "styled-components";
+import { useTheme, withTheme } from "styled-components";
 // @ts-ignore
 import styled from "styled-components/native";
 import { camera, demoImage, imageLayout } from "@root/utils/assets";
@@ -21,9 +21,10 @@ import { UpdateProfileInterface } from "@root/store/updateProfile/interfaces";
 import NavigationStrings from "@root/navigation/navigationStrings";
 import RNFetchBlob from 'rn-fetch-blob'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const UpdateProfile = (props: any) => {
-
+  const { colors }: any = useTheme();
   const [imagePath, setImagePath] = useState<any>(null);
   const [showalert, setShowAlert] = useState(false);
   const [cancelable, setCancelable] = useState(true)
@@ -119,7 +120,7 @@ const UpdateProfile = (props: any) => {
                 uri:
                   imagePath !== null
                     ? imagePath.path
-                    : demoImage,
+                    : '',
               }} />
             <ImageCamera source={camera} />
           </ImageWrapper>
@@ -268,7 +269,8 @@ const UpdateProfile = (props: any) => {
               </Genderhearder>
               <Horizontal>
                 <Dropdown
-                  style={{ width: "100%" }}
+                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                   selectedTextStyle={{color:colors.black}}
                   data={STATES}
                   search={true}
                   maxHeight={300}
@@ -292,7 +294,8 @@ const UpdateProfile = (props: any) => {
 
               <Horizontal>
                 <Dropdown
-                  style={{ width: "100%" }}
+                  style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                  selectedTextStyle={{color:colors.black}}
                   data={visibilty}
                   search={false}
                   maxHeight={100}
@@ -351,7 +354,8 @@ const UpdateProfile = (props: any) => {
 
               <Horizontal>
                 <Dropdown
-                  style={{ width: "100%" }}
+                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                   selectedTextStyle={{color:colors.black}}
                   data={designation}
                   search={false}
                   maxHeight={300}
@@ -374,7 +378,8 @@ const UpdateProfile = (props: any) => {
               </Genderhearder>
               <Horizontal>
                 <Dropdown
-                  style={{ width: "100%" }}
+                  style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                  selectedTextStyle={{color:colors.black}}
                   data={accountType}
                   search={false}
                   maxHeight={100}
@@ -495,7 +500,6 @@ const Horizontal = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2px 20px;
   border-width: 1px;
   border-color: ${({ theme }: any) => theme.colors.borderGray};
   border-radius: 8px;
@@ -505,6 +509,7 @@ const Horizontal = styled.View`
 const Genderhearder = styled.Text`
   font-size: ${({ theme }: any) => theme.fontSize.cardDate};
   margin-top: 16px;
+  color:#000;
 `;
 
 const RadioWrapper = styled.View`
@@ -513,51 +518,12 @@ const RadioWrapper = styled.View`
   align-items: center;
 `;
 
-const TabsText = styled.Text`
-  padding-left: 12px;
-  color: #ffffff;
-  font-size: 17px;
-  font-weight: 400;
-  letter-spacing: -0.41px;
-`;
-
 const TimeText = styled.Text`
   color: ${({ theme }: any) => theme.colors.accentColor};
   padding: 10px 5px;
 `;
 
-const AddImage = styled.Image`
-  width: 20px;
-  height: 20px`;
 
-const ImageBT = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-
-const Tabs = styled.View`
-  padding-left: 2px;
-  padding-right: 2px;
-  margin: 5px;
-  height: 50px;
-  border-radius: 8px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  background-color: #28303d;
-`;
-
-
-const HorizotalCol = styled.View`
-  width: 48%;
-`;
-
-const TabHorizontal = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-`;
 
 const ImageCamera = styled.Image`
   width: 50px;
@@ -586,11 +552,6 @@ const ImageWrapper = styled.View`
   width: 188px;
   height: 188px;
   margin-top: 15px;
-`;
-const ChildWrapper = styled.View`
-  align-items: center;
-  justify-content: center;
-  padding: 0 10px 0 10px;
 `;
 
 

@@ -118,7 +118,8 @@ const SignUpStep2 = ({ props,route }) => {
 
                 <Horizontal>
                   <Dropdown
-                    style={{ width: "100%" }}
+                     style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                     selectedTextStyle={{color:colors.black}}
                     data={STATES}
                     search={true}
                     maxHeight={300}
@@ -230,6 +231,7 @@ const ButtonWrapper = styled.View`
 const Genderhearder = styled.Text`
   font-size: ${({ theme }: any) => theme.fontSize.cardDate};
   margin-top: 16px;
+  color:#000;
 `;
 const RadioWrapper = styled.View`
   margin-top: 16px;
@@ -245,7 +247,6 @@ const Horizontal = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2px 20px;
   border-width: 1px;
   border-color: ${({ theme }: any) => theme.colors.borderGray};
   border-radius: 8px;

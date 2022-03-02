@@ -28,6 +28,7 @@ export default SupportersInterests
 
 
 const TitleText = styled.Text`
+color:#000;
 `
 const ImageWrapper = styled.Image`
   width: 50px;

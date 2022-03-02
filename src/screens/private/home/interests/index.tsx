@@ -46,7 +46,7 @@ const Interest = (props: any) => {
                     <BorderWrapper>
                       <VerticalDivider />
                       <ImageWrapper source={dummy} />
-                      <Text>{item.title}</Text>
+                      <TitleText>{item.title}</TitleText>
                     </BorderWrapper>
                   </TouchableOpacity>
 
@@ -83,6 +83,8 @@ const Interest = (props: any) => {
 
 export default withTheme(Interest);
 
+const TitleText = styled.Text`
+color:#000;`
 const ImageBT = styled.Image`
   width: 20px;
   height: 20px;

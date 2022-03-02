@@ -93,7 +93,8 @@ const AddActivity = () => {
                             <Hearder>Category</Hearder>
                             <Horizontal>
                                 <Dropdown
-                                    style={{ width: "100%" }}
+                                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                                   selectedTextStyle={{color:colors.black}}
                                     data={myGraphData && Object.keys(myGraphData).length > 0 ? myGraphData.data : series}
                                     search={false}
                                     maxHeight={300}
@@ -138,7 +139,8 @@ const AddActivity = () => {
 
                             <Horizontal>
                                 <Dropdown
-                                    style={{ width: "100%" }}
+                                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                                   selectedTextStyle={{color:colors.black}}
                                     data={radio_props}
                                     search={false}
                                     maxHeight={300}
@@ -159,7 +161,8 @@ const AddActivity = () => {
                                 value === 2 ? <Horizontal>
 
                                     <Dropdown
-                                        style={{ width: "100%" }}
+                                       style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
+                                       selectedTextStyle={{color:colors.black}}
                                         data={video_props}
                                         search={false}
                                         maxHeight={100}
@@ -223,7 +226,7 @@ const AddActivity = () => {
                                                                 {imagePath === '' ? <ImageText>Upload Word</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
                                                             </ImageBorder>
                                                         </TouchableOpacity> :
-                                                            <Text>Else</Text>
+                                                            <Text></Text>
                             }
 
                             <ButtonWrapper>
@@ -383,6 +386,7 @@ const ButtonWrapper = styled.View`
 const Hearder = styled.Text`
   font-size: ${({ theme }: any) => theme.fontSize.cardDate};
   margin-top: 16px;
+  color:#000;
 `;
 
 
@@ -396,7 +400,6 @@ const Horizontal = styled.View`
 display: flex;
 flex-direction: row;
 align-items: center;
-padding: 2px 20px;
 border-width: 1px;
 border-color: ${({ theme }: any) => theme.colors.borderGray};
 border-radius: 8px;
