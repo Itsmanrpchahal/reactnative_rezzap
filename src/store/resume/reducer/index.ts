@@ -12,7 +12,7 @@ interface RepositoriesStateInterface {
 const initialState = {
   loading: false,
   error: null,
-  resumeData: []
+  resumeData: {}
 };
 
 /**
@@ -28,17 +28,18 @@ const reducer = (
       case ActionType.RESUME_INIT:
         draft.loading = true;
         draft.error = null;
-        draft.resumeData=[]
+        draft.resumeData={}
         return draft;
       case ActionType.RESUME_SUCCESS:
+        action.payload.data.reverse()
         draft.loading = false;
         draft.error = null;
-        draft.resumeData = action.payload
+        draft.resumeData =  action.payload;
         return draft;
       case ActionType.RESUME_ERROR:
         draft.loading = false;
         draft.error = action.payload;
-        draft.resumeData= []
+        draft.resumeData= {}
         return draft;
 
 

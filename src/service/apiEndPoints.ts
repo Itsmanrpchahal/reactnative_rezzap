@@ -32,8 +32,9 @@ const apiUri = {
   resume_Detail:'resume/resume-details?resume_id=',
   resumeCategorylist:'resume/category-list',
   delete_Resume:'resume/delete?id=',
-  add_Resume:'resume/add?',
+  add_Resume:'resume/add',
   resume_Activity:'/activity/category-activity?category_id=',
+  resume_Update:'resume/update-resume',
 
   add_Comment : 'activity/add-comment?',
   delete_Comment:'activity/delete-comment?id=',

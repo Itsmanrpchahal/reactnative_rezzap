@@ -68,8 +68,8 @@ const MessageDetail = ({ props, route }) => {
       <SendMessageWrapper>
 
         <SearchWrapper>
-          <TextInput style={{color:colors.black}} placeholder={"Type message"} onChangeText={(mess) => setMessageTV(mess)} value={message}>
-          </TextInput>
+          <TextInput style={{color:colors.black,padding:10}} placeholder={"Type message"} onChangeText={(mess) => setMessageTV(mess)} value={message}>
+          </TextInput> 
 
           <TouchableOpacity onPress={async () => {
               sendMessage({

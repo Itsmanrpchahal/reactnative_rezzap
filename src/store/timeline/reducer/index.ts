@@ -31,6 +31,7 @@ const reducer = (
         draft.timelineData=[]
         return draft;
       case ActionType.TIMELINE_SUCCESS:
+        action.payload.data.reverse()
         draft.timelineLoading = false;
         draft.error = null;
         draft.timelineData = action.payload

@@ -12,11 +12,11 @@ import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import PrimaryButton from '@root/components/Button';
 import { RESUME_SCHEMA } from './helpers';
 import styled from "styled-components/native";
+import { navigationRef } from "../../../../navigation/RootNavigation";
 
 const AddResume = ({ props, route }) => {
     const { colors }: any = useTheme();
-    const { resumeDetail, resume_CategoryList, resume_ActivityList, getMySupporter, getMyInterest } = useActions();
-    const [isFocus, setIsFocus] = useState(false);
+    const { resumeDetail, resume_CategoryList, resume_ActivityList, getMySupporter, getMyInterest, add_Resume, resume_Update } = useActions();
     let [series, setSeries] = useState([])
     const { resumeData, loading } = useTypedSelector((state) => state.resumeData);
     const { resumeCData, loadingC } = useTypedSelector((state) => state.resumeCData);
@@ -25,65 +25,131 @@ const AddResume = ({ props, route }) => {
     const { myInterestData, interestLoading } = useTypedSelector(
         (state) => state.interest,
     );
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [profile, setProfile] = useState('');
+    const [category_names, setCategory_names] = useState('');
+    const [activity_names, setActivity_names] = useState('');
+    const [supporters_ids, setSupporters_ids] = useState('');
+    const [interest_names, setInterest_names] = useState('');
     useEffect(() => {
-
         if (route.params.type != "new") {
-            resumeDetail(route.params.id)
-        }
+             resumeDetail(route.params.id)
+             
+         }
         resume_CategoryList(),
             getMySupporter(),
             getMyInterest()
-
         {
             loadingC || resumeActivityData || resumeActivityData || myInterestData ? <AppLoader /> :
                 resumeCData && Object.keys(resumeCData).length > 0 ? resumeCData.data.map((item: any) => (setSeries(item))) : setSeries([])
-
         }
     }, []);
+
+    useEffect(()=>{
+        if (route.params.type != "new" && loading === false) {
+            
+            setName(resumeData.data.resume_name)
+            
+            setEmail(resumeData.data.resume_email)
+           
+            setPhone(resumeData.data.resume_phone)
+            
+            setProfile(resumeData.data.resume_profile)
+        }
+    },[resumeData.data])
     return (
         <MainWrapperWhite>
             {
                 loading ? <AppLoader /> :
                     <ScrollView nestedScrollEnabled={false}>
-
                         <ResumeView>
+                           
                             <Formik
                                 validationSchema={RESUME_SCHEMA}
+                                enableReinitialize={true}
                                 initialValues={{
-                                    name: '',
-                                    email: '',
-                                    phone: '',
-                                    profile: '',
-                                    category_names: '',
-                                    activity_names: '',
-                                    supporters_ids: '',
-                                    interest_names: '',
+                                    name: name,
+                                    email: email,
+                                    phone: phone,
+                                    profile: profile,
+                                    category_names: category_names,
+                                    activity_names: activity_names,
+                                    supporters_ids: supporters_ids,
+                                    interest_names: interest_names,
                                 }}
-                                onSubmit={(values) => {
-                                     console.log('VALUES=====>  ',values)
+                                onSubmit={async (values) => {
+                                    route.params.type === 'new' ?
+                                        await add_Resume({
+                                            name: values.name,
+                                            email: values.email,
+                                            phone: values.phone,
+                                            profile: values.profile,
+                                            category_names: values.category_names,
+                                            activity_names: values.activity_names,
+                                            supporters_ids: values.supporters_ids,
+                                            interest_names: values.interest_names,
+                                        })
+                                        :
+                                        await resume_Update({
+                                            name: values.name,
+                                            email: values.email,
+                                            phone: values.phone,
+                                            profile: values.profile,
+                                            category_names: values.category_names,
+                                            activity_names: values.activity_names,
+                                            supporters_ids: values.supporters_ids,
+                                            interest_names: values.interest_names,
+                                            id:resumeData.data.resume_id
+                                        })
+                                           
+                                    navigationRef.current.goBack()
                                 }}>
                                 {({ setFieldValue, handleSubmit, errors }) => (
                                     <View>
+                                        <TextField accessibilityLabel="Name"
+                                            placeholder='Name'
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_name}
+                                            onChangeText={(value: any) => {
+                                                setFieldValue('name', value);
+                                                setName(value)
+                                            }}
+                                            error={errors ? errors.name : null} />
 
-                                        <TextField accessibilityLabel="Name" defaultValue={route.params.type !== 'new' ? resumeData.data.resume_name : ''} placeholder={'Name'} error={errors ? errors.name : null} onChangeText={(value: any) => {
-                                            setFieldValue('name', value);
-                                        }} />
-                                        <TextField accessibilityLabel="Email" defaultValue={route.params.type !== 'new' ? resumeData.data.resume_email : ''} placeholder={'Email'} error={errors ? errors.email : null} onChangeText={(value: any) => {
-                                            setFieldValue('email', value);
-                                        }} />
-                                        <TextField accessibilityLabel="Phone" defaultValue={route.params.type !== 'new' ? resumeData.data.resume_phone : ''} placeholder={'Phone'} error={errors ? errors.phone : null} onChangeText={(value: any) => {
-                                            setFieldValue('phone', value);
-                                        }} />
-                                        <TextField accessibilityLabel="Resume Profile" defaultValue={route.params.type !== 'new' ? resumeData.data.resume_profile : ''} placeholder={'Resume Profile'} error={errors ? errors.profile : null} onChangeText={(value: any) => {
-                                            setFieldValue('profile', value);
-                                        }} />
+                                        <TextField accessibilityLabel="Email"
+                                            placeholder='Email'
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_email}
+                                            onChangeText={(value: any) => {
+                                                setFieldValue('email', value);
+                                                setEmail(value)
+                                            }}
+                                            error={errors ? errors.email : null} />
+
+                                        <TextField accessibilityLabel="Phone"
+                                            placeholder='Phone'
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_phone}
+                                            onChangeText={(value: any) => {
+                                                setFieldValue('phone', value);
+                                                setPhone(value)
+                                            }}
+                                            error={errors ? errors.phone : null} />
+
+                                        <TextField accessibilityLabel="Resume Profile"
+                                            placeholder='Resume Profile'
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_profile}
+                                            onChangeText={(value: any) => {
+                                                setFieldValue('profile', value);
+                                                setProfile(value)
+                                            }}
+                                            error={errors ? errors.profile : null} />
 
                                         <Title>
                                             Category
                                         </Title>
                                         <Horizontal>
                                             <Dropdown
-                                                style={{ width: "100%" ,backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5}}
+                                                style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
                                                 data={resumeCData && Object.keys(resumeCData).length > 0 ? resumeCData.data : series}
                                                 search={false}
                                                 maxHeight={300}
@@ -91,11 +157,10 @@ const AddResume = ({ props, route }) => {
                                                 valueField="cat_id"
                                                 searchPlaceholder={"Search"}
                                                 value={'cat_name'}
-                                                selectedTextStyle={{color:colors.black}}
-                                                onFocus={() => setIsFocus(true)}
-                                                onBlur={() => setIsFocus(false)}
+                                                selectedTextStyle={{ color: colors.black }}
                                                 onChange={item => {
-                                                    setFieldValue('category_names',item.cat_name)
+                                                    setFieldValue('category_names', item.cat_name)
+                                                    setCategory_names(item.cat_name)
                                                     resume_ActivityList({ cat_id: item.cat_id })
                                                 }}
                                             />
@@ -113,8 +178,8 @@ const AddResume = ({ props, route }) => {
 
                                         <Horizontal>
                                             <Dropdown
-                                                style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                                                selectedTextStyle={{color:colors.black}}
+                                                style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                                                selectedTextStyle={{ color: colors.black }}
                                                 data={resumeActivityData && Object.keys(resumeActivityData).length > 0 ? resumeActivityData.data : series}
                                                 search={false}
                                                 maxHeight={150}
@@ -122,11 +187,9 @@ const AddResume = ({ props, route }) => {
                                                 valueField="id"
                                                 searchPlaceholder={"Search"}
                                                 value={'title'}
-                                                onFocus={() => setIsFocus(true)}
-                                                onBlur={() => setIsFocus(false)}
                                                 onChange={item => {
-                                                    setFieldValue('activity_names',item.title)
-                                                   
+                                                    setFieldValue('activity_names', item.title)
+                                                    setActivity_names(item.title)
                                                 }}
                                             />
 
@@ -143,8 +206,8 @@ const AddResume = ({ props, route }) => {
 
                                         <Horizontal>
                                             <Dropdown
-                                               style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                                               selectedTextStyle={{color:colors.black}}
+                                                style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                                                selectedTextStyle={{ color: colors.black }}
                                                 data={mySupporterData && Object.keys(mySupporterData).length > 0 ? mySupporterData.data : series}
                                                 search={false}
                                                 maxHeight={150}
@@ -152,11 +215,9 @@ const AddResume = ({ props, route }) => {
                                                 valueField="id"
                                                 searchPlaceholder={"Search"}
                                                 value={'name'}
-                                                onFocus={() => setIsFocus(true)}
-                                                onBlur={() => setIsFocus(false)}
                                                 onChange={item => {
-                                                    setFieldValue('supporters_ids',item.name)
-                                                   
+                                                    setFieldValue('supporters_ids', item.name)
+                                                    setSupporters_ids(item.name)
                                                 }}
                                             />
                                         </Horizontal>
@@ -166,7 +227,7 @@ const AddResume = ({ props, route }) => {
                                                 <ErrorWrapper__Text>{errors ? errors.supporters_ids : null}</ErrorWrapper__Text>
                                             </ErrorWrapper>
                                         )}
-            
+
                                         <TextTV>order you select here is directly affected in resume.</TextTV>
 
                                         <Title>
@@ -175,8 +236,8 @@ const AddResume = ({ props, route }) => {
 
                                         <Horizontal>
                                             <Dropdown
-                                                style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                                                selectedTextStyle={{color:colors.black}}
+                                                style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                                                selectedTextStyle={{ color: colors.black }}
                                                 data={myInterestData && Object.keys(myInterestData).length > 0 ? myInterestData.data : series}
                                                 search={false}
                                                 maxHeight={150}
@@ -184,11 +245,9 @@ const AddResume = ({ props, route }) => {
                                                 valueField="id"
                                                 searchPlaceholder={"Search"}
                                                 value={'title'}
-                                                onFocus={() => setIsFocus(true)}
-                                                onBlur={() => setIsFocus(false)}
                                                 onChange={item => {
-                                                    setFieldValue('interest_names',item.title)
-                                                    
+                                                    setFieldValue('interest_names', item.title)
+                                                    setInterest_names(item.title)
                                                 }}
                                             />
                                         </Horizontal>
@@ -198,18 +257,15 @@ const AddResume = ({ props, route }) => {
                                                 <ErrorWrapper__Text>{errors ? errors.interest_names : null}</ErrorWrapper__Text>
                                             </ErrorWrapper>
                                         )}
-
                                         <TextTV>Order you select here is directly affected in resume.</TextTV>
-
                                         <ButtonWrapper>
                                             <PrimaryButton
-                                                onPress={handleSubmit}
+                                                onPress={() => { handleSubmit() }}
                                                 backgroundColor={colors.black}
                                                 btnText={'Confirm'}
-                                                
+                                                loading={loading}
                                             />
                                         </ButtonWrapper>
-
                                     </View>
 
                                 )}

@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
+import styled from "styled-components/native";
 import { WebView } from 'react-native-webview';
-import { MainParentWrapper } from "../../../../utils/globalStyle";
 const Help = () => {
 
     return (
@@ -16,3 +16,7 @@ const Help = () => {
 }
 
 export default Help
+
+const MainParentWrapper = styled.View`
+    height:100%;
+`;

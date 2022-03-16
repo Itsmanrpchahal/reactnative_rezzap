@@ -78,3 +78,53 @@ export const deleteResume = (fn:any) => {
     }
   };
 };
+
+
+export const add_Resume = (fn:any) => {
+  return async (dispatch: Dispatch<Action | any>) => {
+    dispatch({
+      type: ActionType.RESUME_INIT,
+    });
+
+    try {
+      const response =  await service.post(apiUri.add_Resume,fn);
+
+      dispatch({
+        type: ActionType.RESUME_SUCCESS,
+        payload: response.data,
+      });
+      return response;
+    } catch (e: any) {
+
+      dispatch({
+        type: ActionType.RESUME_ERROR,
+        payload: 'Somethings wents wrong',
+      });
+    }
+  };
+}
+
+
+export const resume_Update = (fn:any) => {
+  return async (dispatch: Dispatch<Action | any>) => {
+    dispatch({
+      type: ActionType.RESUME_INIT,
+    });
+
+    try {
+      const response =  await service.put(apiUri.resume_Update,fn);
+
+      dispatch({
+        type: ActionType.RESUME_SUCCESS,
+        payload: response.data,
+      });
+      return response;
+    } catch (e: any) {
+
+      dispatch({
+        type: ActionType.RESUME_ERROR,
+        payload: 'Somethings wents wrong',
+      });
+    }
+  };
+}

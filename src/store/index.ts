@@ -20,6 +20,8 @@ export * as getSupporterTimeline from '@root/store/timeline/action-creators';
 export * as uploadProfilePicture from '@root/store/uploadPicture/action-creators';
 export * as signUp from '@root/store/register/action-creators';
 export * as getResume from '@root/store/resume/action-creators';
+export * as add_Resume from '@root/store/resume/action-creators';
+export * as resume_Update from '@root/store/resume/action-creators';
 export * as deleteResume from '@root/store/resume/action-creators';
 export * as resumeDetail from '@root/store/resume/action-creators';
 export * as resume_CategoryList from '@root/store/resumeCategory/action-creators';

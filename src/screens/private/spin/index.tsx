@@ -12,6 +12,7 @@ import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import PieChart from "react-native-pie-chart";
 import { MainWrapper } from "../../../utils/globalStyle";
 import AppLoader from "../../../components/Loader";
+import NavigationStrings from "@root/navigation/navigationStrings";
 
 const Spin = (props: any) => {
   const { colors }: any = useTheme();
@@ -29,7 +30,6 @@ const Spin = (props: any) => {
       tab === 1 ?
         getSpin('all') :
         getSpin('my')
-
 
     }
   }, [isFocused]);
@@ -60,9 +60,6 @@ const Spin = (props: any) => {
         ) :
           <MainParentWrapper>
             <ChildWrapper>
-
-
-
               {
                 loading ? (
                   <NotFound>Loading...</NotFound>
@@ -73,6 +70,9 @@ const Spin = (props: any) => {
                       data={spinData.data}
                       renderItem={({ item }) => {
                         return <TheSpinCont>
+                          <TouchableOpacity onPress={()=>{
+                             props.navigation.navigate(NavigationStrings.MY_WHEEL,{item:item,type:'1'})
+                            }}>
                           <TheSpinInfograph>
                             <PieChart
                               widthAndHeight={widthAndHeight}
@@ -83,6 +83,8 @@ const Spin = (props: any) => {
                               coverFill={'#FFFFFF'}
                             />
                           </TheSpinInfograph>
+                          </TouchableOpacity>
+                          
                           <TheSpinTitle numberOfLines={1}>{item.name} </TheSpinTitle>
                           <TheSpinDesc>{spinData != null ? item.visibility === '0' ? 'Student' : item.visibility === '1' ? 'Parent' : item.visibility === '2' ? 'College Counselor' : item.visibility === '3' ? 'Admissions - College' : item.visibility === '4' ? 'Recruiter' : item.visibility === '5' ? 'Company' : item.visibility === '5' ? 'Company' : '' : ''} </TheSpinDesc>
                           <TouchableOpacity onPress={async () => {

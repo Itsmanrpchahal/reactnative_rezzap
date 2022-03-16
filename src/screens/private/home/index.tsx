@@ -73,7 +73,7 @@ const Home = (props: any) => {
               />
               <SecondaryButton
                 onPress={() => {
-                  props.navigation.navigate(navigationStrings.MY_WHEEL);
+                  props.navigation.navigate(navigationStrings.MY_WHEEL,{type:'0'});
                 }}
                 btnText={"My Wheel"}
                 backgroundColor={colors.blue}

@@ -21,12 +21,17 @@ const Resume = (props: any) => {
   const isFocused = useIsFocused();
   const { getResume ,deleteResume} = useActions();
   const { resumeData, loading } = useTypedSelector((state) => state.resumeData);
+  
 
   useEffect(() => {
     if (isFocused) {
       getResume()
     }
   }, [isFocused]);
+
+  useEffect(() => {
+console.log('resume data ====>',resumeData)
+  },[resumeData])
 
   return (
     <MainWrapper>
@@ -65,10 +70,6 @@ const Resume = (props: any) => {
 
                       </ResumeWrapper>
                      
-                     
-
-                    
-
                       <GreenWrapper>
                         {/* <TouchableOpacity onPress={() => { setViewMore(!viewmore) }}> */}
                           {/* { */}
@@ -84,7 +85,7 @@ const Resume = (props: any) => {
                                 <TouchableOpacity onPress={ async ()=>{await deleteResume({id:item.id}) 
                               getResume()}}><EditImages source={deletei} /></TouchableOpacity>
                               </EditWrapper>
-                              <TimeTextWhite>View less</TimeTextWhite>
+                              {/* <TimeTextWhite>View less</TimeTextWhite> */}
                             {/* </ViewMore> : <TimeTextWhite>View more</TimeTextWhite>  } */}
 
                         {/* </TouchableOpacity> */}

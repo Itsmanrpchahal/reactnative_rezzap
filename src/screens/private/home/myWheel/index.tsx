@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { MainParentWrapper, MainWrapper, NotFound } from "@root/utils/globalStyle";
+import { MainWrapper, NotFound } from "@root/utils/globalStyle";
 // @ts-ignore
 import styled from "styled-components/native";
 import { useActions } from "@root/hooks/useActions";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import { useIsFocused, useTheme } from "@react-navigation/native";
-import { FlatList, ScrollView, Text, TouchableOpacity } from "react-native";
+import { FlatList, Text, TouchableOpacity } from "react-native";
 import { withTheme } from "styled-components";
 import PieChart from "react-native-pie-chart";
 import AppLoader from "@root/components/Loader";
-import { MainWrapperWhite } from "@root/utils/globalStyle";
-import { filter, support } from "@root/utils/assets";
 import Timeline from "../../../../components/timeline";
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import { navigationRef } from "../../../../navigation/RootNavigation";
 
 
-function MyWheel(props: any) {
+const MyWheel = ({ props, route }) => {
   const [visible, setVisible] = useState(false);
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
   const isFocused = useIsFocused();
-  const { getMyGraph, getMyTimeline ,search_Activity} = useActions();
+  const { getMyGraph, getMyTimeline, search_Activity, getSupporterGraph, getSupporterTimeline } = useActions();
   const { myGraphData, loading } = useTypedSelector((state) => state.myGraph);
   const { timelineData, timelineLoading } = useTypedSelector(
     (state) => state.timeline,
@@ -34,8 +33,13 @@ function MyWheel(props: any) {
 
   useEffect(() => {
     if (isFocused) {
-      getMyGraph();
-      getMyTimeline();
+      route.params.type === '0' ?
+        Promise.all(
+          [getMyGraph(),
+          getMyTimeline()]
+        )
+        : Promise.all([getSupporterGraph({ 'supporter_id': route.params.item.user_id }),
+        getSupporterTimeline({ 'supporter_id': route.params.item.user_id })])
     }
   }, [isFocused]);
 
@@ -57,16 +61,13 @@ function MyWheel(props: any) {
             coverRadius={0.45}
             coverFill={"#FFFFFF"}
           />
-
         </ChartView>
 
 
+
         <Divider backgroundColor={colors.divider} />
-
-
-
         <FilterView>
-         
+
           <Menu
             visible={visible}
             anchor={<Text style={{ fontWeight: '500' }} onPress={showMenu}>Filter by category </Text>}
@@ -75,10 +76,10 @@ function MyWheel(props: any) {
             <FlatList
               data={myGraphData.data}
               renderItem={({ item }) => {
-                return <MenuItem onPress={() => { 
-                 setVisible(false)
-                  search_Activity({id:item.category_id})
-                 }}>{ item != null ? item.category_name : "" }</MenuItem>
+                return <MenuItem onPress={() => {
+                  setVisible(false)
+                  search_Activity({ id: item.category_id })
+                }}>{item != null ? item.category_name : ""}</MenuItem>
               }}
             />
 
