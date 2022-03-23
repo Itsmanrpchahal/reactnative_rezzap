@@ -24,6 +24,7 @@ export const getResume = () => {
       dispatch({
         type: ActionType.RESUME_ERROR,
         payload: 'Somethings wents wrong',
+        
       });
     }
   };
@@ -33,6 +34,7 @@ export const resumeDetail = (fn:any) => {
   return async (dispatch: Dispatch<Action | any>) => {
     dispatch({
       type: ActionType.RESUME_INIT,
+      
     });
 
     try {
@@ -41,6 +43,7 @@ export const resumeDetail = (fn:any) => {
       dispatch({
         type: ActionType.RESUME_SUCCESS,
         payload: response.data,
+       
       });
       
       return response;

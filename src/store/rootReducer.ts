@@ -25,6 +25,7 @@ import dreamCollegeData from '@root/store/dreamCollege/reducer'
 import allcollegeData from '@root/store/allCollegeList/reducer'
 import sendEmailData from '@root/store/sendEmail/reducer'
 import resumeActivityData from '@root/store/resumeActivity/reducer'
+import mytimelineData from '@root/store/myTimeline/reducer'
 
 
 
@@ -54,7 +55,8 @@ const reducers = combineReducers({
   sendEmailData,
   addSupporterData,
   deleteSupporterData,
-  resumeActivityData
+  resumeActivityData,
+  mytimelineData
 });
 
 export default reducers;

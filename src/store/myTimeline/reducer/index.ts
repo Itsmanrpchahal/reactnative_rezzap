@@ -1,18 +1,18 @@
 import produce from 'immer';
-import {Action} from '@root/store/resume/actions';
-import {ActionType} from '@root/store/resume/actions-types';
+import {Action} from '@root/store/myTimeline/actions';
+import {ActionType} from '@root/store/myTimeline/actions-types';
 
 interface RepositoriesStateInterface {
-  loading: boolean;
+  mytimelineLoading: boolean;
   error: string | null;
-  resumeData:any;
+  mytimelineData:any
 
 }
 
 const initialState = {
-  loading: false,
+  mytimelineLoading: false,
   error: null,
-  resumeData: {},
+  mytimelineData: []
 };
 
 /**
@@ -25,24 +25,22 @@ const reducer = (
 ): RepositoriesStateInterface =>
   produce(state, draft => {
     switch (action.type) {
-      case ActionType.RESUME_INIT:
-        draft.loading = true;
+      case ActionType.TIMELINE_INIT:
+        draft.mytimelineLoading = true;
         draft.error = null;
-        draft.resumeData={}
+        draft.mytimelineData=[]
         return draft;
-      case ActionType.RESUME_SUCCESS:
-        Array.isArray(action.payload.data)&& action.payload.data.reverse()
-        draft.loading = false;
+      case ActionType.TIMELINE_SUCCESS:
+        
+        draft.mytimelineLoading = false;
         draft.error = null;
-        draft.resumeData =  action.payload;
+        draft.mytimelineData = action.payload
         return draft;
-      case ActionType.RESUME_ERROR:
-        draft.loading = false;
+      case ActionType.TIMELINE_ERROR:
+        draft.mytimelineLoading = false;
         draft.error = action.payload;
-        draft.resumeData= {}
+        draft.mytimelineData= []
         return draft;
-
-
       default:
         return draft;
     }

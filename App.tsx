@@ -9,12 +9,13 @@ import {QueryClientProvider, QueryClient} from 'react-query';
 import {ThemeProvider} from 'styled-components';
 import {navigationTheme} from './src/theme/theme';
 import Routes from './src/navigation/Routes';
+import { LogBox } from 'react-native';
 
 const persistor = persistStore(store);
 const queryClient = new QueryClient();
 
 export default function App() {
-
+  LogBox.ignoreAllLogs()
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>

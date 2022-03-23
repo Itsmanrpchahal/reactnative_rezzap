@@ -30,7 +30,6 @@ const Resume = (props: any) => {
   }, [isFocused]);
 
   useEffect(() => {
-console.log('resume data ====>',resumeData)
   },[resumeData])
 
   return (

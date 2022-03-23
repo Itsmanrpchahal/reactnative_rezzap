@@ -48,9 +48,9 @@ const AddResume = ({ props, route }) => {
     }, []);
 
     useEffect(()=>{
-        if (route.params.type != "new" && loading === false) {
+        if (route.params.type != "new" && loading === false && resumeData.data ) {
             
-            setName(resumeData.data.resume_name)
+             setName(resumeData.data.resume_name)
             
             setEmail(resumeData.data.resume_email)
            
@@ -110,7 +110,7 @@ const AddResume = ({ props, route }) => {
                                     <View>
                                         <TextField accessibilityLabel="Name"
                                             placeholder='Name'
-                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_name}
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data && resumeData.data.resume_name}
                                             onChangeText={(value: any) => {
                                                 setFieldValue('name', value);
                                                 setName(value)
@@ -119,7 +119,7 @@ const AddResume = ({ props, route }) => {
 
                                         <TextField accessibilityLabel="Email"
                                             placeholder='Email'
-                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_email}
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data && resumeData.data.resume_email}
                                             onChangeText={(value: any) => {
                                                 setFieldValue('email', value);
                                                 setEmail(value)
@@ -128,7 +128,7 @@ const AddResume = ({ props, route }) => {
 
                                         <TextField accessibilityLabel="Phone"
                                             placeholder='Phone'
-                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_phone}
+                                            defaultValue={route.params.type === 'new' ? '' :resumeData.data && resumeData.data.resume_phone}
                                             onChangeText={(value: any) => {
                                                 setFieldValue('phone', value);
                                                 setPhone(value)
@@ -137,7 +137,7 @@ const AddResume = ({ props, route }) => {
 
                                         <TextField accessibilityLabel="Resume Profile"
                                             placeholder='Resume Profile'
-                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data.resume_profile}
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data && resumeData.data.resume_profile}
                                             onChangeText={(value: any) => {
                                                 setFieldValue('profile', value);
                                                 setProfile(value)

@@ -81,10 +81,10 @@ function DashboardTabs(props: any) {
         },
       }} />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name={navigationStrings.TAB_BAR_DASH}
         component={Dash}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

@@ -24,6 +24,9 @@ const MyWheel = ({ props, route }) => {
   const { timelineData, timelineLoading } = useTypedSelector(
     (state) => state.timeline,
   );
+  const { mytimelineData, mytimelineLoading } = useTypedSelector(
+    (state) => state.mytimelineData,
+  );
   const series = [123]
   const sliceColor = ['#F44336']
 
