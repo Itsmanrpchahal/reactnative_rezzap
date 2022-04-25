@@ -25,7 +25,7 @@ function Wheel(item:any) {
           coverFill={"#FFFFFF"}
         />
 
-        <ScrollView>
+        {/* <ScrollView>
           {
             item.item.map((item:any) => (
               <ValueView>
@@ -35,7 +35,7 @@ function Wheel(item:any) {
 
             ))
           }
-        </ScrollView>
+        </ScrollView> */}
 
 
       </ChartView>
@@ -72,8 +72,8 @@ const ValueView = styled.View`
 const ChartView = styled.View`
   margin: 16px;
   flex-direction: row;
- 
 `;
 
 
-const MainView = styled.View``;
+const MainView = styled.View`
+align-Items:center`;

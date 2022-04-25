@@ -28,7 +28,7 @@ const AddNewCategory = () => {
   const [itemId, setItemId] = useState('');
   const [confirm, setConfirm] = useState('Update');
   const { getCategories, deleteCategory, updateCategory, addCategory } = useActions();
-  const { categoryData, loading } = useTypedSelector(
+  const { categoryData, catloading } = useTypedSelector(
     (state) => state.categoryData,
   );
 
@@ -45,7 +45,7 @@ const AddNewCategory = () => {
       
       <MainView>
         
-        {loading ? (
+        {catloading ? (
           <AppLoader />
         ) :
           Object.keys(categoryData).length > 0 ?

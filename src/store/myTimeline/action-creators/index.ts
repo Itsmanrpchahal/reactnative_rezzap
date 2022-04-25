@@ -29,5 +29,35 @@ export const getMyTimeline = () => {
   };
 };
 
+export const addActivity = (data: any) => {
+  return async (dispatch: Dispatch<Action | any>) => {
+    dispatch({
+      type: ActionType.MYTIMELINE_INIT,
+    });
+
+    try {
+      const response = await service.post(apiUri.activityStore,
+        data,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },);
+
+      dispatch({
+        type: ActionType.MYTIMELINE_SUCCESS,
+        payload: response.data,
+      });
+      return response;
+    } catch (e: any) {
+
+      dispatch({
+        type: ActionType.MYTIMELINE_ERROR,
+        payload: 'Somethings wents wrong',
+      });
+    }
+  };
+};
+
 
 

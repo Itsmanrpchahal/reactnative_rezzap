@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { Platform, Text,KeyboardAvoidingView, TouchableOpacity, View } from "react-native";
 import { useTheme, withTheme } from "styled-components";
 import styled from "styled-components/native";
 import { MainWrapperWhite } from "@root/utils/globalStyle";
@@ -16,8 +16,10 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import ImagePicker from "react-native-image-crop-picker";
 import { camera } from "@root/utils/assets";
 import DocumentPicker from "react-native-document-picker"
+import { Formik } from "formik";
+import { ADD_ACTIVITY_SCHEMA } from "./helpers";
 
-const AddActivity = () => {
+const AddActivity = (props: any) => {
     const [value, setValue] = useState(null);
     const [catv, setCatV] = useState(1);
     const [showalert, setShowAlert] = useState(false);
@@ -39,10 +41,9 @@ const AddActivity = () => {
     const [imagePath, setImagePath] = useState<any>('');
     const [vedioPath, setVideoPath] = useState<any>('Upload Video')
     const { colors }: any = useTheme();
-    const { getMyGraph } = useActions();
+    const { getMyGraph, addActivity } = useActions();
     const [isFocus, setIsFocus] = useState(false);
     const [visibleTimer, setVisibleTimer] = useState<boolean>(false);
-    const [stime, setSTime] = useState<any>(new Date());
     const { myGraphData, loading } = useTypedSelector((state) => state.myGraph);
 
     useEffect(() => {
@@ -79,239 +80,294 @@ const AddActivity = () => {
         }
     };
     return (
-        <MainWrapperWhite>
+        <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS == 'ios' ? 'padding' : null}
+    >
+ <MainWrapperWhite>
             {
                 loading ? <AppLoader /> :
                     <ScrollView>
                         <MainView>
-
-                            <TextField accessibilityLabel="Title">
-
-                            </TextField>
-
-
-                            <Hearder>Category</Hearder>
-                            <Horizontal>
-                                <Dropdown
-                                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                                   selectedTextStyle={{color:colors.black}}
-                                    data={myGraphData && Object.keys(myGraphData).length > 0 ? myGraphData.data : series}
-                                    search={false}
-                                    maxHeight={300}
-                                    labelField="category_name"
-                                    valueField="cat_id"
-                                    searchPlaceholder={"Search"}
-                                    value={value}
-                                    onFocus={() => setIsFocus(true)}
-                                    onBlur={() => setIsFocus(false)}
-                                    onChange={item => {
-                                        setIsFocus(false)
-                                        setCatValue(item.value)
-                                    }}
-                                />
-                            </Horizontal>
-
-                            <Hearder>Event Date</Hearder>
-                            <TouchableOpacity
-                                onPress={() => {
+                            <Formik
+                                validationSchema={ADD_ACTIVITY_SCHEMA}
+                                enableReinitialize={true}
+                                initialValues={
                                     {
-                                        setVisibleTimer(true);
+                                        title: '',
+                                        category: '',
+                                        media_type: value,
+                                        event_date: format(new Date(), 'yyyy-MM-dd'),
+                                        content:''
                                     }
+                                }
+                                onSubmit={async (values) => {
+
+                                    var formData = new FormData()
+                                    let osPath =
+                                        Platform.OS === 'android'
+                                            ? values.content.path
+                                            : values.content.path.replace('file://', '');
+
+                                    formData.append('content', {
+                                        // @ts-ignore
+                                        uri: osPath,
+                                        type: values.content.mime,
+                                        name: values.content.filename,         
+                                    });
+
+                                    await addActivity({
+                                        title:values.title,
+                                        category:values.category,
+                                        event_date:values.event_date,
+                                        content:values.content,
+                                        media_type:value
+                                    })
+                                    props.navigation.pop()
+                                    console.log('ADD ACTIVITY ===> ', formData)
                                 }}>
-                                <Horizontal>
-                                    <TimeText>
-                                        {format(new Date(stime), "yyyy-MM-dd")}
-                                    </TimeText>
-                                </Horizontal>
-                            </TouchableOpacity>
+                                {({ setFieldValue, handleSubmit, errors, values }) => (
+                                    <View>
+                                        <TextField
+                                            accessibilityLabel="Title"
+                                            value={values.title}
+                                            onChangeText={(value: any) =>
+                                                setFieldValue('title', value)
+                                            }
+                                            error={errors ? errors.title : null}>
+
+                                        </TextField>
 
 
-                            <CustomTimePicker
-                                showDateTimePicker={visibleTimer}
-                                handlePickerData={(date: any) => {
-                                    setSTime(date);
-                                }
-                                }
-                                setDateTimePicker={setVisibleTimer}
-                            />
+                                        <Hearder>Category</Hearder>
+                                        <Horizontal>
+                                            <Dropdown
+                                                style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                                                selectedTextStyle={{ color: colors.black }}
+                                                data={myGraphData && Object.keys(myGraphData).length > 0 ? myGraphData.data : series}
+                                                search={false}
+                                                maxHeight={300}
+                                                labelField="category_name"
+                                                valueField="cat_id"
+                                                searchPlaceholder={"Search"}
+                                                value={value}
+                                                onFocus={() => setIsFocus(true)}
+                                                onBlur={() => setIsFocus(false)}
+                                                onChange={item => {
 
-                            <Hearder>Type</Hearder>
+                                                    setFieldValue('category', item.category_name)
 
-                            <Horizontal>
-                                <Dropdown
-                                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                                   selectedTextStyle={{color:colors.black}}
-                                    data={radio_props}
-                                    search={false}
-                                    maxHeight={300}
-                                    labelField="label"
-                                    valueField="value"
-                                    value={value}
-                                    searchPlaceholder={"Search"}
-                                    onFocus={() => setIsFocus(true)}
-                                    onBlur={() => setIsFocus(false)}
-                                    onChange={item => {
-                                        setIsFocus(false);
-                                        setValue(item.value)
-                                    }}
-                                />
-                            </Horizontal>
+                                                }}
+                                            />
+                                        </Horizontal>
 
-                            {
-                                value === 2 ? <Horizontal>
+                                        {
+                                            errors && <ErrorWrapper>
+                                                <ErrorWrapper__Text>{errors.category}</ErrorWrapper__Text>
+                                            </ErrorWrapper>
+                                        }
 
-                                    <Dropdown
-                                       style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                                       selectedTextStyle={{color:colors.black}}
-                                        data={video_props}
-                                        search={false}
-                                        maxHeight={100}
-                                        labelField="label"
-                                        valueField="value"
-                                        value={catv}
-                                        searchPlaceholder={"Search"}
-                                        placeholder={'Upload a Video'}
-                                        onFocus={() => setIsFocus(true)}
-                                        onBlur={() => setIsFocus(false)}
-                                        onChange={item => {
-                                            setIsFocus(false);
-                                            setCatV(item.value)
-                                        }}
-                                    />
-                                </Horizontal> : <Text></Text>
-                            }
+                                        <Hearder>Event Date</Hearder>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                {
+                                                    setVisibleTimer(true);
+                                                }
+                                            }}>
+                                            <Horizontal>
+                                                <TimeText>
+                                                    {values.event_date}
+                                                </TimeText>
+                                            </Horizontal>
+                                        </TouchableOpacity>
 
 
-                            {
-                                value === 1 ? <TouchableOpacity onPress={() => { setShowAlert(true) }}>
-                                    <ImageBorder>
-                                        {imagePath === '' ? <ImageText>Add Image</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
-                                    </ImageBorder>
-                                </TouchableOpacity> :
-                                    value === 2 && catv === 1 ? <TouchableOpacity onPress={() => {
-                                        ImagePicker.openPicker({
-                                            mediaType: "video",
+                                        <CustomTimePicker
+                                            showDateTimePicker={visibleTimer}
+                                            handlePickerData={(date: any) => {
+                                                setFieldValue('event_date', format(date, 'yyyy-MM-dd'))
+                                            }
+                                            }
+                                            setDateTimePicker={setVisibleTimer}
+                                        />
 
-                                        }).then(async (image) => {
-                                            setVideoPath(image.path)
-                                        });
-                                    }}>
-                                        <ImageBorder>
-                                            {imagePath === '' ? <ImageText>{vedioPath}</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
-                                        </ImageBorder>
-                                    </TouchableOpacity> :
+                                        <Hearder>Type</Hearder>
 
-                                        value === 2 && catv === 2 ?
-                                            <TextField placeholder="Youtube/Vimeo Embed Link"></TextField> :
+                                        <Horizontal>
+                                            <Dropdown
+                                                style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                                                selectedTextStyle={{ color: colors.black }}
+                                                data={radio_props}
+                                                search={false}
+                                                maxHeight={300}
+                                                labelField="label"
+                                                valueField="value"
+                                                value={value}
+                                                searchPlaceholder={"Search"}
+                                                onFocus={() => setIsFocus(true)}
+                                                onBlur={() => setIsFocus(false)}
+                                                onChange={item => {
+                                                    setIsFocus(false);
+                                                    setValue(item.value)
+                                                }}
+                                            />
+                                        </Horizontal>
 
-                                            value === 3 ?
-                                                <TouchableOpacity onPress={() => {
-                                                    selectAudio('audio')
+                                        {
+                                            value === 2 ? <Horizontal>
+
+                                                <Dropdown
+                                                    style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                                                    selectedTextStyle={{ color: colors.black }}
+                                                    data={video_props}
+                                                    search={false}
+                                                    maxHeight={100}
+                                                    labelField="label"
+                                                    valueField="value"
+                                                    value={catv}
+                                                    searchPlaceholder={"Search"}
+                                                    placeholder={'Upload a Video'}
+                                                    onFocus={() => setIsFocus(true)}
+                                                    onBlur={() => setIsFocus(false)}
+                                                    onChange={item => {
+                                                        setIsFocus(false);
+                                                        setCatV(item.value)
+                                                    }}
+                                                />
+                                            </Horizontal> : null
+                                        }
+
+
+                                        {
+                                            value === 1 ? <TouchableOpacity onPress={() => { setShowAlert(true) }}>
+                                                <ImageBorder>
+                                                    {imagePath === '' ? <ImageText>Add Image</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
+                                                </ImageBorder>
+                                            </TouchableOpacity> :
+                                                value === 2 && catv === 1 ? <TouchableOpacity onPress={() => {
+                                                    ImagePicker.openPicker({
+                                                        mediaType: "video",
+
+                                                    }).then(async (image) => {
+                                                        setVideoPath(image.path)
+                                                    });
                                                 }}>
                                                     <ImageBorder>
-                                                        {imagePath === '' ? <ImageText>Upload Audio</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
+                                                        {imagePath === '' ? <ImageText>{vedioPath}</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
                                                     </ImageBorder>
                                                 </TouchableOpacity> :
 
-                                                value === 4 ? <TextField accessibilityLabel="Content" placeholder="Content"></TextField> :
+                                                    value === 2 && catv === 2 ?
+                                                        <TextField placeholder="Youtube/Vimeo Embed Link"></TextField> :
 
-                                                    value === 5 ? <TouchableOpacity onPress={() => { selectPdf('Pdf') }}>
-                                                        <ImageBorder>
-                                                            {imagePath === '' ? <ImageText>Upload PDF</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
-                                                        </ImageBorder>
-                                                    </TouchableOpacity> :
+                                                        value === 3 ?
+                                                            <TouchableOpacity onPress={() => {
+                                                                selectAudio('audio')
+                                                            }}>
+                                                                <ImageBorder>
+                                                                    {imagePath === '' ? <ImageText>Upload Audio</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
+                                                                </ImageBorder>
+                                                            </TouchableOpacity> :
 
-                                                        value === 6 ? <TouchableOpacity onPress={() => { selectWord('word') }}>
-                                                            <ImageBorder>
-                                                                {imagePath === '' ? <ImageText>Upload Word</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
-                                                            </ImageBorder>
-                                                        </TouchableOpacity> :
-                                                            <Text></Text>
-                            }
+                                                            value === 4 ? <TextField accessibilityLabel="Content" placeholder="Content"></TextField> :
 
-                            <ButtonWrapper>
-                                <PrimaryButton
-                                    onPress={() => { }}
-                                    backgroundColor={colors.black}
-                                    btnText={"Post Activity"}
-                                    loading={loading}
-                                />
-                            </ButtonWrapper>
+                                                                value === 5 ? <TouchableOpacity onPress={() => { selectPdf('Pdf') }}>
+                                                                    <ImageBorder>
+                                                                        {imagePath === '' ? <ImageText>Upload PDF</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
+                                                                    </ImageBorder>
+                                                                </TouchableOpacity> :
 
-                            {
-                                showalert && <AwesomeAlert
-                                    show={showalert}
-                                    showProgress={false}
-                                    title="Select Photo"
-                                    closeOnTouchOutside={false}
-                                    closeOnHardwareBackPress={false}
-                                    showCancelButton={true}
-                                    cancelText={'Cancel'}
-                                    customView={
-                                        <TabHorizontal>
-                                            <HorizotalCol>
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        ImagePicker.openCamera({
+                                                                    value === 6 ? <TouchableOpacity onPress={() => { selectWord('word') }}>
+                                                                        <ImageBorder>
+                                                                            {imagePath === '' ? <ImageText>Upload Word</ImageText> : <ImageV source={{ uri: imagePath.path }}></ImageV>}
+                                                                        </ImageBorder>
+                                                                    </TouchableOpacity> :
+                                                                        <Text></Text>
+                                        }
 
-                                                            cropping: true,
-                                                            compressImageQuality: 1,
-                                                        }).then((image) => {
-                                                            setImagePath(image);
-                                                            setShowAlert(false)
-                                                        });
-                                                    }}>
-                                                    <Tabs>
-                                                        <ImageBT>
-                                                            <AddImage
-                                                                source={camera} />
+                                        <ButtonWrapper>
+                                            <PrimaryButton
+                                                onPress={handleSubmit}
+                                                backgroundColor={colors.black}
+                                                btnText={"Post Activity"}
+                                                loading={loading}
+                                            />
+                                        </ButtonWrapper>
 
+                                        {
+                                            showalert && <AwesomeAlert
+                                                show={showalert}
+                                                showProgress={false}
+                                                title="Select Photo"
+                                                closeOnTouchOutside={false}
+                                                closeOnHardwareBackPress={false}
+                                                showCancelButton={true}
+                                                cancelText={'Cancel'}
+                                                customView={
+                                                    <TabHorizontal>
+                                                        <HorizotalCol>
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    ImagePicker.openCamera({
 
-                                                            <TabsText>Camera</TabsText>
-                                                        </ImageBT>
-                                                    </Tabs>
-                                                </TouchableOpacity>
-                                            </HorizotalCol>
+                                                                        cropping: true,
+                                                                        compressImageQuality: 1,
+                                                                    }).then((image) => {
+                                                                        setImagePath(image);
+                                                                        setShowAlert(false)
+                                                                    });
+                                                                }}>
+                                                                <Tabs>
+                                                                    <ImageBT>
+                                                                        {/* <AddImage
+                                                                source={camera} /> */}
+                                                                        <TabsText>Camera</TabsText>
+                                                                    </ImageBT>
+                                                                </Tabs>
+                                                            </TouchableOpacity>
+                                                        </HorizotalCol>
 
-                                            <HorizotalCol>
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        ImagePicker.openPicker({
-                                                            cropping: true,
-                                                            compressImageQuality: 1,
+                                                        <HorizotalCol>
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    ImagePicker.openPicker({
+                                                                        cropping: true,
+                                                                        compressImageQuality: 1,
 
-                                                        }).then(async (image) => {
-                                                            setImagePath(image)
-                                                            setShowAlert(false)
+                                                                    }).then(async (image) => {
+                                                                        setFieldValue('content', image)
+                                                                        setImagePath(image)
+                                                                        setShowAlert(false)
 
-                                                        });
-                                                    }}>
-                                                    <Tabs
-                                                    >
-                                                        <ImageBT>
-                                                            <AddImage
-                                                                source={camera} />
-
-
-                                                            <TabsText>Gallery</TabsText>
-                                                        </ImageBT>
-                                                    </Tabs>
-                                                </TouchableOpacity>
-                                            </HorizotalCol>
-                                        </TabHorizontal>
-                                    }
-                                    cancelButtonColor={"#DD6B55"}
-                                    onCancelPressed={() => {
-                                        setShowAlert(false);
-                                    }}
-                                />
-                            }
+                                                                    });
+                                                                }}>
+                                                                <Tabs
+                                                                >
+                                                                    <ImageBT>
+                                                                        {/* <AddImage
+                                                                source={camera} /> */}
+                                                                        <TabsText>Gallery</TabsText>
+                                                                    </ImageBT>
+                                                                </Tabs>
+                                                            </TouchableOpacity>
+                                                        </HorizotalCol>
+                                                    </TabHorizontal>
+                                                }
+                                                cancelButtonColor={"#DD6B55"}
+                                                onCancelPressed={() => {
+                                                    setShowAlert(false);
+                                                }}
+                                            />
+                                        }
+                                    </View>
+                                )}
+                            </Formik>
                         </MainView>
                     </ScrollView>
-
-
             }
         </MainWrapperWhite>
+    </KeyboardAvoidingView>
+       
 
 
     )
@@ -340,6 +396,14 @@ const AddImage = styled.Image`
 const ImageBT = styled.View`
   flex-direction: row;
   align-items: center;
+`;
+
+const ErrorWrapper = styled.View`
+  margin-top: 3px;
+  padding-left: 2px;
+`;
+const ErrorWrapper__Text = styled.Text`
+  color: red;
 `;
 
 const Tabs = styled.View`

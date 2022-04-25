@@ -1,14 +1,9 @@
 import axios from "axios";
-import { CommonActions } from "@react-navigation/native";
 import { baseURL } from "@root/service/apiEndPoints";
 import Snackbar from "react-native-snackbar";
 
 // @ts-ignore
-import { persistor, store } from "@root/store";
-import { navigationRef } from "../navigation/RootNavigation";
-import navigationStrings from "@root/navigation/navigationStrings";
-import { clearAll } from "../storage";
-import { ActionType } from "@root/store/login/actions-types";
+import {  store } from "@root/store";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const state = store.getState();
@@ -41,13 +36,13 @@ instance.interceptors.response.use(
     return response;
   },
   error => {
-    
-    if(!error.response.data.status)
+    console.log('Error ==> ',error.response.data.status)
+    if(error.response.data && !error.response.data.status)
     {
-      Snackbar.show({
-        text: error.response.data.message,
-        duration: Snackbar.LENGTH_SHORT,
-      })
+      // Snackbar.show({
+      //   text: error && error.response.data.message,
+      //   duration: Snackbar.LENGTH_SHORT,
+      // })
     }
 
     return Promise.reject(error);

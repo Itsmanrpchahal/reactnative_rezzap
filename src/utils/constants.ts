@@ -4,6 +4,7 @@ export const WINDOW_DEVICE_WIDTH = Dimensions.get('window').width;
 export const WINDOW_DEVICE_HEIGHT = Dimensions.get('window').height;
 
 export const imageUrl = "https://www.rezzap.com/uploads/profile-photo/";
+export const vedioUrl = "https://www.rezzap.com/uploads/activity-videos/";
 export const pdfUrl = "https://www.rezzap.com/uploads/activity-pdfs/";
 export const activityImages = "https://www.rezzap.com/uploads/activity-images/";
 export const interestsImages = "https://www.rezzap.com/uploads/group-icon/";

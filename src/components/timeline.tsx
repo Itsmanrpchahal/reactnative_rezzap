@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Linking, Text, TouchableOpacity } from "react-native";
 // @ts-ignore
 import styled from "styled-components/native";
-import { comment, deleteBlack, dots, add, pdf, share, support } from "../utils/assets";
+import { comment, deleteBlack, thumb, add, pdf, share, support } from "../utils/assets";
 import { format } from 'date-fns';
-import { activityImages, pdfUrl } from "../utils/constants";
+import { activityImages, imageUrl, pdfUrl, vedioUrl } from "../utils/constants";
 import { useActions } from "@root/hooks/useActions";
 import Share from 'react-native-share'
 import TextField from "@root/components/TextField";
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
-import { id } from "date-fns/locale";
+
 
 
 const Timeline = (item: any) => {
-  
+  var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   const [addcomment,setAddComment] = useState('')
   const myCustomShare = async (id: any) => {
     const shareOptions = {
@@ -34,13 +34,13 @@ const Timeline = (item: any) => {
   const { setsupport, deleteTimelineItem, getMyTimeline ,addComments,deleteComments} = useActions();
   const {addCommemtData,commentloading} = useTypedSelector((state) => state.addCommemtData);
   const [supportt, setSupport] = useState(false);
-  
+ 
 
   return (
     <ParentWarpper>
         <HorizontalWrapper>
         <VerticalWrapper>
-          <CapText>{item.item.category ? item.item.category.substring(0,1).toUpperCase() : ''}</CapText>
+          {/* <CapText>{item.item.category ? item.item.category.substring(0,1).toUpperCase() : ''}</CapText> */}
           <DateText>{format(new Date(item.item.created_at), 'do')}</DateText>
           <MonthWrapper>
             <MonthText>
@@ -60,10 +60,15 @@ const Timeline = (item: any) => {
                 {format(new Date(item.item.created_at), 'HH:mm')}
               </SubTitleText>
 
+             
               {
                 item.item.media_type === "1"
                   ? <ImageWrapper source={{ uri: activityImages + item.item.content }} />
-                  : item.item.media_type === "2" ? <TouchableOpacity onPress={() => { Linking.openURL(item.item.content) }}><ActivityText>{item.item.content}</ActivityText></TouchableOpacity>
+                  : item.item.media_type === "2" ? <TouchableOpacity style={{width:150}} onPress={() => {  if(item.item.content.match(p)){
+                    Linking.openURL(item.item.content)
+                } else{
+                  Linking.openURL(vedioUrl+ item.item.content)
+                } }}><ImageWrapper source={thumb} /></TouchableOpacity>
                     : item.item.media_type === "3" ? <Text>Audio</Text>
                       : item.item.media_type === "4" ? <ActivityText>{item.item.content}</ActivityText>
                         : item.item.media_type === "5" ? <TouchableOpacity onPress={() => { Linking.openURL(pdfUrl + item.item.content) }}><PDFImage source={pdf}></PDFImage></TouchableOpacity>

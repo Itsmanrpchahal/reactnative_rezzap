@@ -33,5 +33,6 @@ import searchwhite from '../assets/searchwhite/searchwhite.png'
 import closewhite from '../assets/closewhite/closewhite.png'
 import bookmark from '../assets/bookmark/bookmark.png'
 import filter from '../assets/filter/filter.png'
+import thumb from '../assets/thumb/thumb.png'
 
-export {navigaionIcon, imageLayout, demoImage,dp,loc,back,follow,dummy,edit,deletei,add,dots,support,comment,share,camera,pdf,calender,pdfwhite,word,doc,search,send,addCategory,editBlack,deleteBlack,addWhite,close,addresume,slidebc,dash,searchwhite,closewhite,bookmark,filter};
+export {navigaionIcon, imageLayout, demoImage,dp,loc,back,follow,dummy,edit,deletei,add,dots,support,comment,share,camera,pdf,calender,pdfwhite,word,doc,search,send,addCategory,editBlack,deleteBlack,addWhite,close,addresume,slidebc,dash,searchwhite,closewhite,bookmark,filter,thumb};

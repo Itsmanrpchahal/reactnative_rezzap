@@ -46,11 +46,11 @@ let osPath =
         type: imagePath.mime,
         name: imagePath.filename,
       });
-    
+      setShowAlert(false);
        await addNew_Interest({title : values.title,
         url : values.url,
        },formData)
-      setShowAlert(false);
+      
     }
   };
 
@@ -79,6 +79,7 @@ let osPath =
               url:values.url,
               is_image:0
             })
+            
             navigationRef.current.goBack();
           }
             
@@ -135,12 +136,13 @@ let osPath =
                                 compressImageQuality: 1,
                               }).then((image) => {
                                 setImagePath(image);
+                                setShowAlert(false);
                               });
                             }}>
                             <Tabs>
                               <ImageBT>
-                                <AddImage
-                                  source={camera} />
+                                {/* <AddImage
+                                  source={camera} /> */}
 
 
                                 <TabsText>Camera</TabsText>
@@ -158,14 +160,14 @@ let osPath =
 
                               }).then(async (image) => {
                                 setImagePath(image)
-
+                                setShowAlert(false);
                               });
                             }}>
                             <Tabs
                             >
                               <ImageBT>
-                                <AddImage
-                                  source={camera} />
+                                {/* <AddImage
+                                  source={camera} /> */}
 
 
                                 <TabsText>Gallery</TabsText>

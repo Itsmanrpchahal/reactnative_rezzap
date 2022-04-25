@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 import { MainParentWrapper, NotFound } from "@root/utils/globalStyle";
 import { withTheme } from "styled-components";
 import { demoImage, imageLayout } from "@root/utils/assets";
-import { FlatList,ScrollView, Text, TouchableOpacity } from "react-native";
+import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import SecondaryButton from "@root/components/ButtonSecondary";
 import { useIsFocused, useTheme } from "@react-navigation/native";
 import ListCard from "@root/components/supporterItem";
@@ -40,12 +40,12 @@ const Home = (props: any) => {
   }, [isFocused]);
 
   return (
-   
-     <MainWrapper>
-     {loading ? (
-          <AppLoader/>
-        ) :
-        <ScrollView nestedScrollEnabled={false} style={{width:'100%',height:'100%'}}>
+
+    <MainWrapper>
+      {loading ? (
+        <AppLoader />
+      ) :
+
         <MainParentWrapper>
 
           <ChildWrapper>
@@ -55,14 +55,14 @@ const Home = (props: any) => {
               <ImageWrapper>
                 <ImageView source={imageLayout} />
                 <ImageBottom
-                  source={myProfileData ? {uri : imageUrl + myProfileData.data.profile_photo } : demoImage } />
+                  source={myProfileData ? { uri: imageUrl + myProfileData.data.profile_photo } : demoImage} />
               </ImageWrapper>
             </TouchableOpacity>
 
 
-            <UserText>{myProfileData && Object.keys(myProfileData).length > 0  ? myProfileData.data.first_name + " " + myProfileData.data.last_name : ""}</UserText>
-            <UserSubText>{myProfileData && Object.keys(myProfileData).length > 0  ? myProfileData.data.profile_status : ""}</UserSubText>
-            
+            <UserText>{myProfileData && Object.keys(myProfileData).length > 0 ? myProfileData.data.first_name + " " + myProfileData.data.last_name : ""}</UserText>
+            <UserSubText>{myProfileData && Object.keys(myProfileData).length > 0 ? myProfileData.data.profile_status : ""}</UserSubText>
+
             <BtnWrapper>
               <SecondaryButton
                 onPress={() => {
@@ -73,7 +73,7 @@ const Home = (props: any) => {
               />
               <SecondaryButton
                 onPress={() => {
-                  props.navigation.navigate(navigationStrings.MY_WHEEL,{type:'0'});
+                  props.navigation.navigate(navigationStrings.MY_WHEEL, { type: '0' });
                 }}
                 btnText={"My Wheel"}
                 backgroundColor={colors.blue}
@@ -82,55 +82,58 @@ const Home = (props: any) => {
           </ChildWrapper>
           <Divider backgroundColor={colors.divider} height={3} />
 
-          <HorizontalWrapper>
+          <ScrollView nestedScrollEnabled={false} style={{ width: '100%', height: '100%' }}>
+            <View>
+            
+              <HorizontalWrapper>
 
-            <TextWrapper>Supporters</TextWrapper>
+                <TextWrapper>Supporters</TextWrapper>
 
-            <TouchableOpacity onPress={() => {
-              props.navigation.navigate(navigationStrings.SUPPORTERS, { item: mySupporterData.data });
-            }}>
-              <TextWrapper>View All</TextWrapper>
-            </TouchableOpacity>
-          </HorizontalWrapper>
-
-          {
-            supporterLoading ? (
-                <NotFound>Loading...</NotFound>
-              ) :
-              Object.keys(mySupporterData).length > 0 ?
-                (<FlatList
-                  nestedScrollEnabled={true}
-                  data={mySupporterData.data}
-                  horizontal={true}
-                  renderItem={({ item }) => {
-                    return <ListCard item={item} />;
-                  }}
-                />) :
-                (<Text>No Data Found</Text>)
-          }
-
-          <Divider backgroundColor={colors.divider} height={1} />
-          {
-            timelineLoading ? (
-                <NotFound>Loading...</NotFound>
-              ) :
-              timelineData.data && Object.keys(timelineData.data).length > 0 ?
-                (
-                   timelineData.data.map((item: any) => (
-                    <Timeline item={item} />
-                    
-                  ))
+                <TouchableOpacity onPress={() => {
+                  props.navigation.navigate(navigationStrings.SUPPORTERS, { item: mySupporterData.data });
+                }}>
+                  <TextWrapper>View All</TextWrapper>
+                </TouchableOpacity>
+              </HorizontalWrapper>
+              {
+                supporterLoading ? (
+                  <NotFound>Loading...</NotFound>
                 ) :
-                (<Text>No Data Found</Text>)
-          }
+                  Object.keys(mySupporterData).length > 0 ?
+                    (<FlatList
+                      nestedScrollEnabled={true}
+                      data={mySupporterData.data}
+                      horizontal={true}
+                      renderItem={({ item }) => {
+                        return <ListCard item={item} />;
+                      }}
+                    />) :
+                    (<Text>No Data Found</Text>)
+              }
+              {
+                timelineLoading ? (
+                  <NotFound>Loading...</NotFound>
+                ) :
+                  timelineData.data && Object.keys(timelineData.data).length > 0 ?
+                    (
+                      timelineData.data.map((item: any) => (
+                        <Timeline item={item} />
+
+                      ))
+                    ) :
+                    (<Text>No Data Found</Text>)
+              }
+            </View>
+          </ScrollView>
+
 
         </MainParentWrapper>
-        </ScrollView>
-      }
-     </MainWrapper>
-      
 
-   
+      }
+    </MainWrapper>
+
+
+
   );
 };
 

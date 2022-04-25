@@ -16,7 +16,7 @@ import { navigationRef } from "../../../../navigation/RootNavigation";
 
 const AddResume = ({ props, route }) => {
     const { colors }: any = useTheme();
-    const { resumeDetail, resume_CategoryList, resume_ActivityList, getMySupporter, getMyInterest, add_Resume, resume_Update } = useActions();
+    const { resumeDetail, resume_CategoryList,resume_ActivityList, getCategories, getMySupporter, getMyInterest, add_Resume, resume_Update } = useActions();
     let [series, setSeries] = useState([])
     const { resumeData, loading } = useTypedSelector((state) => state.resumeData);
     const { resumeCData, loadingC } = useTypedSelector((state) => state.resumeCData);
@@ -25,47 +25,61 @@ const AddResume = ({ props, route }) => {
     const { myInterestData, interestLoading } = useTypedSelector(
         (state) => state.interest,
     );
+    const { categoryData, catloading } = useTypedSelector(
+        (state) => state.categoryData,
+    );
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [profile, setProfile] = useState('');
-    const [category_names, setCategory_names] = useState('');
-    const [activity_names, setActivity_names] = useState('');
-    const [supporters_ids, setSupporters_ids] = useState('');
-    const [interest_names, setInterest_names] = useState('');
+    const [catSelected, setCatSelected] = useState([]);
+
+    const [titleSelected, setTitleSelected] = useState([]);
+    const [supporter, setSupporterSelected] = useState([])
+    const [interest, setIntestedSelected] = useState([])
     useEffect(() => {
         if (route.params.type != "new") {
-             resumeDetail(route.params.id)
-             
-         }
+            resumeDetail(route.params.id)
+            
+        } else {
+            getCategories()
+        }
         resume_CategoryList(),
             getMySupporter(),
             getMyInterest()
+            console.log('resumeCData ===> ',resumeCData)
         {
-            loadingC || resumeActivityData || resumeActivityData || myInterestData ? <AppLoader /> :
+            loadingC || resumeActivityData || myInterestData ? <AppLoader /> :
                 resumeCData && Object.keys(resumeCData).length > 0 ? resumeCData.data.map((item: any) => (setSeries(item))) : setSeries([])
         }
     }, []);
 
-    useEffect(()=>{
-        if (route.params.type != "new" && loading === false && resumeData.data ) {
-            
-             setName(resumeData.data.resume_name)
-            
+    useEffect(() => {
+        if (route.params.type != "new" && loading === false && resumeData.data) {
+
+            setName(resumeData.data.resume_name)
+
             setEmail(resumeData.data.resume_email)
-           
+
             setPhone(resumeData.data.resume_phone)
-            
+
             setProfile(resumeData.data.resume_profile)
+           
+            {
+                resumeData.data.category_list  && setCatSelected(resumeData.data.category_list.map(item => item.id)),
+                resumeData.data.interest_list  && setIntestedSelected(resumeData.data.interest_list.map(item => item.name))
+                
+            }
+
         }
-    },[resumeData.data])
+    }, [resumeData.data])
     return (
         <MainWrapperWhite>
             {
                 loading ? <AppLoader /> :
                     <ScrollView nestedScrollEnabled={false}>
                         <ResumeView>
-                           
+
                             <Formik
                                 validationSchema={RESUME_SCHEMA}
                                 enableReinitialize={true}
@@ -74,10 +88,10 @@ const AddResume = ({ props, route }) => {
                                     email: email,
                                     phone: phone,
                                     profile: profile,
-                                    category_names: category_names,
-                                    activity_names: activity_names,
-                                    supporters_ids: supporters_ids,
-                                    interest_names: interest_names,
+                                    category_ids: route.params.type != "new" ? catSelected.toString(): '',
+                                    activity_names: '',
+                                    supporters_ids: '',
+                                    interest_names: route.params.type != "new" ? interest.toString(): '',
                                 }}
                                 onSubmit={async (values) => {
                                     route.params.type === 'new' ?
@@ -86,25 +100,26 @@ const AddResume = ({ props, route }) => {
                                             email: values.email,
                                             phone: values.phone,
                                             profile: values.profile,
-                                            category_names: values.category_names,
+                                            category_ids: values.category_ids,
                                             activity_names: values.activity_names,
                                             supporters_ids: values.supporters_ids,
                                             interest_names: values.interest_names,
                                         })
+                                        
                                         :
                                         await resume_Update({
                                             name: values.name,
                                             email: values.email,
                                             phone: values.phone,
                                             profile: values.profile,
-                                            category_names: values.category_names,
+                                            category_ids: values.category_ids,
                                             activity_names: values.activity_names,
                                             supporters_ids: values.supporters_ids,
                                             interest_names: values.interest_names,
-                                            id:resumeData.data.resume_id
+                                            id: resumeData.data.resume_id
                                         })
-                                           
-                                    navigationRef.current.goBack()
+                                            // console.log('UPDATWE===> ',values)
+                                     navigationRef.current.goBack()
                                 }}>
                                 {({ setFieldValue, handleSubmit, errors }) => (
                                     <View>
@@ -128,7 +143,7 @@ const AddResume = ({ props, route }) => {
 
                                         <TextField accessibilityLabel="Phone"
                                             placeholder='Phone'
-                                            defaultValue={route.params.type === 'new' ? '' :resumeData.data && resumeData.data.resume_phone}
+                                            defaultValue={route.params.type === 'new' ? '' : resumeData.data && resumeData.data.resume_phone}
                                             onChangeText={(value: any) => {
                                                 setFieldValue('phone', value);
                                                 setPhone(value)
@@ -148,7 +163,7 @@ const AddResume = ({ props, route }) => {
                                             Category
                                         </Title>
                                         <Horizontal>
-                                            <Dropdown
+                                            <MultiSelect
                                                 style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
                                                 data={resumeCData && Object.keys(resumeCData).length > 0 ? resumeCData.data : series}
                                                 search={false}
@@ -156,18 +171,18 @@ const AddResume = ({ props, route }) => {
                                                 labelField="cat_name"
                                                 valueField="cat_id"
                                                 searchPlaceholder={"Search"}
-                                                value={'cat_name'}
+                                                value={catSelected}
                                                 selectedTextStyle={{ color: colors.black }}
                                                 onChange={item => {
-                                                    setFieldValue('category_names', item.cat_name)
-                                                    setCategory_names(item.cat_name)
-                                                    resume_ActivityList({ cat_id: item.cat_id })
+                                                    const commaSep = item.map(item => item).join(',');
+                                                    setFieldValue('category_ids', commaSep)
+                                                    setCatSelected(item)  
                                                 }}
                                             />
                                         </Horizontal>
                                         {errors !== null && (
                                             <ErrorWrapper>
-                                                <ErrorWrapper__Text>{errors ? errors.category_names : null}</ErrorWrapper__Text>
+                                                <ErrorWrapper__Text>{errors ? errors.category_ids : null}</ErrorWrapper__Text>
                                             </ErrorWrapper>
                                         )}
                                         <TextTV>Select categories in the order that should appear in the resume.</TextTV>
@@ -175,21 +190,21 @@ const AddResume = ({ props, route }) => {
                                         <Title>
                                             Activity
                                         </Title>
-
                                         <Horizontal>
-                                            <Dropdown
+                                            <MultiSelect
                                                 style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
                                                 selectedTextStyle={{ color: colors.black }}
                                                 data={resumeActivityData && Object.keys(resumeActivityData).length > 0 ? resumeActivityData.data : series}
                                                 search={false}
                                                 maxHeight={150}
                                                 labelField="title"
-                                                valueField="id"
+                                                valueField="title"
                                                 searchPlaceholder={"Search"}
-                                                value={'title'}
+                                                value={titleSelected}
                                                 onChange={item => {
-                                                    setFieldValue('activity_names', item.title)
-                                                    setActivity_names(item.title)
+                                                    const commaSep = item.map(item => item).join(',');
+                                                    setFieldValue('activity_names', commaSep)
+                                                    setTitleSelected(item)
                                                 }}
                                             />
 
@@ -205,7 +220,7 @@ const AddResume = ({ props, route }) => {
                                         </Title>
 
                                         <Horizontal>
-                                            <Dropdown
+                                            <MultiSelect
                                                 style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
                                                 selectedTextStyle={{ color: colors.black }}
                                                 data={mySupporterData && Object.keys(mySupporterData).length > 0 ? mySupporterData.data : series}
@@ -214,10 +229,11 @@ const AddResume = ({ props, route }) => {
                                                 labelField="name"
                                                 valueField="id"
                                                 searchPlaceholder={"Search"}
-                                                value={'name'}
+                                                value={supporter}
                                                 onChange={item => {
-                                                    setFieldValue('supporters_ids', item.name)
-                                                    setSupporters_ids(item.name)
+                                                    const commaSep = item.map(item => item).join(',');
+                                                    setFieldValue('supporters_ids', commaSep)
+                                                    setSupporterSelected(item)
                                                 }}
                                             />
                                         </Horizontal>
@@ -235,19 +251,20 @@ const AddResume = ({ props, route }) => {
                                         </Title>
 
                                         <Horizontal>
-                                            <Dropdown
+                                            <MultiSelect
                                                 style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
                                                 selectedTextStyle={{ color: colors.black }}
                                                 data={myInterestData && Object.keys(myInterestData).length > 0 ? myInterestData.data : series}
                                                 search={false}
                                                 maxHeight={150}
                                                 labelField="title"
-                                                valueField="id"
+                                                valueField="title"
                                                 searchPlaceholder={"Search"}
-                                                value={'title'}
+                                                value={interest}
                                                 onChange={item => {
-                                                    setFieldValue('interest_names', item.title)
-                                                    setInterest_names(item.title)
+                                                    const commaSep = item.map(item => item).join(',');
+                                                    setFieldValue('interest_names', commaSep)
+                                                    setIntestedSelected(item)
                                                 }}
                                             />
                                         </Horizontal>

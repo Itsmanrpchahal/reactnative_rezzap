@@ -3,13 +3,14 @@ import { useTheme, withTheme } from "styled-components";
 // @ts-ignore
 import styled from "styled-components/native";
 import { camera, demoImage, imageLayout } from "@root/utils/assets";
-import { Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { AsyncStorage, Platform, ScrollView, TouchableOpacity, View } from "react-native";
 import TextField from "@root/components/TextField";
 import { Formik } from "formik";
 import ImagePicker from "react-native-image-crop-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import { useActions } from "@root/hooks/useActions";
+import axios from "axios";
 // @ts-ignore
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from "react-native-simple-radio-button";
 import { accountType, designation, radio_props, STATES, visibilty } from "@root/utils/constants";
@@ -20,8 +21,6 @@ import { UPDATEPROFILE_SCHEMA } from "./helpers";
 import { UpdateProfileInterface } from "@root/store/updateProfile/interfaces";
 import NavigationStrings from "@root/navigation/navigationStrings";
 import RNFetchBlob from 'rn-fetch-blob'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const UpdateProfile = (props: any) => {
   const { colors }: any = useTheme();
@@ -32,44 +31,53 @@ const UpdateProfile = (props: any) => {
   const { uploadProfilePicture, updateMyProfile } = useActions();
   const [isFocus, setIsFocus] = useState(false);
   const [visibleTimer, setVisibleTimer] = useState<boolean>(false);
-  const [token,setToken] = useState('');
-    const { myProfileData, loading } = useTypedSelector(
+
+  const { myProfileData, loading } = useTypedSelector(
     (state) => state.myProfile,
   );
   const [value, setValue] = useState(1);
   const [stime, setSTime] = useState<any>(myProfileData ? myProfileData.data.dob : '');
   const [profiledesgination, setProfileDesgination] = useState(myProfileData ? myProfileData.data.designation.toString() : '')
   const [text, setText] = useState('Update Profile')
-  AsyncStorage.getItem('TOKEN').then((asyncStorageRes) => {
-    // @ts-ignore
-    setToken(asyncStorageRes)
-  });
+
+
 
   const saveImage = async (values: any) => {
     if (values === null) {
       console.log("Image path error");
 
     } else {
-      const formData = new FormData();
-      console.log('Image' , values)
+      var formData = new FormData()
       let osPath =
-        Platform.OS === "android"
+        Platform.OS === 'android'
           ? values.path
-          : values.path.replace("file://", "");
-
-      let data = {
+          : values.path.replace('file://', '');
+ 
+      formData.append('file', {
+        // @ts-ignore
         uri: osPath,
-        type: values.mime,
-        name: values.filename,
-      }
-
-      formData.append("profile_pic", JSON.stringify(data));
-
-   
-
+        type: 'image/jpeg',
+        name: 'photo.png',
+      });
+      formData.append('entityId', 579);
+      formData.append('description', '');
+      console.log('FormData=-====>', formData);
+      try {
+          const resposne = axios({
+                    method: "POST",
+                    url: "https://linkedup-app-api.azurewebsites.net/api/v2/shifts/report/upload/",
+                    data: formData,
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                      Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkNmREo4UGlhNElpQ3lDWlB1QlAxWUxhSjRQZ0dhZHZKS3JMNjVlbGdCdXBDVGF4aDZNTXJHdGZXb0JIcXVwSy1PTFpQbVhKNTI5TFV2MHUyMy1tOTJaYlhCejhEdDlXdlliSmZKeldLOEVkUFcyNFVMcm9DUzgwMnlRSTR6MFlKMzRkdHJsUUVnaS1NLUNJVzI0Q1RTT2ZrM3pCbnhua2FZTElJQzVxb0VaYTQ0Z3AtIiwianRpIjoiNGIxNTRjOGQtNjRhOC00OTM0LWI3ODEtYmI3ZDg2Y2I3MDlkIiwiZXhwIjoxNjUwNDU4MTYyLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDM1OS8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDM1OS8ifQ.2MJrCph4v9vQqjjOR_n___y1VtbCxZvH6FELp_BOXcc"
+                    },
+                })
+                console.log('Response ==> ',resposne)
+            } catch (error) {
+                console.log('error ===>  ',error)
+            }
       // setCancel("Uploading");
-      // console.log('formData ====>   ', formData)
-      await uploadProfilePicture(formData);
+      //  await uploadProfilePicture(formData);
 
     }
   };
@@ -99,18 +107,15 @@ const UpdateProfile = (props: any) => {
 
   // @ts-ignore
   return (
-
     <ScrollView >
       <ParentWrapper>
         <TouchableOpacity onPress={() => {
           ImagePicker.openPicker({
             cropping: true,
-            compressImageQuality: 1,
-
+            freeStyleCropEnabled: false,
           }).then(async (image) => {
             setImagePath(image);
             await saveImage(image);
-
           });
         }}>
           <ImageWrapper>
@@ -125,61 +130,6 @@ const UpdateProfile = (props: any) => {
             <ImageCamera source={camera} />
           </ImageWrapper>
         </TouchableOpacity>
-
-
-        {/* customView={
-              <TabHorizontal>
-                <HorizotalCol>
-                  <TouchableOpacity
-                    onPress={() => {
-                      ImagePicker.openCamera({
-
-                        cropping: true,
-                        compressImageQuality: 1,
-                      }).then((image) => {
-                        setImagePath(image);
-                      });
-                    }}>
-                    <Tabs>
-                      <ImageBT>
-                        <AddImage
-                          source={camera} />
-
-
-                        <TabsText>Camera</TabsText>
-                      </ImageBT>
-                    </Tabs>
-                  </TouchableOpacity>
-                </HorizotalCol>
-
-                <HorizotalCol>
-                  <TouchableOpacity
-                    onPress={() => {
-                      ImagePicker.openPicker({
-                        cropping: true,
-                        compressImageQuality: 1,
-
-                      }).then(async (image) => {
-                        setImagePath(image);
-                        await saveImage(image);
-
-                      });
-                    }}>
-                    <Tabs
-                    >
-                      <ImageBT>
-                        <AddImage
-                          source={camera} />
-
-
-                        <TabsText>Gallery</TabsText>
-                      </ImageBT>
-                    </Tabs>
-                  </TouchableOpacity>
-                </HorizotalCol>
-              </TabHorizontal>
-            } */}
-
 
         <Formik
           validationSchema={UPDATEPROFILE_SCHEMA}
@@ -269,8 +219,8 @@ const UpdateProfile = (props: any) => {
               </Genderhearder>
               <Horizontal>
                 <Dropdown
-                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                   selectedTextStyle={{color:colors.black}}
+                  style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                  selectedTextStyle={{ color: colors.black }}
                   data={STATES}
                   search={true}
                   maxHeight={300}
@@ -294,8 +244,8 @@ const UpdateProfile = (props: any) => {
 
               <Horizontal>
                 <Dropdown
-                  style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                  selectedTextStyle={{color:colors.black}}
+                  style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                  selectedTextStyle={{ color: colors.black }}
                   data={visibilty}
                   search={false}
                   maxHeight={100}
@@ -354,8 +304,8 @@ const UpdateProfile = (props: any) => {
 
               <Horizontal>
                 <Dropdown
-                   style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                   selectedTextStyle={{color:colors.black}}
+                  style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                  selectedTextStyle={{ color: colors.black }}
                   data={designation}
                   search={false}
                   maxHeight={300}
@@ -378,8 +328,8 @@ const UpdateProfile = (props: any) => {
               </Genderhearder>
               <Horizontal>
                 <Dropdown
-                  style={{ width: "100%",backgroundColor:'#D3D3D3' ,borderRadius:8,padding : 5 }}
-                  selectedTextStyle={{color:colors.black}}
+                  style={{ width: "100%", backgroundColor: '#D3D3D3', borderRadius: 8, padding: 5 }}
+                  selectedTextStyle={{ color: colors.black }}
                   data={accountType}
                   search={false}
                   maxHeight={100}
