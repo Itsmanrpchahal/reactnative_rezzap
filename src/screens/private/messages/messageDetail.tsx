@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { NotFound, MainWrapper } from "@root/utils/globalStyle";
 import { withTheme } from "styled-components";
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { FlatList,  Keyboard, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 import { useIsFocused, useTheme } from "@react-navigation/native";
 import { useActions } from "@root/hooks/useActions";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import { demoImage, send } from "@root/utils/assets";
 // @ts-ignore
 import styled from "styled-components/native";
-import { format } from "date-fns";
 import { imageUrl } from "@root/utils/constants";
 import AppLoader from "../../../components/Loader";
-import formatDistance from "date-fns/fp/formatDistance";
 
 // @ts-ignore
 const MessageDetail = ({ props, route }) => {
@@ -20,7 +17,9 @@ const MessageDetail = ({ props, route }) => {
   const { getMessageDetail, sendMessage } = useActions();
   const { messageListData, loading } = useTypedSelector((state) => state.messageListData);
   const [message, setMessageTV] = useState('');
-
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const showSubscription = Keyboard.addListener('keyboardDidShow', e => setKeyboardHeight(e.endCoordinates.height));
+  const hideSubscription = Keyboard.addListener('keyboardWillHide', () => setKeyboardHeight(0));
 
   useEffect(() => {
     if (isFocused) {
@@ -28,78 +27,90 @@ const MessageDetail = ({ props, route }) => {
     }
   }, [isFocused]);
 
+  useEffect(()=>{
+    showSubscription.remove();
+    hideSubscription.remove();
+  },[keyboardHeight])
+
   return (
-    <ParentWrapper>
-      {
-        loading ? (
-          <AppLoader />
-        ) :
-          <FlatList
-            nestedScrollEnabled={true}
-            data={messageListData.data}
-            showsHorizontalScrollIndicator={false}
-            numColumns={1}
-            inverted={true}
-            horizontal={false}
+    
+      <ParentWrapper>
+        {
+          loading ? (
+            <AppLoader />
+          ) :
 
-            renderItem={({ item }) => {
-              return (
-                <ChatMainView>
+            <FlatList
+              nestedScrollEnabled={true}
+              data={messageListData.data}
+              showsHorizontalScrollIndicator={false}
+              numColumns={1}
+              inverted={true}
+              horizontal={false}
 
-                  <ChatWrapper flexDirection={item.message_type === 'sender' ? 'row-reverse' : 'row'}>
-                    <ProfileImage source={messageListData.user_data && Object.keys(messageListData.user_data).length > 0 ? { uri: item.message_type != 'sender' ? imageUrl + messageListData.user_data.profile_photo : imageUrl + messageListData.supporter_data.profile_photo } : demoImage} />
-                    <ChatNameView>
-                      <ChatTimeNameWrapper>
+              renderItem={({ item }) => {
+                return (
+                  <ChatMainView>
 
-                        <ChatText flexDirection={item.message_type === 'sender' ? 'right' : 'left'}>
-                          {messageListData.user_data && Object.keys(messageListData.user_data).length > 0 ? item.message_type != 'sender' ? messageListData.user_data.first_name : messageListData.supporter_data.first_name : ''}
-                        </ChatText>
-                        {/* {
-                          item.message_type !== 'sender' && <TimeAgoTV>{formatDistance(new Date(new Date(messageListData.user_data.created).getFullYear(), new Date(messageListData.user_data.created).getMonth(), new Date(messageListData.user_data.created).getDate()),
-                            new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
-                           )}</TimeAgoTV>
-                        } */}
-                  
-                      </ChatTimeNameWrapper>
-                      <ChatMessage flexDirection={item.message_type === 'sender' ? 'right' : 'left'}>
-                        {item.message}
-                      </ChatMessage>
-                    </ChatNameView>
-                  </ChatWrapper>
-                </ChatMainView>
-              );
-            }}
-          />
-      }
+                    <ChatWrapper flexDirection={item.message_type === 'sender' ? 'row-reverse' : 'row'}>
+                      <ProfileImage source={messageListData.user_data && Object.keys(messageListData.user_data).length > 0 ? { uri: item.message_type != 'sender' ? imageUrl + messageListData.user_data.profile_photo : imageUrl + messageListData.supporter_data.profile_photo } : demoImage} />
+                      <ChatNameView>
+                        <ChatTimeNameWrapper>
 
-      <SendMessageWrapper>
-        <ProfileImage source={demoImage} />
-        <SearchWrapper style={[styles.shadowBottonContainerStyle]}>
-          <TextInput style={{ color: colors.black, padding: 10 }} placeholder={"Type message"} onChangeText={(mess) => setMessageTV(mess)} value={message}>
-          </TextInput>
+                          <ChatText flexDirection={item.message_type === 'sender' ? 'right' : 'left'}>
+                            {messageListData.user_data && Object.keys(messageListData.user_data).length > 0 ? item.message_type != 'sender' ? messageListData.user_data.first_name : messageListData.supporter_data.first_name : ''}
+                          </ChatText>
+                          {/* {
+                    item.message_type !== 'sender' && <TimeAgoTV>{formatDistance(new Date(new Date(messageListData.user_data.created).getFullYear(), new Date(messageListData.user_data.created).getMonth(), new Date(messageListData.user_data.created).getDate()),
+                      new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                     )}</TimeAgoTV>
+                  } */}
 
-          <TouchableOpacity onPress={async () => {
-            sendMessage({
-              'supporter_id': route.params.id,
-              'message': message
-            })
-            setMessageTV('')
-          }}>
-            <ImageView source={send} />
-          </TouchableOpacity>
-        </SearchWrapper>
-      </SendMessageWrapper>
+                        </ChatTimeNameWrapper>
+                        <ChatMessage flexDirection={item.message_type === 'sender' ? 'right' : 'left'}>
+                          {item.message}
+                        </ChatMessage>
+                      </ChatNameView>
+                    </ChatWrapper>
+                  </ChatMainView>
+                );
+              }}
+            />
+        }
+        
+        <SendMessageWrapper marginBottom={keyboardHeight}>
+          <ProfileImage source={demoImage} />
+          <SearchWrapper style={[styles.shadowBottonContainerStyle]}>
+            <TextInput style={{ color: colors.black, padding: 10 }} placeholder={"Type message"} onChangeText={(mess) => setMessageTV(mess)} value={message}>
+            </TextInput>
 
-    </ParentWrapper>
+            <TouchableOpacity onPress={async () => {
+              sendMessage({
+                'supporter_id': route.params.id,
+                'message': message
+              })
+              setMessageTV('')
+            }}>
+              <ImageView source={send} />
+            </TouchableOpacity>
+          </SearchWrapper>
+        </SendMessageWrapper>
+
+
+      </ParentWrapper >
+   
   );
 };
-
 // @ts-ignore
 export default withTheme(MessageDetail);
 
 type TextProps = {
   flexDirection: string
 };
+
+type KeyboardProps ={
+  marginBottom:number
+}
 
 const ImageView = styled.Image`
 padding: 10px;
@@ -118,10 +129,11 @@ const SearchWrapper = styled.View`
   background-color:#fff;
 `;
 
-const SendMessageWrapper = styled.View`
+const SendMessageWrapper = styled.View<KeyboardProps>`
   flex-direction: row;
-  margin-bottom: 16px;
+  margin-bottom:${({ marginBottom }: any) => marginBottom}px;
   margin-top: auto;
+  padding-bottom:16px;
   `;
 
 const styles = StyleSheet.create({

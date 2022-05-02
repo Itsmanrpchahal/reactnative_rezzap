@@ -16,7 +16,7 @@ import { navigationRef } from "../../../../navigation/RootNavigation";
 
 const AddResume = ({ props, route }) => {
     const { colors }: any = useTheme();
-    const { resumeDetail, resume_CategoryList,resume_ActivityList, getCategories, getMySupporter, getMyInterest, add_Resume, resume_Update } = useActions();
+    const { resumeDetail, resume_CategoryList, resume_ActivityList, getCategories, getMySupporter, getMyInterest, add_Resume, resume_Update } = useActions();
     let [series, setSeries] = useState([])
     const { resumeData, loading } = useTypedSelector((state) => state.resumeData);
     const { resumeCData, loadingC } = useTypedSelector((state) => state.resumeCData);
@@ -24,9 +24,6 @@ const AddResume = ({ props, route }) => {
     const { mySupporterData, supporterLoading } = useTypedSelector((state) => state.mySupporters);
     const { myInterestData, interestLoading } = useTypedSelector(
         (state) => state.interest,
-    );
-    const { categoryData, catloading } = useTypedSelector(
-        (state) => state.categoryData,
     );
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -37,17 +34,17 @@ const AddResume = ({ props, route }) => {
     const [titleSelected, setTitleSelected] = useState([]);
     const [supporter, setSupporterSelected] = useState([])
     const [interest, setIntestedSelected] = useState([])
+    const activity_titles = []
     useEffect(() => {
         if (route.params.type != "new") {
             resumeDetail(route.params.id)
-            
+
         } else {
             getCategories()
         }
         resume_CategoryList(),
             getMySupporter(),
             getMyInterest()
-            console.log('resumeCData ===> ',resumeCData)
         {
             loadingC || resumeActivityData || myInterestData ? <AppLoader /> :
                 resumeCData && Object.keys(resumeCData).length > 0 ? resumeCData.data.map((item: any) => (setSeries(item))) : setSeries([])
@@ -64,15 +61,31 @@ const AddResume = ({ props, route }) => {
             setPhone(resumeData.data.resume_phone)
 
             setProfile(resumeData.data.resume_profile)
-           
+
             {
-                resumeData.data.category_list  && setCatSelected(resumeData.data.category_list.map(item => item.id)),
-                resumeData.data.interest_list  && setIntestedSelected(resumeData.data.interest_list.map(item => item.name))
-                
+                resumeData.data.category_list
+                if (resumeData.data.category_list) {
+                   
+                    // resumeData.data.category_list.forEach((cat) => {
+                    //     cat.activity_list.forEach((activity) => {
+                    //         activity_titles.push(activity.title)
+                    //     })
+                    //     setTitleSelected(activity_titles)
+                    // })
+                    
+                    console.log('activity_titles ---> ',resumeData.data)
+               
+                }
+                resumeData.data.activity_list && setTitleSelected(resumeData.data.activity_list.map(item => item))
+                resumeData.data.category_list && setCatSelected(resumeData.data.category_list.map(item => item.id))
+                resumeData.data.interest_list && setIntestedSelected(resumeData.data.interest_list.map(item => item.name))
+                resumeData.data.supporter_list && setSupporterSelected(resumeData.data.supporter_list.map(item => item.id))
+
             }
 
         }
     }, [resumeData.data])
+
     return (
         <MainWrapperWhite>
             {
@@ -88,10 +101,10 @@ const AddResume = ({ props, route }) => {
                                     email: email,
                                     phone: phone,
                                     profile: profile,
-                                    category_ids: route.params.type != "new" ? catSelected.toString(): '',
-                                    activity_names: '',
-                                    supporters_ids: '',
-                                    interest_names: route.params.type != "new" ? interest.toString(): '',
+                                    category_ids: route.params.type != "new" ? catSelected.toString() : '',
+                                    activity_names: route.params.type != "new" ? titleSelected.toString() : '',
+                                    supporters_ids: route.params.type != "new" ? supporter.toString() : '',
+                                    interest_names: route.params.type != "new" ? interest.toString() : '',
                                 }}
                                 onSubmit={async (values) => {
                                     route.params.type === 'new' ?
@@ -105,7 +118,6 @@ const AddResume = ({ props, route }) => {
                                             supporters_ids: values.supporters_ids,
                                             interest_names: values.interest_names,
                                         })
-                                        
                                         :
                                         await resume_Update({
                                             name: values.name,
@@ -118,8 +130,8 @@ const AddResume = ({ props, route }) => {
                                             interest_names: values.interest_names,
                                             id: resumeData.data.resume_id
                                         })
-                                            // console.log('UPDATWE===> ',values)
-                                     navigationRef.current.goBack()
+                                    // console.log('UPDATWE===> ',values)
+                                    navigationRef.current.goBack()
                                 }}>
                                 {({ setFieldValue, handleSubmit, errors }) => (
                                     <View>
@@ -176,7 +188,8 @@ const AddResume = ({ props, route }) => {
                                                 onChange={item => {
                                                     const commaSep = item.map(item => item).join(',');
                                                     setFieldValue('category_ids', commaSep)
-                                                    setCatSelected(item)  
+                                                    setCatSelected(item)
+                                                    resume_ActivityList({ cat_id: commaSep })
                                                 }}
                                             />
                                         </Horizontal>
@@ -209,6 +222,7 @@ const AddResume = ({ props, route }) => {
                                             />
 
                                         </Horizontal>
+
                                         {errors !== null && (
                                             <ErrorWrapper>
                                                 <ErrorWrapper__Text>{errors ? errors.activity_names : null}</ErrorWrapper__Text>
