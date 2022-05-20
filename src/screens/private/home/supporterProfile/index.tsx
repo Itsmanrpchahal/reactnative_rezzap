@@ -4,7 +4,7 @@ import { Divider, MainWrapper, NotFound } from "@root/utils/globalStyle";
 // @ts-ignore
 import styled from "styled-components/native";
 import { demoImage, dp, follow } from "@root/utils/assets";
-import { FlatList, Image, ScrollView, Text, TouchableOpacity } from "react-native";
+import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import ListCard from "@root/components/supporterItem";
 import { useIsFocused, useTheme } from "@react-navigation/native";
 import Detail from "@root/components/detail";
@@ -53,7 +53,7 @@ const SupporterProfile = ({ props, route }) => {
         loading ? (
           <AppLoader />
         ) :
-          <ScrollView nestedScrollEnabled={true}>
+         
 
             <MainWrapper>
               <ImageBox>
@@ -81,6 +81,9 @@ const SupporterProfile = ({ props, route }) => {
 
               </HorizontalWrapper>
 
+
+              <ScrollView nestedScrollEnabled={true} >
+              <View>
               <HorizontalWrapper>
                 <TouchableOpacity>
                   <TextDecs>Supporters</TextDecs>
@@ -91,8 +94,6 @@ const SupporterProfile = ({ props, route }) => {
                   <TextDecs>View All </TextDecs>
                 </TouchableOpacity>
               </HorizontalWrapper>
-
-
               {
                 supporterLoading ? (
                   <NotFound>Loading...</NotFound>
@@ -110,10 +111,7 @@ const SupporterProfile = ({ props, route }) => {
                     ) :
                     (<Text>No Data Found</Text>)
               }
-
-
               <Divider backgroundColor={colors.divider} height={4} />
-
               <TabWrapper>
                 <Tabbutton>
                   <TouchableOpacity onPress={() => {
@@ -178,9 +176,12 @@ const SupporterProfile = ({ props, route }) => {
                       (<Text>No Data Found</Text>)
                 }
               </BottomWrapper>
+              </View>
+                </ScrollView>
+             
             </MainWrapper>
 
-          </ScrollView>
+         
       }
     </MainWrapper>
 

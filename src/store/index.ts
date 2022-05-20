@@ -33,6 +33,7 @@ export * as searchSupporter from '@root/store/message/action-creators';
 export * as getCategories from '@root/store/categories/action-creators';
 export * as addCategory from '@root/store/categories/action-creators';
 export * as updateCategory from '@root/store/categories/action-creators';
+export * as storeCategory from '@root/store/categories/action-creators';
 export * as deleteCategory from '@root/store/categories/action-creators';
 export * as setsupport from '@root/store/supportUnsupport/action-creators';
 export * as getNotifications from '@root/store/notifictions/action-creators';

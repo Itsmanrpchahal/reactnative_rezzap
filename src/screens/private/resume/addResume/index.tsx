@@ -74,7 +74,6 @@ const AddResume = ({ props, route }) => {
                     // })
                     
                     console.log('activity_titles ---> ',resumeData.data)
-               
                 }
                 resumeData.data.activity_list && setTitleSelected(resumeData.data.activity_list.map(item => item))
                 resumeData.data.category_list && setCatSelected(resumeData.data.category_list.map(item => item.id))

@@ -23,11 +23,11 @@ const AddNewCategory = () => {
   const { colors }: any = useTheme();
   const isFocused = useIsFocused();
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  const [checkedIds, setChekedIds] = useState({})
+  const [checkedIds,setcheckedIds] = useState([]) 
   const [data, setData] = useState('');
   const [itemId, setItemId] = useState('');
   const [confirm, setConfirm] = useState('Update');
-  const { getCategories, deleteCategory, updateCategory, addCategory } = useActions();
+  const { getCategories, deleteCategory, updateCategory, addCategory,storeCategory } = useActions();
   const { categoryData, catloading } = useTypedSelector(
     (state) => state.categoryData,
   );
@@ -38,6 +38,7 @@ const AddNewCategory = () => {
       getCategories()
     }
   }, [isFocused]);
+
 
   return (
 
@@ -53,7 +54,7 @@ const AddNewCategory = () => {
               nestedScrollEnabled={true}
               data={categoryData.data}
               horizontal={false}
-              renderItem={({ item }) => {
+              renderItem={({ item ,index}) => {
                 return (
                   <CateView>
                     <CateItem>
@@ -67,11 +68,11 @@ const AddNewCategory = () => {
                           animationDuration={0}
                           onFillColor={colors.greenColor}
                           onCheckColor={colors.greenColor}
-                          onValueChange={(newValue) => { setToggleCheckBox(newValue)}}
+                          onValueChange={(newValue) => {  }}
                         />
 
                         <TitleText>
-                          {item.title}
+                          {item.title}  {checkedIds}
                         </TitleText>
                       </CateLeft>
 
@@ -92,13 +93,11 @@ const AddNewCategory = () => {
 
                         </CateRight> : <Text></Text>
                       }
-
                     </CateItem>
-
                   </CateView>
                 )
               }}
-            />) :
+            />) : 
             (<Text>No Data Found</Text>)
 
         }
@@ -194,7 +193,7 @@ const AddNewCategory = () => {
             }}
             backgroundColor={colors.black}
             btnText={"Add"}
-            loading={loading}
+            loading={catloading}
           />
         </ButtonWrapper>
       </MainView>

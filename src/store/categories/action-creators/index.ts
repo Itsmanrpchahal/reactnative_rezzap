@@ -101,3 +101,27 @@ export const updateCategory = (fn:any) => {
     }
   };
 };
+
+export const storeCategory = (fn:any) => {
+  return async (dispatch: Dispatch<Action | any>) => {
+    dispatch({
+      type: ActionType.CATEGORIES_INIT,
+    });
+
+    try {
+      const response = await service.put(apiUri.storeCategory +fn);
+
+      dispatch({
+        type: ActionType.CATEGORIES_SUCCESS,
+        payload: response.data,
+      });
+      return response;
+    } catch (e: any) {
+
+      dispatch({
+        type: ActionType.CATEGORIES_ERROR,
+        payload: 'Somethings wents wrong',
+      });
+    }
+  };
+}
