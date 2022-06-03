@@ -47,7 +47,6 @@ const Home = (props: any) => {
       ) :
 
         <MainParentWrapper>
-
           <ChildWrapper>
             <TouchableOpacity onPress={() => {
               props.navigation.navigate(navigationStrings.MYPROFILE);
@@ -55,10 +54,10 @@ const Home = (props: any) => {
               <ImageWrapper>
                 <ImageView source={imageLayout} />
                 <ImageBottom
-                  source={myProfileData ? { uri: imageUrl + myProfileData.data.profile_photo } : demoImage} />
+                  source={myProfileData ? { uri: imageUrl + myProfileData.data.profile_photo } : require('../../../assets/demoImage/demoImage.png')} />
               </ImageWrapper>
             </TouchableOpacity>
-
+           {console.log('IMAGE PATH ---> ',myProfileData && imageUrl + myProfileData.data.profile_photo)}
 
             <UserText>{myProfileData && Object.keys(myProfileData).length > 0 ? myProfileData.data.first_name + " " + myProfileData.data.last_name : ""}</UserText>
             <UserSubText>{myProfileData && Object.keys(myProfileData).length > 0 ? myProfileData.data.profile_status : ""}</UserSubText>

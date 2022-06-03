@@ -49,7 +49,7 @@ const apiUri = {
   deleteCategory: 'category/destroy?id=',
   storeCategory: 'category/store-categories?category_ids=',
   categoryUpdate: 'category/update?',
-
+  activityCategory:'category/show-categories',
 
   supportUnsupportapi: 'activity/support-unsupport?',
   deleteActivity: 'activity/destroy?id=',

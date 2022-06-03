@@ -274,6 +274,8 @@ PODS:
     - glog
   - react-native-document-picker (8.0.0):
     - React-Core
+  - react-native-image-picker (4.8.3):
+    - React-Core
   - react-native-pdf (6.4.0):
     - React-Core
   - react-native-safe-area-context (3.3.2):
@@ -456,6 +458,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -541,6 +544,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-pdf:
     :path: "../node_modules/react-native-pdf"
   react-native-safe-area-context:
@@ -632,6 +637,7 @@ SPEC CHECKSUMS:
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
   react-native-document-picker: 429972f7ece4463aa5bcdd789622b3a674a3c5d1
+  react-native-image-picker: e95b4785b685cfc06609bc50ed6fb55b59990c99
   react-native-pdf: a6a5a3f0bdf340eb2eed6c96034424d2cc3f84b0
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
@@ -664,6 +670,6 @@ SPEC CHECKSUMS:
   Yoga: e7dc4e71caba6472ff48ad7d234389b91dadc280
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6f61bc8e9e8adda888c1aacd845b67fc32c54cc7
+PODFILE CHECKSUM: 6911fd661d7c1dcb146dbbe1804b6d6ca4f161a0
 
 COCOAPODS: 1.11.3

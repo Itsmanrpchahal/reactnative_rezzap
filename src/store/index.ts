@@ -52,5 +52,6 @@ export * as search_StateSchool from '@root/store/allCollegeList/action-creators'
 export * as send_Email from '@root/store/sendEmail/action-creators'
 export * as reset_Password from '@root/store/sendEmail/action-creators'
 export * as resume_ActivityList from '@root/store/resumeActivity/action-creators'
+export * as getActivityCategories from '@root/store/activityCategory/action-creators'
 export * from '@root/store/rootReducer';
 
