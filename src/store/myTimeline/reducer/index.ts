@@ -25,18 +25,18 @@ const reducer = (
 ): RepositoriesStateInterface =>
   produce(state, draft => {
     switch (action.type) {
-      case ActionType.TIMELINE_INIT:
+      case ActionType.MYTIMELINE_INIT:
         draft.mytimelineLoading = true;
         draft.error = null;
         draft.mytimelineData=[]
         return draft;
-      case ActionType.TIMELINE_SUCCESS:
+      case ActionType.MYTIMELINE_SUCCESS:
         
         draft.mytimelineLoading = false;
         draft.error = null;
         draft.mytimelineData = action.payload
         return draft;
-      case ActionType.TIMELINE_ERROR:
+      case ActionType.MYTIMELINE_ERROR:
         draft.mytimelineLoading = false;
         draft.error = action.payload;
         draft.mytimelineData= []

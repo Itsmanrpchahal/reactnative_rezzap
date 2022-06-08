@@ -56,32 +56,6 @@ const UpdateProfile = (props: any) => {
   );
   const [text, setText] = useState('Update Profile');
 
-  const saveImage = async (values: any) => {
-    if (imagePath === null) {
-      console.log('Image path error');
-      alert('Image path error');
-    } else {
-      var formData = new FormData();
-      let osPath =
-        Platform.OS === 'android'
-          ? imagePath.path
-          : imagePath.path.replace('file://', '');
-
-      formData.append('profile_pic', {
-        // @ts-ignore
-        uri: osPath,
-        type: 'image/jpeg',
-        name: 'photo.png',
-      });
-
-      console.log('REZAAP ====> ', formData);
-      console.log('REZAAP1 ====> ', props);
-
-      setCancel('Uploading');
-      //  await uploadProfilePicture(formData);
-    }
-  };
-
   async function handleUpdate(values: UpdateProfileInterface) {
     setText('Updating');
     await updateMyProfile({

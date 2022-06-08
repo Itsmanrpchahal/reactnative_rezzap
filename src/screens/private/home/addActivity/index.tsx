@@ -18,18 +18,19 @@ import {format} from 'date-fns';
 import AppLoader from '../../../../components/Loader';
 import {ScrollView} from 'react-native-gesture-handler';
 import PrimaryButton from '@root/components/Button';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import ImagePicker from 'react-native-image-crop-picker';
-import {camera} from '@root/utils/assets';
+import {launchImageLibrary} from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {Formik} from 'formik';
-import {ADD_ACTIVITY_SCHEMA} from './helpers';
+import {ADD_ACTIVITY_SCHEMA, ADD_ACTIVITY_SCHEMA1} from './helpers';
 
 const AddActivity = (props: any) => {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(0);
+  const [title, setTitle] = useState('');
   const [catv, setCatV] = useState(1);
-  const [showalert, setShowAlert] = useState(false);
-  const [catValue, setCatValue] = useState();
+  const [pdf, setPdf] = useState('');
+  const [sound, setSound] = useState('');
+  const [word, setWord] = useState('');
+  const [category, setCategory] = useState();
   let [series, setSeries] = useState([]);
   var radio_props = [
     {label: 'Image  ', value: 1},
@@ -42,23 +43,29 @@ const AddActivity = (props: any) => {
 
   var video_props = [
     {label: 'Upload a Video', value: 1},
-    {label: 'Youtube/Vieo Embed link', value: 2},
+    {label: 'Youtube/Video Embed link', value: 2},
   ];
   const [imagePath, setImagePath] = useState<any>('');
-  const [vedioPath, setVideoPath] = useState<any>('Upload Video');
+  const [vedioPath, setVideoPath] = useState<any>('');
   const {colors}: any = useTheme();
-  const {getMyGraph, addActivity,getActivityCategories} = useActions();
+  const {addActivity, getActivityCategories} = useActions();
   const [isFocus, setIsFocus] = useState(false);
   const [visibleTimer, setVisibleTimer] = useState<boolean>(false);
-  const {myGraphData, loading} = useTypedSelector(state => state.myGraph);
-  const {activity_categoryData, activity_catloading} = useTypedSelector(state => state.activity_categoryData);
+  const {activity_categoryData, activity_catloading} = useTypedSelector(
+    state => state.activity_categoryData,
+  );
+
+  const {mytimelineData, mytimelineLoading} = useTypedSelector(
+    state => state.mytimelineData,
+  );
 
   useEffect(() => {
-    getActivityCategories()
+    getActivityCategories();
     {
-        activity_catloading ? (
+      activity_catloading ? (
         <AppLoader />
-      ) : activity_categoryData && Object.keys(activity_categoryData).length > 0 ? (
+      ) : activity_categoryData &&
+        Object.keys(activity_categoryData).length > 0 ? (
         activity_categoryData.data.map((item: any) => setSeries(item))
       ) : (
         setSeries([])
@@ -66,83 +73,73 @@ const AddActivity = (props: any) => {
     }
   }, []);
 
-  const saveImage = async (values: any) => {
-    if (imagePath === null) {
-      console.log('Image path error');
-      setShowAlert(false);
-    } else {
-      const formData = new FormData();
-      let osPath =
-        Platform.OS === 'ios'
-          ? imagePath.path
-          : imagePath.path.replace('file://', '');
-
-      formData.append('image', {
-        // @ts-ignore
-
-        uri: osPath,
-        type: imagePath.mime,
-        name: imagePath.filename,
-      });
-
-      setShowAlert(false);
-    }
-  };
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS == 'ios' ? 'padding' : null}>
       <MainWrapperWhite>
-        {loading || activity_catloading ? (
+        {mytimelineLoading || activity_catloading ? (
           <AppLoader />
         ) : (
           <ScrollView>
             <MainView>
               <Formik
-                validationSchema={ADD_ACTIVITY_SCHEMA}
+                validationSchema={
+                  value == 4 || catv == 2
+                    ? ADD_ACTIVITY_SCHEMA1
+                    : ADD_ACTIVITY_SCHEMA
+                }
                 enableReinitialize={true}
                 initialValues={{
-                  title: '',
-                  category: '',
+                  title: title,
+                  category: category,
                   media_type: value,
                   event_date: format(new Date(), 'yyyy-MM-dd'),
                   content: '',
                 }}
                 onSubmit={async values => {
-                  var formData = new FormData();
-                  let osPath =
-                    Platform.OS === 'android'
-                      ? values.content.path
-                      : values.content.path.replace('file://', '');
-
-                  formData.append('content', {
-                    // @ts-ignore
-                    uri: osPath,
-                    type: values.content.mime,
-                    name: values.content.filename,
-                  });
-
-                  await addActivity({
-                    title: values.title,
-                    category: values.category,
-                    event_date: values.event_date,
-                    content: values.content,
-                    media_type: value,
-                  });
-                  props.navigation.pop();
-                  console.log('ADD ACTIVITY ===> ', formData);
+                  if (
+                    values.media_type == 0 ||
+                    values.media_type == 4 ||
+                    (values.media_type == 2 && catv == 2)
+                  ) {
+                    await addActivity(
+                      {
+                        title: values.title,
+                        category: values.category,
+                        media_type: catv == 2 ? '4' : values.media_type,
+                        event_date: values.event_date,
+                        content: values.content,
+                      },
+                      values.media_type,
+                      catv,
+                    );
+                    props.navigation.pop();
+                  } else if (
+                    values.media_type == 1 ||
+                    values.media_type == 2 ||
+                    values.media_type == 3 ||
+                    values.media_type == 5 ||
+                    values.media_type == 6
+                  ) {
+                    await addActivity(values.content, values.media_type, catv);
+                    props.navigation.pop();
+                    // alert(JSON.stringify(values.content));
+                  }
                 }}>
                 {({setFieldValue, handleSubmit, errors, values}) => (
                   <View>
                     <TextField
                       accessibilityLabel="Title"
                       value={values.title}
-                      onChangeText={(value: any) =>
-                        setFieldValue('title', value)
-                      }
+                      onChangeText={(value: any) => {
+                        setTitle(value);
+                        setFieldValue('title', value);
+                      }}
                       error={errors ? errors.title : null}></TextField>
 
                     <Hearder>Category</Hearder>
+
                     <Horizontal>
                       <Dropdown
                         style={{
@@ -153,20 +150,20 @@ const AddActivity = (props: any) => {
                         }}
                         selectedTextStyle={{color: colors.black}}
                         data={
-                            activity_categoryData && Object.keys(activity_categoryData).length > 0
+                          activity_categoryData &&
+                          Object.keys(activity_categoryData).length > 0
                             ? activity_categoryData.data
                             : series
                         }
                         search={false}
                         maxHeight={300}
                         labelField="title"
-                        valueField="id"
+                        valueField="title"
                         searchPlaceholder={'Search'}
-                        value={value}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
+                        value={category}
                         onChange={item => {
-                          setFieldValue('id', item.id);
+                          setFieldValue('category', item.title);
+                          setCategory(item.title);
                         }}
                       />
                     </Horizontal>
@@ -198,7 +195,6 @@ const AddActivity = (props: any) => {
                       }}
                       setDateTimePicker={setVisibleTimer}
                     />
-
                     <Hearder>Type</Hearder>
 
                     <Horizontal>
@@ -256,153 +252,264 @@ const AddActivity = (props: any) => {
 
                     {value === 1 ? (
                       <TouchableOpacity
-                        onPress={() => {
-                          setShowAlert(true);
+                        onPress={async () => {
+                          const result = await launchImageLibrary({
+                            mediaType: 'photo',
+                            quality: 0,
+                          });
+                          var formData = new FormData();
+                          let osPath =
+                            Platform.OS === 'android'
+                              ? result.assets[0].uri
+                              : result.assets[0].uri.replace('file://', '');
+                          setImagePath(result.assets[0].uri);
+                          formData.append('content', {
+                            // @ts-ignore
+                            uri: osPath,
+                            type: 'image/jpeg',
+                            name: 'photo.png',
+                          });
+                          formData.append('title', values.title);
+                          formData.append('category', values.category);
+                          formData.append('media_type', values.media_type);
+                          formData.append('event_date', values.event_date);
+                          setFieldValue('content', formData);
+                          console.log('REZAAP ====> ', formData);
                         }}>
                         <ImageBorder>
                           {imagePath === '' ? (
                             <ImageText>Add Image</ImageText>
                           ) : (
-                            <ImageV source={{uri: imagePath.path}}></ImageV>
+                            <ImageV source={{uri: imagePath}}></ImageV>
                           )}
                         </ImageBorder>
+
+                        {imagePath == '' && (
+                          <ErrorWrapper>
+                            <ErrorWrapper__Text>
+                              Image is required
+                            </ErrorWrapper__Text>
+                          </ErrorWrapper>
+                        )}
                       </TouchableOpacity>
                     ) : value === 2 && catv === 1 ? (
                       <TouchableOpacity
-                        onPress={() => {
-                          ImagePicker.openPicker({
+                        onPress={async () => {
+                          const result = await launchImageLibrary({
                             mediaType: 'video',
-                          }).then(async image => {
-                            setVideoPath(image.path);
+                            quality: 1,
                           });
+                          var formData = new FormData();
+                          let osPath =
+                            Platform.OS === 'android'
+                              ? result.assets[0].uri
+                              : result.assets[0].uri.replace('file://', '');
+                          setImagePath(result.assets[0].uri);
+                          formData.append('content', {
+                            // @ts-ignore
+                            uri: osPath,
+                            type: result.assets[0].type,
+                            name: result.assets[0].fileName,
+                          });
+                          formData.append('title', values.title);
+                          formData.append('category', values.category);
+                          formData.append('media_type', values.media_type);
+                          formData.append('event_date', values.event_date);
+                          setFieldValue('content', formData);
+                          setVideoPath(result.assets[0].fileName);
+
+                          console.log('REZAAP ====> ', formData);
                         }}>
                         <ImageBorder>
-                          {imagePath === '' ? (
-                            <ImageText>{vedioPath}</ImageText>
-                          ) : (
-                            <ImageV source={{uri: imagePath.path}}></ImageV>
-                          )}
+                          <ImageText>
+                            {vedioPath ? vedioPath : 'Select Video'}
+                          </ImageText>
                         </ImageBorder>
+                        {vedioPath == '' && (
+                          <ErrorWrapper>
+                            <ErrorWrapper__Text>
+                              Video is required
+                            </ErrorWrapper__Text>
+                          </ErrorWrapper>
+                        )}
                       </TouchableOpacity>
                     ) : value === 2 && catv === 2 ? (
-                      <TextField placeholder="Youtube/Vimeo Embed Link"></TextField>
+                      <TextField
+                        placeholder="Youtube/Video Embed Link"
+                        value={values.content}
+                        onChangeText={(value: any) => {
+                          setFieldValue('content', value);
+                        }}
+                        error={errors ? errors.content : null}></TextField>
                     ) : value === 3 ? (
                       <TouchableOpacity
-                        onPress={() => {
-                          selectAudio('audio');
+                        onPress={async () => {
+                          try {
+                            const file = await DocumentPicker.pick({
+                              type: [DocumentPicker.types.audio],
+                              copyTo: 'documentDirectory',
+                            });
+
+                            let name = file[0].name;
+                            setSound(name);
+                            var formData = new FormData();
+                            let osPath =
+                              Platform.OS === 'android'
+                                ? file[0].uri
+                                : file[0].uri.replace('file://', '');
+
+                            formData.append('content', {
+                              // @ts-ignore
+                              uri: osPath,
+                              type: file[0].type,
+                              name: file[0].name,
+                            });
+                            formData.append('title', values.title);
+                            formData.append('category', values.category);
+                            formData.append('media_type', values.media_type);
+                            formData.append('event_date', values.event_date);
+                            setFieldValue('content', formData);
+                          } catch (error) {
+                            if (DocumentPicker.isCancel(error)) {
+                              // The user canceled the document picker.
+                              alert(JSON.stringify(error));
+                            } else {
+                              throw error;
+                            }
+                          }
                         }}>
                         <ImageBorder>
-                          {imagePath === '' ? (
-                            <ImageText>Upload Audio</ImageText>
-                          ) : (
-                            <ImageV source={{uri: imagePath.path}}></ImageV>
-                          )}
+                          <ImageText>
+                            {sound ? sound : 'Upload Audio'}
+                          </ImageText>
                         </ImageBorder>
+
+                        {sound == '' && (
+                          <ErrorWrapper>
+                            <ErrorWrapper__Text>
+                              Audio is required
+                            </ErrorWrapper__Text>
+                          </ErrorWrapper>
+                        )}
                       </TouchableOpacity>
                     ) : value === 4 ? (
                       <TextField
                         accessibilityLabel="Content"
-                        placeholder="Content"></TextField>
+                        value={values.content}
+                        onChangeText={(value: any) => {
+                          setFieldValue('content', value);
+                        }}
+                        error={errors ? errors.content : null}></TextField>
                     ) : value === 5 ? (
                       <TouchableOpacity
-                        onPress={() => {
-                          selectPdf('Pdf');
+                        onPress={async () => {
+                          try {
+                            const file = await DocumentPicker.pick({
+                              type: [DocumentPicker.types.pdf],
+                              copyTo: 'documentDirectory',
+                            });
+                            let name = file[0].name;
+                            setPdf(name);
+                            var formData = new FormData();
+                            let osPath =
+                              Platform.OS === 'android'
+                                ? file[0].uri
+                                : file[0].uri.replace('file://', '');
+
+                            formData.append('content', {
+                              // @ts-ignore
+                              uri: osPath,
+                              type: file[0].type,
+                              name: file[0].name,
+                            });
+                            formData.append('title', values.title);
+                            formData.append('category', values.category);
+                            formData.append('media_type', values.media_type);
+                            formData.append('event_date', values.event_date);
+                            setFieldValue('content', formData);
+                          } catch (error) {
+                            if (DocumentPicker.isCancel(error)) {
+                              // The user canceled the document picker.
+
+                              alert(JSON.stringify(error));
+                            } else {
+                              throw error;
+                            }
+                          }
                         }}>
                         <ImageBorder>
-                          {imagePath === '' ? (
-                            <ImageText>Upload PDF</ImageText>
-                          ) : (
-                            <ImageV source={{uri: imagePath.path}}></ImageV>
-                          )}
+                          <ImageText>
+                            {pdf === '' ? 'Upload PDF' : pdf}
+                          </ImageText>
                         </ImageBorder>
+
+                        {pdf == '' && (
+                          <ErrorWrapper>
+                            <ErrorWrapper__Text>
+                              PDF is required
+                            </ErrorWrapper__Text>
+                          </ErrorWrapper>
+                        )}
                       </TouchableOpacity>
                     ) : value === 6 ? (
                       <TouchableOpacity
-                        onPress={() => {
-                          selectWord('word');
+                        onPress={async () => {
+                          try {
+                            const file = await DocumentPicker.pick({
+                              type: [DocumentPicker.types.doc],
+                              copyTo: 'documentDirectory',
+                            });
+
+                            let name = file[0].name;
+                            setWord(name);
+                            var formData = new FormData();
+                            let osPath =
+                              Platform.OS === 'android'
+                                ? file[0].uri
+                                : file[0].uri.replace('file://', '');
+
+                            formData.append('content', {
+                              // @ts-ignore
+                              uri: osPath,
+                              type: file[0].type,
+                              name: file[0].name,
+                            });
+                            formData.append('title', values.title);
+                            formData.append('category', values.category);
+                            formData.append('media_type', values.media_type);
+                            formData.append('event_date', values.event_date);
+                            setFieldValue('content', formData);
+                          } catch (error) {
+                            if (DocumentPicker.isCancel(error)) {
+                              // The user canceled the document picker.
+                              alert(JSON.stringify(error));
+                            } else {
+                              throw error;
+                            }
+                          }
                         }}>
                         <ImageBorder>
-                          {imagePath === '' ? (
-                            <ImageText>Upload Word</ImageText>
-                          ) : (
-                            <ImageV source={{uri: imagePath.path}}></ImageV>
-                          )}
+                          <ImageText>{word ? word : 'Upload Word'}</ImageText>
                         </ImageBorder>
+
+                        {word == '' && (
+                          <ErrorWrapper>
+                            <ErrorWrapper__Text>
+                              Doc is required
+                            </ErrorWrapper__Text>
+                          </ErrorWrapper>
+                        )}
                       </TouchableOpacity>
-                    ) : (
-                      <Text></Text>
-                    )}
+                    ) : null}
 
                     <ButtonWrapper>
                       <PrimaryButton
                         onPress={handleSubmit}
                         backgroundColor={colors.black}
                         btnText={'Post Activity'}
-                        loading={loading}
+                        loading={false}
                       />
                     </ButtonWrapper>
-
-                    {showalert && (
-                      <AwesomeAlert
-                        show={showalert}
-                        showProgress={false}
-                        title="Select Photo"
-                        closeOnTouchOutside={false}
-                        closeOnHardwareBackPress={false}
-                        showCancelButton={true}
-                        cancelText={'Cancel'}
-                        customView={
-                          <TabHorizontal>
-                            <HorizotalCol>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  ImagePicker.openCamera({
-                                    cropping: true,
-                                    compressImageQuality: 1,
-                                  }).then(image => {
-                                    setImagePath(image);
-                                    setShowAlert(false);
-                                  });
-                                }}>
-                                <Tabs>
-                                  <ImageBT>
-                                    {/* <AddImage
-                                                                source={camera} /> */}
-                                    <TabsText>Camera</TabsText>
-                                  </ImageBT>
-                                </Tabs>
-                              </TouchableOpacity>
-                            </HorizotalCol>
-
-                            <HorizotalCol>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  ImagePicker.openPicker({
-                                    cropping: true,
-                                    compressImageQuality: 1,
-                                  }).then(async image => {
-                                    setFieldValue('content', image);
-                                    setImagePath(image);
-                                    setShowAlert(false);
-                                  });
-                                }}>
-                                <Tabs>
-                                  <ImageBT>
-                                    {/* <AddImage
-                                                                source={camera} /> */}
-                                    <TabsText>Gallery</TabsText>
-                                  </ImageBT>
-                                </Tabs>
-                              </TouchableOpacity>
-                            </HorizotalCol>
-                          </TabHorizontal>
-                        }
-                        cancelButtonColor={'#DD6B55'}
-                        onCancelPressed={() => {
-                          setShowAlert(false);
-                        }}
-                      />
-                    )}
                   </View>
                 )}
               </Formik>
@@ -513,57 +620,3 @@ const Horizontal = styled.View`
 const MainView = styled.View`
   padding: 16px;
 `;
-
-async function selectAudio(type: string) {
-  try {
-    const file = await DocumentPicker.pick({
-      type: [DocumentPicker.types.audio],
-      copyTo: 'documentDirectory',
-    });
-
-    alert(JSON.stringify(file));
-  } catch (error) {
-    if (DocumentPicker.isCancel(error)) {
-      // The user canceled the document picker.
-      alert(JSON.stringify(error));
-    } else {
-      throw error;
-    }
-  }
-}
-
-async function selectPdf(type: string) {
-  try {
-    const file = await DocumentPicker.pick({
-      type: [DocumentPicker.types.pdf],
-      copyTo: 'documentDirectory',
-    });
-
-    alert(JSON.stringify(file));
-  } catch (error) {
-    if (DocumentPicker.isCancel(error)) {
-      // The user canceled the document picker.
-      alert(JSON.stringify(error));
-    } else {
-      throw error;
-    }
-  }
-}
-
-async function selectWord(type: string) {
-  try {
-    const file = await DocumentPicker.pick({
-      type: [DocumentPicker.types.doc],
-      copyTo: 'documentDirectory',
-    });
-
-    alert(JSON.stringify(file));
-  } catch (error) {
-    if (DocumentPicker.isCancel(error)) {
-      // The user canceled the document picker.
-      alert(JSON.stringify(error));
-    } else {
-      throw error;
-    }
-  }
-}
