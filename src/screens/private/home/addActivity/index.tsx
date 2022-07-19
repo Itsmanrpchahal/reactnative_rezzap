@@ -22,15 +22,17 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {Formik} from 'formik';
 import {ADD_ACTIVITY_SCHEMA, ADD_ACTIVITY_SCHEMA1} from './helpers';
+import { dummy } from '../../../../utils/assets';
 
 const AddActivity = (props: any) => {
   const [value, setValue] = useState(0);
   const [title, setTitle] = useState('');
+  const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [catv, setCatV] = useState(1);
   const [pdf, setPdf] = useState('');
   const [sound, setSound] = useState('');
   const [word, setWord] = useState('');
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState('');
   let [series, setSeries] = useState([]);
   var radio_props = [
     {label: 'Image  ', value: 1},
@@ -47,8 +49,9 @@ const AddActivity = (props: any) => {
   ];
   const [imagePath, setImagePath] = useState<any>('');
   const [vedioPath, setVideoPath] = useState<any>('');
+  const [content,setContent] = useState<String>('')
   const {colors}: any = useTheme();
-  const {addActivity, getActivityCategories} = useActions();
+  const {addActivity, getActivityCategories,updateActivity} = useActions();
   const [isFocus, setIsFocus] = useState(false);
   const [visibleTimer, setVisibleTimer] = useState<boolean>(false);
   const {activity_categoryData, activity_catloading} = useTypedSelector(
@@ -73,6 +76,19 @@ const AddActivity = (props: any) => {
     }
   }, []);
 
+  useEffect(() => {
+    {
+      props.route.params.type === 1 && setTitle(props.route.params.item.title);
+      props.route.params.type === 1 &&
+        setDate(props.route.params.item.event_date);
+    }
+  }, []);
+
+  useEffect(() => {
+    props.route.params.type === 1 &&
+      setCategory(props.route.params.item.category);
+  }, []);
+ 
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
@@ -83,6 +99,7 @@ const AddActivity = (props: any) => {
         ) : (
           <ScrollView>
             <MainView>
+              <Text>{JSON.stringify(props.route.params.item.id)}  </Text>
               <Formik
                 validationSchema={
                   value == 4 || catv == 2
@@ -94,8 +111,8 @@ const AddActivity = (props: any) => {
                   title: title,
                   category: category,
                   media_type: value,
-                  event_date: format(new Date(), 'yyyy-MM-dd'),
-                  content: '',
+                  event_date: date,
+                  content:  content,
                 }}
                 onSubmit={async values => {
                   if (
@@ -103,6 +120,18 @@ const AddActivity = (props: any) => {
                     values.media_type == 4 ||
                     (values.media_type == 2 && catv == 2)
                   ) {
+                    props.route.params.type === 1 ? await updateActivity(
+                      {
+                        title: values.title,
+                        category: values.category,
+                        media_type: catv == 2 ? '4' : values.media_type,
+                        event_date: values.event_date,
+                        content: values.content,
+                        id : props.route.params.item.id
+                      },
+                      values.media_type,
+                      catv,
+                    ) :
                     await addActivity(
                       {
                         title: values.title,
@@ -122,9 +151,20 @@ const AddActivity = (props: any) => {
                     values.media_type == 5 ||
                     values.media_type == 6
                   ) {
+                    props.route.params.type === 1 ? await updateActivity(
+                      {
+                        title: values.title,
+                        category: values.category,
+                        media_type: catv == 2 ? '4' : values.media_type,
+                        event_date: values.event_date,
+                        content: values.content,
+                        id : props.route.params.item.id
+                      },
+                      values.media_type,
+                      catv,
+                    ) :
                     await addActivity(values.content, values.media_type, catv);
                     props.navigation.pop();
-                    // alert(JSON.stringify(values.content));
                   }
                 }}>
                 {({setFieldValue, handleSubmit, errors, values}) => (
@@ -372,7 +412,7 @@ const AddActivity = (props: any) => {
                           } catch (error) {
                             if (DocumentPicker.isCancel(error)) {
                               // The user canceled the document picker.
-                              alert(JSON.stringify(error));
+                             
                             } else {
                               throw error;
                             }
@@ -424,14 +464,11 @@ const AddActivity = (props: any) => {
                             });
                             formData.append('title', values.title);
                             formData.append('category', values.category);
-                            formData.append('media_type', values.media_type);
+                            formData.append('media_type', values.media_type.toString());
                             formData.append('event_date', values.event_date);
                             setFieldValue('content', formData);
                           } catch (error) {
                             if (DocumentPicker.isCancel(error)) {
-                              // The user canceled the document picker.
-
-                              alert(JSON.stringify(error));
                             } else {
                               throw error;
                             }
@@ -476,13 +513,13 @@ const AddActivity = (props: any) => {
                             });
                             formData.append('title', values.title);
                             formData.append('category', values.category);
-                            formData.append('media_type', values.media_type);
+                            formData.append('media_type', values.media_type.toString());
                             formData.append('event_date', values.event_date);
                             setFieldValue('content', formData);
                           } catch (error) {
                             if (DocumentPicker.isCancel(error)) {
                               // The user canceled the document picker.
-                              alert(JSON.stringify(error));
+                             
                             } else {
                               throw error;
                             }
@@ -506,7 +543,7 @@ const AddActivity = (props: any) => {
                       <PrimaryButton
                         onPress={handleSubmit}
                         backgroundColor={colors.black}
-                        btnText={'Post Activity'}
+                        btnText={props.route.params.type === 1 ?  'Update Activity': 'Post Activity'}
                         loading={false}
                       />
                     </ButtonWrapper>

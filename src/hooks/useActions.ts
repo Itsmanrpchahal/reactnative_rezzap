@@ -13,6 +13,7 @@ import { authActionCreators,
    addNew_Interest,
    getMyTimeline,
    addActivity,
+   updateActivity,
    getSupporterTimeline,
    uploadProfilePicture,
    signUp,
@@ -53,7 +54,7 @@ import { authActionCreators,
    search_Activity,
    add_Resume,
    resume_Update,
-   getActivityCategories} from "../store";
+   getActivityCategories,} from "../store";
 
 export const useActions = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ export const useActions = () => {
       addNew_Interest,
       getMyTimeline,
       addActivity,
+      updateActivity,
       getSupporterTimeline,
       uploadProfilePicture,
       signUp,
@@ -113,7 +115,7 @@ export const useActions = () => {
       search_Activity,
       add_Resume,
       resume_Update,
-      getActivityCategories
+      getActivityCategories,
     ),
     dispatch,
   );

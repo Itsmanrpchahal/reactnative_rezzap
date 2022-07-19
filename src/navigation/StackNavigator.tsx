@@ -23,7 +23,7 @@ import NavigationStrings from "./navigationStrings";
 import AddNewInterest from "../screens/private/home/interests/addNewInterest";
 import UpdateProfile from "../screens/private/home/myProfile/updateProfile";
 import { useTypedSelector } from "../hooks/useTypedSelector";
-import AddNewCategory from "../screens/private/home/newCategory/"
+import AddNewCategory from "../screens/private/home/newCategory"
 import AwesomeAlert from "react-native-awesome-alerts";
 import FAQ from '../screens/private/home/faq';
 import About from '../screens/private/home/about';
@@ -80,7 +80,7 @@ function StackNavigator(props: any) {
               <TouchableOpacity
                 onPress={() => {
                   
-                  navigationRef.current.navigate(NavigationStrings.ADD_ACTIVITY)
+                  navigationRef.current.navigate(NavigationStrings.ADD_ACTIVITY,{type:0})
                 }}>
                <AddBtn
                   style={{marginRight: 15}}

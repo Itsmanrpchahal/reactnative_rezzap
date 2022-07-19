@@ -5,7 +5,7 @@ import { withTheme } from "styled-components";
 import styled  from "styled-components/native";
 import { useTheme } from "@react-navigation/native";
 import PieChart from "react-native-pie-chart";
-import {  ScrollView } from "react-native";
+import { Text, ScrollView } from "react-native";
 
 function Wheel(item:any) {
   const { colors }: any = useTheme();

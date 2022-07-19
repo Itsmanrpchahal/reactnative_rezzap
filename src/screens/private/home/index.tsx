@@ -26,7 +26,6 @@ const Home = (props: any) => {
   const { myProfileData, loading } = useTypedSelector(
     (state) => state.myProfile,
   );
-
   const { timelineData, timelineLoading } = useTypedSelector(
     (state) => state.timeline,
   );
@@ -39,13 +38,13 @@ const Home = (props: any) => {
     }
   }, [isFocused]);
 
+
   return (
 
     <MainWrapper>
       {loading ? (
         <AppLoader />
       ) :
-
         <MainParentWrapper>
           <ChildWrapper>
             <TouchableOpacity onPress={() => {
@@ -120,7 +119,7 @@ const Home = (props: any) => {
 
                       ))
                     ) :
-                    (<Text>No Data Found</Text>)
+                    (<Text>No Data Found {JSON.stringify(timelineData)}</Text>)
               }
             </View>
           </ScrollView>

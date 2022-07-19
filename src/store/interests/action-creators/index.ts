@@ -3,8 +3,7 @@ import {ActionType} from '@root/store/interests/actions-types';
 import {Action} from '@root/store/interests/actions';
 import {apiUri} from '@root/service/apiEndPoints';
 import service from '@root/service/axios';
-import { SupporterInterface } from "../interface/SupporterInterface";
-
+import {SupporterInterface} from '../interface/SupporterInterface';
 
 export const getMyInterest = () => {
   return async (dispatch: Dispatch<Action | any>) => {
@@ -21,7 +20,6 @@ export const getMyInterest = () => {
       });
       return response;
     } catch (e: any) {
-
       dispatch({
         type: ActionType.MY_INTEREST_ERROR,
         payload: 'Somethings wents wrong',
@@ -30,15 +28,14 @@ export const getMyInterest = () => {
   };
 };
 
-
-export const deleteMyInterest = (fn:any) => {
+export const deleteMyInterest = (fn: any) => {
   return async (dispatch: Dispatch<Action | any>) => {
     dispatch({
       type: ActionType.MY_INTEREST,
     });
 
     try {
-      const response = await service.delete(apiUri.deleteInterest+fn.id);
+      const response = await service.delete(apiUri.deleteInterest + fn.id);
 
       dispatch({
         type: ActionType.MY_INTEREST_SUCCESS,
@@ -46,7 +43,6 @@ export const deleteMyInterest = (fn:any) => {
       });
       return response;
     } catch (e: any) {
-
       dispatch({
         type: ActionType.MY_INTEREST_ERROR,
         payload: 'Somethings wents wrong',
@@ -55,14 +51,14 @@ export const deleteMyInterest = (fn:any) => {
   };
 };
 
-export const addNew_Interest = (data:any,formData:FormData) => {
+export const addNew_Interest = (data: any) => {
   return async (dispatch: Dispatch<Action | any>) => {
     dispatch({
       type: ActionType.MY_INTEREST,
     });
 
     try {
-      const response = await service.post(apiUri.addInterest,data,formData);
+      const response = await service.post(apiUri.addInterest, data);
 
       dispatch({
         type: ActionType.MY_INTEREST_SUCCESS,
@@ -70,7 +66,6 @@ export const addNew_Interest = (data:any,formData:FormData) => {
       });
       return response;
     } catch (e: any) {
-
       dispatch({
         type: ActionType.MY_INTEREST_ERROR,
         payload: 'Somethings wents wrong',
@@ -79,15 +74,14 @@ export const addNew_Interest = (data:any,formData:FormData) => {
   };
 };
 
-
-export const UpdateInterest = (data:any) => {
+export const UpdateInterest = (data: any) => {
   return async (dispatch: Dispatch<Action | any>) => {
     dispatch({
       type: ActionType.MY_INTEREST,
     });
 
     try {
-      const response = await service.post(apiUri.update_Interest,data);
+      const response = await service.post(apiUri.update_Interest, data);
 
       dispatch({
         type: ActionType.MY_INTEREST_SUCCESS,
@@ -95,7 +89,6 @@ export const UpdateInterest = (data:any) => {
       });
       return response;
     } catch (e: any) {
-
       dispatch({
         type: ActionType.MY_INTEREST_ERROR,
         payload: 'Somethings wents wrong',
@@ -104,17 +97,16 @@ export const UpdateInterest = (data:any) => {
   };
 };
 
-
-
-export const supporters_InterestList = (fn:any) => {
-  
+export const supporters_InterestList = (fn: any) => {
   return async (dispatch: Dispatch<Action | any>) => {
     dispatch({
       type: ActionType.MY_INTEREST,
     });
 
     try {
-      const response = await service.get(apiUri.supportersInterestList+fn.supporter_id);
+      const response = await service.get(
+        apiUri.supportersInterestList + fn.supporter_id,
+      );
 
       dispatch({
         type: ActionType.MY_INTEREST_SUCCESS,
@@ -122,7 +114,6 @@ export const supporters_InterestList = (fn:any) => {
       });
       return response;
     } catch (e: any) {
-
       dispatch({
         type: ActionType.MY_INTEREST_ERROR,
         payload: 'Somethings wents wrong',
@@ -130,7 +121,3 @@ export const supporters_InterestList = (fn:any) => {
     }
   };
 };
-
-
-
-

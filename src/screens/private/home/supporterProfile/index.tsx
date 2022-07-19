@@ -1,198 +1,273 @@
-import React, { useEffect, useState } from "react";
-import { withTheme } from "styled-components";
-import { Divider, MainWrapper, NotFound } from "@root/utils/globalStyle";
+import React, {useEffect, useState} from 'react';
+import {withTheme} from 'styled-components';
+import {Divider, MainWrapper, NotFound} from '@root/utils/globalStyle';
 // @ts-ignore
-import styled from "styled-components/native";
-import { demoImage, dp, follow } from "@root/utils/assets";
-import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import ListCard from "@root/components/supporterItem";
-import { useIsFocused, useTheme } from "@react-navigation/native";
-import Detail from "@root/components/detail";
-import Wheel from "@root/components/wheel";
-import { useActions } from "@root/hooks/useActions";
-import { useTypedSelector } from "@root/hooks/useTypedSelector";
-import { imageUrl } from "@root/utils/constants";
-import navigationStrings from "@root/navigation/navigationStrings";
-import Timeline from "@root/components/timeline";
-import { navigationRef } from "@root/navigation/RootNavigation";
-import AppLoader from "../../../../components/Loader";
-import SupportersInterests from "@root/components/interests";
+import styled from 'styled-components/native';
+import {demoImage, dp, follow} from '@root/utils/assets';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import ListCard from '@root/components/supporterItem';
+import {useIsFocused, useTheme} from '@react-navigation/native';
+import Detail from '@root/components/detail';
+import Wheel from '@root/components/wheel';
+import {useActions} from '@root/hooks/useActions';
+import {useTypedSelector} from '@root/hooks/useTypedSelector';
+import {imageUrl} from '@root/utils/constants';
+import navigationStrings from '@root/navigation/navigationStrings';
+import Timeline from '@root/components/timeline';
+import {navigationRef} from '@root/navigation/RootNavigation';
+import AppLoader from '../../../../components/Loader';
+import SupportersInterests from '@root/components/interests';
 
 // @ts-ignore
-const SupporterProfile = ({ props, route }) => {
-  const { colors }: any = useTheme();
-  const { getSupporterProfile, getSupporterGraph, getSupporterSupporterList, getSupporterTimeline, setFollowUnfollow, supporters_InterestList } = useActions();
-  const { myProfileData, loading } = useTypedSelector(
-    (state) => state.myProfile,
+const SupporterProfile = ({props, route}) => {
+  const {colors}: any = useTheme();
+  const {
+    getSupporterProfile,
+    getSupporterGraph,
+    getSupporterSupporterList,
+    getSupporterTimeline,
+    setFollowUnfollow,
+    supporters_InterestList,
+  } = useActions();
+  const {myProfileData, loading} = useTypedSelector(state => state.myProfile);
+  const {myInterestData, interestLoading} = useTypedSelector(
+    state => state.interest,
   );
-  const { myInterestData, interestLoading } = useTypedSelector(
-    (state) => state.interest,
+  const {mySupporterData, supporterLoading} = useTypedSelector(
+    state => state.mySupporters,
   );
-  const { mySupporterData, supporterLoading } = useTypedSelector((state) => state.mySupporters);
-  const { myGraphData } = useTypedSelector((state) => state.myGraph);
-  const { timelineData, timelineLoading } = useTypedSelector(
-    (state) => state.timeline,
+  const {myGraphData} = useTypedSelector(state => state.myGraph);
+  const {timelineData, timelineLoading} = useTypedSelector(
+    state => state.timeline,
   );
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState(2);
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
-
-      getSupporterProfile({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, });
-      getSupporterGraph({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
-      getSupporterSupporterList({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
-      getSupporterTimeline({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
-      supporters_InterestList({ 'supporter_id': route.params.type != '' ? route.params.item.id : route.params.item.item.id, })
+      getSupporterProfile({
+        supporter_id:
+          route.params.type != ''
+            ? route.params.item.id
+            : route.params.item.item.id,
+      });
+      getSupporterGraph({
+        supporter_id:
+          route.params.type != ''
+            ? route.params.item.id
+            : route.params.item.item.id,
+      });
+      getSupporterSupporterList({
+        supporter_id:
+          route.params.type != ''
+            ? route.params.item.id
+            : route.params.item.item.id,
+      });
+      getSupporterTimeline({
+        supporter_id:
+          route.params.type != ''
+            ? route.params.item.id
+            : route.params.item.item.id,
+      });
+      supporters_InterestList({
+        supporter_id:
+          route.params.type != ''
+            ? route.params.item.id
+            : route.params.item.item.id,
+      });
     }
   }, [isFocused]);
 
   return (
     <MainWrapper>
-      {
-        loading ? (
-          <AppLoader />
-        ) :
-         
+      {loading || timelineLoading ? (
+        <AppLoader />
+      ) : (
+        <MainWrapper>
+          <ImageBox>
+            <ImageView
+              source={{
+                uri:
+                  myProfileData != null
+                    ? imageUrl + myProfileData.data.profile_photo
+                    : demoImage,
+              }}
+            />
+          </ImageBox>
+          <HorizontalWrapper>
+            <TitleVerticle>
+              <TextWrapper>
+                {myProfileData != null
+                  ? myProfileData.data.first_name +
+                    ' ' +
+                    myProfileData.data.last_name
+                  : ''}
+              </TextWrapper>
+              <TextDecs>Actor</TextDecs>
+            </TitleVerticle>
 
-            <MainWrapper>
-              <ImageBox>
-                <ImageView source={{ uri: myProfileData != null ? imageUrl + myProfileData.data.profile_photo : demoImage }} />
-              </ImageBox>
-              <HorizontalWrapper>
-                <TitleVerticle>
-                  <TextWrapper>{myProfileData != null ? myProfileData.data.first_name + " " + myProfileData.data.last_name : ''}</TextWrapper>
-                  <TextDecs>Actor</TextDecs>
+            <TouchableOpacity
+              onPress={async () => {
+                await setFollowUnfollow({
+                  supporter_id: myProfileData.data.id,
+                  status_type: myProfileData.data.is_follow === 0 ? '1' : '0',
+                });
+                getSupporterProfile({supporter_id: route.params.item.item.id});
+              }}>
+              <FollowHorizontal>
+                <Image source={follow} />
+                <TextDecs>
+                  {myProfileData != null
+                    ? myProfileData.data.is_follow
+                      ? 'Unfollow'
+                      : 'Follow'
+                    : 'Follow'}
+                </TextDecs>
+              </FollowHorizontal>
+            </TouchableOpacity>
+          </HorizontalWrapper>
 
-                </TitleVerticle>
-
-                <TouchableOpacity onPress={async () => {
-                  await setFollowUnfollow({
-                    supporter_id: myProfileData.data.id,
-                    status_type: myProfileData.data.is_follow === 0 ? '1' : '0'
-                  })
-                  getSupporterProfile({ 'supporter_id': route.params.item.item.id, });
-                }}>
-                  <FollowHorizontal>
-                    <Image source={follow} />
-                    <TextDecs>{myProfileData != null ? myProfileData.data.is_follow ? 'Unfollow' : 'Follow' : 'Follow'}</TextDecs>
-                  </FollowHorizontal>
-                </TouchableOpacity>
-
-              </HorizontalWrapper>
-
-
-              <ScrollView nestedScrollEnabled={true} >
-              <View>
+          <ScrollView nestedScrollEnabled={true}>
+            <View>
               <HorizontalWrapper>
                 <TouchableOpacity>
                   <TextDecs>Supporters</TextDecs>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                  navigationRef.current.navigate(navigationStrings.SUPPORTERS, { item: mySupporterData.data });
-                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigationRef.current.navigate(
+                      navigationStrings.SUPPORTERS,
+                      {item: mySupporterData.data},
+                    );
+                  }}>
                   <TextDecs>View All </TextDecs>
                 </TouchableOpacity>
               </HorizontalWrapper>
-              {
-                supporterLoading ? (
-                  <NotFound>Loading...</NotFound>
-                ) :
-                  Object.keys(mySupporterData).length > 0 ?
-                    (
-                      <FlatList
-                        nestedScrollEnabled={false}
-                        data={mySupporterData.data}
-                        horizontal={true}
-                        renderItem={({ item }) => {
-                          return <ListCard item={item} />;
-                        }}
-                      />
-                    ) :
-                    (<Text>No Data Found</Text>)
-              }
+              {supporterLoading ? (
+                <NotFound>Loading...</NotFound>
+              ) : Object.keys(mySupporterData).length > 0 ? (
+                <FlatList
+                  nestedScrollEnabled={false}
+                  data={mySupporterData.data}
+                  horizontal={true}
+                  renderItem={({item}) => {
+                    return <ListCard item={item} />;
+                  }}
+                />
+              ) : (
+                <Text>No Data Found</Text>
+              )}
               <Divider backgroundColor={colors.divider} height={4} />
               <TabWrapper>
-                <Tabbutton>
-                  <TouchableOpacity onPress={() => {
-                    setTab(1);
-                  }}>
-                    <TabText>Details</TabText>
-                  </TouchableOpacity>
-
-                  <Divider backgroundColor={tab === 1 ? colors.greenColor : colors.darkGray} height={3} />
-                </Tabbutton>
-                <Tabbutton>
-                  <TouchableOpacity onPress={() => {
-                    setTab(2);
-                  }}>
+              <Tabbutton>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setTab(2);
+                    }}>
                     <TabText>Timeline</TabText>
                   </TouchableOpacity>
-                  <Divider backgroundColor={tab === 2 ? colors.greenColor : colors.darkGray} height={3} />
+                  <Divider
+                    backgroundColor={
+                      tab === 2 ? colors.greenColor : colors.darkGray
+                    }
+                    height={3}
+                  />
                 </Tabbutton>
+
                 <Tabbutton>
-                  <TouchableOpacity onPress={() => {
-                    setTab(3);
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setTab(3);
+                    }}>
                     <TabText>Wheel</TabText>
                   </TouchableOpacity>
 
-                  <Divider backgroundColor={tab === 3 ? colors.greenColor : colors.darkGray} height={3} />
+                  <Divider
+                    backgroundColor={
+                      tab === 3 ? colors.greenColor : colors.darkGray
+                    }
+                    height={3}
+                  />
                 </Tabbutton>
 
                 <Tabbutton>
-                  <TouchableOpacity onPress={() => {
-                    setTab(4);
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setTab(4);
+                    }}>
                     <TabText>Interests</TabText>
                   </TouchableOpacity>
 
-                  <Divider backgroundColor={tab === 4 ? colors.greenColor : colors.darkGray} height={3} />
+                  <Divider
+                    backgroundColor={
+                      tab === 4 ? colors.greenColor : colors.darkGray
+                    }
+                    height={3}
+                  />
                 </Tabbutton>
+
+                <Tabbutton>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setTab(1);
+                    }}>
+                    <TabText>Details/Profile</TabText>
+                  </TouchableOpacity>
+
+                  <Divider
+                    backgroundColor={
+                      tab === 1 ? colors.greenColor : colors.darkGray
+                    }
+                    height={3}
+                  />
+                </Tabbutton>
+               
+                
+
+               
               </TabWrapper>
 
               <BottomWrapper>
-                {tab === 1 ? <Detail item={myProfileData.data} /> : tab === 3 ? <Wheel item={myGraphData.data} /> : tab === 4 ? interestLoading ? (
-                  <NotFound>Loading...</NotFound>
-                ) :
-                  Object.keys(myInterestData).length > 0 ?
-                    (
-                      myInterestData.data.map((item: any) => (
-                        <SupportersInterests item={item} />
-
-                      ))
-                    ) :
-                    (<Text>No Data Found</Text>) :
-                  timelineLoading ? (
+                {tab === 1 ? (
+                  <Detail item={myProfileData.data} />
+                ) : tab === 3 ? (
+                  <Wheel item={myGraphData.data} />
+                ) : tab === 4 ? (
+                  interestLoading ? (
                     <NotFound>Loading...</NotFound>
-                  ) :
-                  timelineData &&  Object.keys(timelineData).length > 0 ?
-                      (
-                        timelineData.data.map((item: any) => (
-                          <Timeline item={item} />
-
-                        ))
-                      ) :
-                      (<Text>No Data Found</Text>)
-                }
+                  ) : Object.keys(myInterestData).length > 0 ? (
+                    myInterestData.data.map((item: any) => (
+                      <SupportersInterests item={item} />
+                    ))
+                  ) : (
+                    <Text>No Data Found</Text>
+                  )
+                ) : timelineLoading ? (
+                  <NotFound>Loading...</NotFound>
+                ) : timelineData && Object.keys(timelineData).length > 0 ? (
+                  timelineData.data.map((item: any) => <Timeline item={item} />)
+                ) : (
+                  <Text>No Data Found</Text>
+                )}
               </BottomWrapper>
-              </View>
-                </ScrollView>
-             
-            </MainWrapper>
-
-         
-      }
+            </View>
+          </ScrollView>
+        </MainWrapper>
+      )}
     </MainWrapper>
-
-
   );
-}
+};
 
 // @ts-ignore
 export default withTheme(SupporterProfile);
-const CommentText = styled.Text`
-color:#000`
+
 
 const BottomWrapper = styled.View`
   height: auto;
@@ -200,7 +275,7 @@ const BottomWrapper = styled.View`
 
 const TabText = styled.Text`
   text-align: center;
-  color:#000;
+  color: #000;
 `;
 
 const Tabbutton = styled.View`
@@ -217,14 +292,14 @@ const TabWrapper = styled.View`
 `;
 
 const TextDecs = styled.Text`
-  color: ${({ theme }: any) => theme.colors.black};
-  font-size: ${({ theme }: any) => theme.fontSize.cardDate};
+  color: ${({theme}: any) => theme.colors.black};
+  font-size: ${({theme}: any) => theme.fontSize.cardDate};
   margin-left: 5px;
 `;
 
 const TextWrapper = styled.Text`
-  color: ${({ theme }: any) => theme.colors.black};
-  font-size: ${({ theme }: any) => theme.fontSize.cardTitle};
+  color: ${({theme}: any) => theme.colors.black};
+  font-size: ${({theme}: any) => theme.fontSize.cardTitle};
   margin-left: 5px;
   min-width: 85px;
 `;
@@ -233,9 +308,7 @@ const FollowHorizontal = styled.View`
   flex-direction: row;
 `;
 
-const TitleVerticle = styled.View`
-
-`;
+const TitleVerticle = styled.View``;
 
 const HorizontalWrapper = styled.View`
   display: flex;
@@ -247,7 +320,6 @@ const HorizontalWrapper = styled.View`
   align-items: center;
   justify-content: space-between;
 `;
-
 
 const ImageBox = styled.View`
   position: relative;

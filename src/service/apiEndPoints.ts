@@ -23,6 +23,7 @@ const apiUri = {
   update_Interest: 'interests/update',
 
   activityShow: 'activity/show',
+  activityUpdate : 'activity/update',
   activityStore: 'activity/store',
   supporterActivityShow: 'supporter/activity-list?supporter_id=',
   searchActivity: 'activity/category-activity?category_id=',

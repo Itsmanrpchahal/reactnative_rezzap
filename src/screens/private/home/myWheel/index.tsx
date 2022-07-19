@@ -11,7 +11,6 @@ import PieChart from 'react-native-pie-chart';
 import AppLoader from '@root/components/Loader';
 import Timeline from '../../../../components/timeline';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
-import {navigationRef} from '../../../../navigation/RootNavigation';
 
 const MyWheel = ({props, route}) => {
   const [visible, setVisible] = useState(false);
@@ -61,6 +60,7 @@ const MyWheel = ({props, route}) => {
         <ChildWrapperOuter>
           <ChartView>
             <PieChart
+          
               widthAndHeight={widthAndHeight}
               series={
                 myGraphData && Object.keys(myGraphData).length > 0
@@ -81,7 +81,7 @@ const MyWheel = ({props, route}) => {
           </ChartView>
 
           <Divider backgroundColor={colors.divider} />
-          
+
           <FilterView>
             <Menu
               visible={visible}
@@ -91,6 +91,27 @@ const MyWheel = ({props, route}) => {
                 </Text>
               }
               onRequestClose={hideMenu}>
+              <MenuItem
+                onPress={() => {
+                  route.params.type === '0'
+                    ? Promise.all([
+                        getActivityCategories(),
+                        getMyTimeline(),
+                        getMyGraph(),
+                      ])
+                    : Promise.all([
+                        getSupporterGraph({
+                          supporter_id: route.params.item.user_id,
+                        }),
+                        getSupporterTimeline({
+                          supporter_id: route.params.item.user_id,
+                        }),
+                      ]),
+                    hideMenu();
+                }}>
+                All
+              </MenuItem>
+
               <FlatList
                 data={activity_categoryData.data}
                 renderItem={({item}) => {

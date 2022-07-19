@@ -15,6 +15,7 @@ export * as supporters_InterestList from '@root/store/interests/action-creators'
 export * as deleteMyInterest from '@root/store/interests/action-creators';
 export * as getMyTimeline from '@root/store/myTimeline/action-creators';
 export * as addActivity from '@root/store/myTimeline/action-creators';
+export * as updateActivity from '@root/store/myTimeline/action-creators';
 export * as search_Activity from '@root/store/timeline/action-creators';
 export * as deleteTimelineItem from '@root/store/timeline/action-creators';
 export * as getSupporterTimeline from '@root/store/timeline/action-creators';

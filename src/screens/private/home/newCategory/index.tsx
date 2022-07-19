@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList,  Text, TouchableOpacity, View } from "react-native";
 import { useTheme, withTheme } from "styled-components";
 import styled from "styled-components/native"
-import { MainWrapper, MainWrapperWhite } from "../../../../utils/globalStyle";
+import { MainWrapperWhite } from "../../../../utils/globalStyle";
 import CheckBox from '@react-native-community/checkbox';
 import { deleteBlack, editBlack, add } from "@root/utils/assets";
 import TextField from '@root/components/TextField';
 import { useIsFocused } from "@react-navigation/native";
 import { useTypedSelector } from "@root/hooks/useTypedSelector";
 import { useActions } from "@root/hooks/useActions";
-import { NotFound } from "@root/utils/globalStyle";
 import { CATEGORY_SCHEMA } from './helpers';
 import { Formik } from 'formik';
 import PrimaryButton from "@root/components/Button";
 import AppLoader from "../../../../components/Loader";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { addWhite } from "../../../../utils/assets";
-import { navigationRef } from "../../../../navigation/RootNavigation";
-import navigationStrings from "../../../../navigation/navigationStrings";
 
 const AddNewCategory = () => {
   const { colors }: any = useTheme();

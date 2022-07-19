@@ -19,6 +19,8 @@ import Share from 'react-native-share';
 import TextField from '@root/components/TextField';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import {useTypedSelector} from '@root/hooks/useTypedSelector';
+import { navigationRef } from '../navigation/RootNavigation';
+import navigationStrings from '../navigation/navigationStrings';
 
 const Timeline = (item: any) => {
   var p =
@@ -57,7 +59,7 @@ const Timeline = (item: any) => {
           <DateText>{format(new Date(item.item.created_at), 'do')}</DateText>
           <MonthWrapper>
             <MonthText>
-              {format(new Date(item.item.created_at), 'MMM')}
+              {format(new Date(item.item.created_at), 'MMM')} 
             </MonthText>
           </MonthWrapper>
         </VerticalWrapper>
@@ -130,7 +132,7 @@ const Timeline = (item: any) => {
                   </Text>
                 }
                 onRequestClose={hideMenu}>
-                <MenuItem onPress={() => {}}>Edit</MenuItem>
+                <MenuItem onPress={()=>{navigationRef.current.navigate(navigationStrings.ADD_ACTIVITY,{item:item.item,type:1}),hideMenu()}}>Edit</MenuItem>
                 <MenuItem
                   onPress={async () => {
                     await deleteTimelineItem({id: item.item.id}),
